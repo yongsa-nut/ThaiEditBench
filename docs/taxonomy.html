@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>บอตแก้คำผิด — Error Classification</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Sarabun:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap');
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', 'Sarabun', sans-serif;
+  background: #f0f2f5;
+  color: #1a1a2e;
+  padding: 2rem;
+  line-height: 1.6;
+}
+
+h1 {
+  font-size: 1.8rem;
+  color: #1a3a5f;
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  color: #555;
+  margin-bottom: 1.5rem;
+  font-size: 0.95rem;
+}
+
+.stats-bar {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+}
+
+.stat-pill {
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+  border: 2px solid transparent;
+}
+
+.stat-pill:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.stat-pill.active {
+  border-color: #1a1a2e;
+}
+
+.stat-pill.all { background: #e2e8f0; color: #1a1a2e; }
+
+.cat-1 { background: #fee2e2; color: #991b1b; }
+.cat-2 { background: #dbeafe; color: #1e40af; }
+.cat-3 { background: #fef3c7; color: #92400e; }
+.cat-4 { background: #d1fae5; color: #065f46; }
+.cat-5 { background: #ede9fe; color: #5b21b6; }
+.cat-6 { background: #fce7f3; color: #9d174d; }
+.cat-0 { background: #f1f5f9; color: #475569; }
+
+.category-section {
+  margin-bottom: 2rem;
+  transition: opacity 0.2s;
+}
+
+.category-section.hidden {
+  display: none;
+}
+
+.category-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.category-header h2 {
+  font-size: 1.25rem;
+  color: #1a3a5f;
+}
+
+.category-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.category-desc {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 1rem;
+  font-style: italic;
+}
+
+.entry-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+  gap: 0.75rem;
+}
+
+.entry-card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 1rem 1.25rem;
+  border-left: 4px solid #ccc;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  transition: box-shadow 0.15s;
+}
+
+.entry-card:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+}
+
+.entry-card.cat-1 { border-left-color: #ef4444; }
+.entry-card.cat-2 { border-left-color: #3b82f6; }
+.entry-card.cat-3 { border-left-color: #f59e0b; }
+.entry-card.cat-4 { border-left-color: #10b981; }
+.entry-card.cat-5 { border-left-color: #8b5cf6; }
+.entry-card.cat-6 { border-left-color: #ec4899; }
+.entry-card.cat-0 { border-left-color: #94a3b8; }
+
+.wrong {
+  font-family: 'Sarabun', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #dc2626;
+  text-decoration: line-through;
+  text-decoration-color: rgba(220,38,38,0.4);
+}
+
+.arrow {
+  color: #999;
+  margin: 0 0.5rem;
+  font-size: 1.1rem;
+}
+
+.correct {
+  font-family: 'Sarabun', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #059669;
+}
+
+.variants {
+  font-family: 'Sarabun', sans-serif;
+  font-size: 0.85rem;
+  color: #888;
+  margin-top: 0.35rem;
+}
+
+.mechanism {
+  font-size: 0.8rem;
+  color: #666;
+  margin-top: 0.4rem;
+  background: #f8fafc;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.move-controls {
+  display: flex;
+  gap: 0.25rem;
+  margin-top: 0.5rem;
+}
+
+.move-btn {
+  font-size: 0.7rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  background: #f8fafc;
+  color: #555;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.move-btn:hover {
+  background: #e2e8f0;
+}
+
+.move-btn.active-move {
+  background: #1a3a5f;
+  color: #fff;
+  border-color: #1a3a5f;
+}
+
+footer {
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid #ddd;
+  font-size: 0.8rem;
+  color: #888;
+}
+
+@media print {
+  body { padding: 1rem; }
+  .move-controls { display: none; }
+  .stat-pill { cursor: default; }
+}
+</style>
+</head>
+<body>
+
+<h1>บอตแก้คำผิด — Error Classification Review</h1>
+<p class="subtitle">Source: Thai Wikipedia <code>วิกิพีเดีย:บอต/บอตแก้คำผิด</code> — 80+ correction rules classified into proposed EditingBench error taxonomy. Click a category pill to filter. Click "Move to →" buttons on cards to reclassify.</p>
+
+<div class="stats-bar" id="statsBar"></div>
+
+<div id="sections"></div>
+
+<footer>
+  <div id="changeLog"></div>
+  <p>EditingBench taxonomy review — generated 2026-04-16</p>
+</footer>
+
+<script>
+const categories = [
+  { id: 1, name: "Tone-mark error", color: "cat-1", desc: "Wrong ่ ้ ๊ ๋ ็ mark — added, removed, or substituted. Rule: Thai tone rules + Royal Institute." },
+  { id: 2, name: "Consonant-pair confusion", color: "cat-2", desc: "Indic-etymology homophonous pairs (ฎ/ฏ, ฑ/ท, น/ณ, ส/ษ/ศ, ป/บ final, ท/ธ). Require memorization of etymology." },
+  { id: 3, name: "การันต์ error", color: "cat-3", desc: "Silent marker (์) spurious, missing, or misplaced. Includes extra silent consonant+์ clusters." },
+  { id: 4, name: "Vowel/sara error", color: "cat-4", desc: "Wrong vowel form, extra/missing vowel mark, long↔short confusion (ี/ิ), extra ะ/ุ/ิ." },
+  { id: 5, name: "Cluster / metathesis", color: "cat-5", desc: "Letter reordering, gemination errors, รร↔ัน alternation. Structural misspelling of consonant clusters." },
+  { id: 6, name: "Loanword transliteration", color: "cat-6", desc: "Wrong Thai consonant for English source. Royal Institute rules: -ck/-c→ก (not ค), -t→ต (not ท), -p→ป (not พ)." },
+  { id: 0, name: "Uncertain / multi-class", color: "cat-0", desc: "Could belong to more than one class, or classification unclear." }
+];
+
+let entries = [
+  // Category 1: Tone-mark errors
+  { wrong: "กระทั้ง", correct: "กระทั่ง", cat: 1, mechanism: "้ → ่ (falling→low tone mark)", variants: "" },
+  { wrong: "โน๊ต", correct: "โน้ต", cat: 1, mechanism: "๊ → ้ (high→falling tone mark)", variants: "" },
+  { wrong: "ฟังก์ชั่น", correct: "ฟังก์ชัน", cat: 1, mechanism: "spurious ่ on ั (no tone mark needed)", variants: "" },
+  { wrong: "เวอร์ชั่น", correct: "เวอร์ชัน", cat: 1, mechanism: "spurious ่ on ั", variants: "" },
+  { wrong: "เคเบิ้ล", correct: "เคเบิล", cat: 1, mechanism: "spurious ้ on ิ", variants: "" },
+  { wrong: "เซ็นติ", correct: "เซนติ", cat: 1, mechanism: "spurious ็ (ไม้ไต่คู้)", variants: "" },
+  { wrong: "สเตชั่น", correct: "สเตชัน", cat: 1, mechanism: "spurious ่ on ั", variants: "" },
+  { wrong: "แอปพลิเคชั่น", correct: "แอปพลิเคชัน", cat: 1, mechanism: "spurious ่ on ั", variants: "แอพพลิเคชั่น, แอพพลิเคชัน" },
+  { wrong: "เอ็นจิ้น", correct: "เอนจิน", cat: 1, mechanism: "spurious ็ and ้", variants: "เอ็นจิน, เอนจิ้น" },
+  { wrong: "บล๊อก", correct: "บล็อก", cat: 1, mechanism: "๊ → ็ (high tone mark → short vowel mark)", variants: "บล็อค, บล๊อค" },
+  { wrong: "ลิ๊งค์", correct: "ลิงก์", cat: 1, mechanism: "spurious ๊ + ค→ก", variants: "ลิ้งค์, ลิ้งก์, ลิ๊งก์" },
+
+  // Category 2: Consonant-pair confusion
+  { wrong: "กฏ", correct: "กฎ", cat: 2, mechanism: "ฏ → ฎ (retroflex pair, same sound in modern Thai)", variants: "" },
+  { wrong: "กฏหมาย", correct: "กฎหมาย", cat: 2, mechanism: "ฏ → ฎ", variants: "" },
+  { wrong: "กรกฏาคม", correct: "กรกฎาคม", cat: 2, mechanism: "ฏ → ฎ", variants: "" },
+  { wrong: "ปฎิ-", correct: "ปฏิ-", cat: 2, mechanism: "ฎ → ฏ (reversed confusion)", variants: "ปฎิกริยา→ปฏิกิริยา (also vowel)" },
+  { wrong: "ปรากฎ", correct: "ปรากฏ", cat: 2, mechanism: "ฎ → ฏ", variants: "" },
+  { wrong: "ฑูต", correct: "ทูต", cat: 2, mechanism: "ฑ → ท (both /tʰ/ in modern Thai)", variants: "" },
+  { wrong: "ทะเลสาป", correct: "ทะเลสาบ", cat: 2, mechanism: "ป → บ (final stop, same sound)", variants: "" },
+  { wrong: "คำนวน", correct: "คำนวณ", cat: 2, mechanism: "น → ณ (both /n/, Indic distinction)", variants: "" },
+  { wrong: "ฝรั่งเศษ", correct: "ฝรั่งเศส", cat: 2, mechanism: "ษ → ส (both /s/ in modern Thai)", variants: "" },
+  { wrong: "ผลลัพท์", correct: "ผลลัพธ์", cat: 2, mechanism: "ท → ธ (before การันต์)", variants: "" },
+
+  // Category 3: การันต์ errors
+  { wrong: "ขาดดุลย์", correct: "ขาดดุล", cat: 3, mechanism: "spurious ย์ — word doesn't have silent ย", variants: "" },
+  { wrong: "งบดุลย์", correct: "งบดุล", cat: 3, mechanism: "spurious ย์", variants: "" },
+  { wrong: "ถ่วงดุลย์", correct: "ถ่วงดุล", cat: 3, mechanism: "spurious ย์", variants: "" },
+  { wrong: "สมดุลย์", correct: "สมดุล", cat: 3, mechanism: "spurious ย์", variants: "" },
+  { wrong: "โครงการณ์", correct: "โครงการ", cat: 3, mechanism: "spurious ณ์", variants: "" },
+  { wrong: "ผูกพันธ์", correct: "ผูกพัน", cat: 3, mechanism: "spurious ธ์ (confusion with พันธุ์)", variants: "" },
+  { wrong: "ลายเซ็นต์", correct: "ลายเซ็น", cat: 3, mechanism: "spurious ต์", variants: "" },
+  { wrong: "ภาพยนต์", correct: "ภาพยนตร์", cat: 3, mechanism: "missing ร before ์", variants: "" },
+  { wrong: "รถยนตร์", correct: "รถยนต์", cat: 3, mechanism: "spurious ร before ์", variants: "" },
+  { wrong: "เวทย์มนตร์", correct: "เวทมนตร์", cat: 3, mechanism: "spurious ย์ on เวท + correct มนตร์", variants: "เวทย์มนต์, เวทมนต์" },
+  { wrong: "สวดมนตร์", correct: "สวดมนต์", cat: 3, mechanism: "spurious ร before ์", variants: "สวดมน" },
+  { wrong: "คริสตศตวรรษ", correct: "คริสต์ศตวรรษ", cat: 3, mechanism: "missing ์ after ต", variants: "" },
+  { wrong: "คริสตศักราช", correct: "คริสต์ศักราช", cat: 3, mechanism: "missing ์ after ต", variants: "" },
+  { wrong: "คริสตศาสนา", correct: "คริสต์ศาสนา", cat: 3, mechanism: "missing ์ after ต", variants: "" },
+  { wrong: "คริสต์กาล", correct: "คริสตกาล", cat: 3, mechanism: "spurious ์ (ต here is pronounced)", variants: "" },
+  { wrong: "เอล์ฟ", correct: "เอลฟ์", cat: 3, mechanism: "์ on wrong consonant (ล vs ฟ)", variants: "" },
+  { wrong: "เอ็กซ์", correct: "เอกซ์", cat: 3, mechanism: "spurious ็ on เอก (short vowel not needed)", variants: "" },
+
+  // Category 4: Vowel/sara errors
+  { wrong: "คลีนิก", correct: "คลินิก", cat: 4, mechanism: "ี → ิ (long→short vowel)", variants: "" },
+  { wrong: "ธุระกิจ", correct: "ธุรกิจ", cat: 4, mechanism: "extra ะ after ร", variants: "" },
+  { wrong: "อิสระภาพ", correct: "อิสรภาพ", cat: 4, mechanism: "extra ะ after ร", variants: "" },
+  { wrong: "สังเกตุ", correct: "สังเกต", cat: 4, mechanism: "spurious ุ at end", variants: "" },
+  { wrong: "อนุญาติ", correct: "อนุญาต", cat: 4, mechanism: "spurious ิ at end", variants: "" },
+  { wrong: "อโดบี", correct: "อะโดบี", cat: 4, mechanism: "missing ะ after อ", variants: "" },
+  { wrong: "อลูมิเนียม", correct: "อะลูมิเนียม", cat: 4, mechanism: "missing ะ after อ", variants: "" },
+  { wrong: "ปฏิกริยา", correct: "ปฏิกิริยา", cat: 4, mechanism: "missing ิ in กิริ cluster", variants: "ปฎิกริยา (also consonant)" },
+
+  // Category 5: Cluster / metathesis
+  { wrong: "บรรได", correct: "บันได", cat: 5, mechanism: "รร → ัน (cluster alternation)", variants: "" },
+  { wrong: "บรรเทิง", correct: "บันเทิง", cat: 5, mechanism: "รร → ัน", variants: "" },
+  { wrong: "ปราถนา", correct: "ปรารถนา", cat: 5, mechanism: "letter reorder: ถ and ร swapped", variants: "" },
+  { wrong: "กษัตรย์", correct: "กษัตริย์", cat: 5, mechanism: "missing ิ + wrong cluster (ตรย→ตริย)", variants: "" },
+  { wrong: "กิติมศักดิ์", correct: "กิตติมศักดิ์", cat: 5, mechanism: "missing gemination (ต→ตต)", variants: "" },
+  { wrong: "ศรีษะ", correct: "ศีรษะ", cat: 5, mechanism: "ร and ี swapped in position", variants: "" },
+  { wrong: "เยอรมันนี", correct: "เยอรมนี", cat: 5, mechanism: "extra ัน (spurious syllable)", variants: "" },
+  { wrong: "จักรสาน", correct: "จักสาน", cat: 5, mechanism: "extra ร in cluster", variants: "" },
+  { wrong: "สวรรณคต", correct: "สวรรคต", cat: 5, mechanism: "extra ณ in cluster", variants: "" },
+
+  // Category 6: Loanword transliteration
+  { wrong: "เกมส์", correct: "เกม", cat: 6, mechanism: "spurious ส์ (English -s not transliterated)", variants: "" },
+  { wrong: "ซอฟท์แวร์", correct: "ซอฟต์แวร์", cat: 6, mechanism: "ท → ต (English -ft → ฟต์)", variants: "" },
+  { wrong: "นิวยอร์ค", correct: "นิวยอร์ก", cat: 6, mechanism: "ค → ก (English -k → ก)", variants: "" },
+  { wrong: "ร็อค", correct: "ร็อก", cat: 6, mechanism: "ค → ก (English -ck → ก)", variants: "" },
+  { wrong: "ล็อค", correct: "ล็อก", cat: 6, mechanism: "ค → ก", variants: "" },
+  { wrong: "มิวสิค", correct: "มิวสิก", cat: 6, mechanism: "ค → ก (English -c → ก)", variants: "" },
+  { wrong: "เบรค", correct: "เบรก", cat: 6, mechanism: "ค → ก", variants: "" },
+  { wrong: "ไบท์", correct: "ไบต์", cat: 6, mechanism: "ท → ต (English -te → ต)", variants: "" },
+  { wrong: "เทมเพลท", correct: "เทมเพลต", cat: 6, mechanism: "ท → ต", variants: "" },
+  { wrong: "อัพเดต", correct: "อัปเดต", cat: 6, mechanism: "พ → ป (English up- → อัป)", variants: "อัพเด็ต, อัพเดท, อัปเด็ต" },
+  { wrong: "อัพโหลด", correct: "อัปโหลด", cat: 6, mechanism: "พ → ป (English up- → อัป)", variants: "" },
+  { wrong: "อินเตอร์เน็ต", correct: "อินเทอร์เน็ต", cat: 6, mechanism: "ต → ท (English -ter → เทอร์)", variants: "อินเตอเน็ต, อินเตอร์เนต" },
+  { wrong: "อิเล็กโทรนิกส์", correct: "อิเล็กทรอนิกส์", cat: 6, mechanism: "โทร → ทรอ (vowel placement in transliteration)", variants: "" },
+  { wrong: "เว็บไซท์", correct: "เว็บไซต์", cat: 6, mechanism: "ท → ต (English -te → ต)", variants: "เวบไซท์, เวบไซต์, เว็บไซต" },
+  { wrong: "โปรเจค", correct: "โปรเจกต์", cat: 6, mechanism: "ค → กต์ (English -ct → กต์)", variants: "โปรเจคท์, โปรเจคต์, โปรเจ็ค, โปรเจ็คท์, โปรเจ็คต์" },
+  { wrong: "กราฟฟิค", correct: "กราฟิก", cat: 6, mechanism: "ฟฟ→ฟ + ค→ก (no gemination + consonant)", variants: "กราฟฟิก" },
+  { wrong: "ซีรี่ส์", correct: "ซีรีส์", cat: 6, mechanism: "spurious ่ on ี", variants: "ซีรีย์, ซีรี่ย์" },
+  { wrong: "บราวเซอร์", correct: "เบราว์เซอร์", cat: 6, mechanism: "บ→เบ + missing ์ on ว", variants: "เบราเซอร์" },
+  { wrong: "ดอทคอม", correct: "ดอตคอม", cat: 6, mechanism: "ท → ต", variants: "ด็อทคอม, ด็อตคอม" },
+  { wrong: "ดอทเน็ท", correct: "ดอตเน็ต", cat: 6, mechanism: "ท → ต (both positions)", variants: "ดอทเน็ต, ด็อตเน็ต, ด็อทเน็ต, ดอทเนท" },
+  { wrong: "สคริปท์", correct: "สคริปต์", cat: 6, mechanism: "ท → ต", variants: "สครปต์" },
+  { wrong: "เซอร์เวอร์", correct: "เซิร์ฟเวอร์", cat: 6, mechanism: "wrong vowel + missing ฟ (server)", variants: "" },
+  { wrong: "เอาท์พุต", correct: "เอาต์พุต", cat: 6, mechanism: "ท → ต", variants: "เอาท์พุท" },
+  { wrong: "ออบเจ็ค", correct: "อ็อบเจกต์", cat: 6, mechanism: "ค → กต์ + vowel", variants: "ออปเจ็ค, ออปเจค" },
+  { wrong: "คริสมาส", correct: "คริสต์มาส", cat: 6, mechanism: "missing ต์ (Christ-)", variants: "คริสมาสต์" },
+  { wrong: "คริสต์เตียน", correct: "คริสเตียน", cat: 6, mechanism: "spurious ์ + extra ต", variants: "" },
+  { wrong: "โปรโตคอล", correct: "โพรโทคอล", cat: 6, mechanism: "โป→โพ, ต→ท (protocol)", variants: "" },
+  { wrong: "ปีรามิด", correct: "พีระมิด", cat: 6, mechanism: "ป→พ + vowel (pyramid)", variants: "ปิระมิด" },
+  { wrong: "ไลท์โนเวล", correct: "ไลต์โนเวล", cat: 6, mechanism: "ท → ต (light)", variants: "ไลค์โนเวล, ไลก์โนเวล" },
+  { wrong: "เวิล์ด", correct: "เวิลด์", cat: 6, mechanism: "์ on wrong consonant (ล vs ด)", variants: "" },
+  { wrong: "แอพพลิเคชัน", correct: "แอปพลิเคชัน", cat: 6, mechanism: "พ→ป first syllable + extra พ", variants: "แอพพลิเคชั่น, แอพพลิคเคชัน" },
+
+  // Category 0: Uncertain / multi-class
+  { wrong: "ก๊กกะ", correct: "จิกะ", cat: 0, mechanism: "unclear — possibly unit prefix confusion (giga)", variants: "กิ๊กกะ, กิกะ" },
+  { wrong: "ลอส แองเจลิส", correct: "ลอสแอนเจลิส", cat: 0, mechanism: "spacing + vowel (แอง→แอน) — proper noun", variants: "multiple variants" },
+  { wrong: "อะนิเม", correct: "อนิเมะ", cat: 0, mechanism: "vowel placement + missing ะ (Japanese loanword)", variants: "อานิเมะ" },
+  { wrong: "ไมโครซอฟต์", correct: "ไมโครซอฟท์", cat: 0, mechanism: "ต→ท? Royal Institute uses ท here — inconsistent with other -ft rules", variants: "" },
+];
+
+// State
+let activeFilter = 'all';
+let changes = [];
+
+function render() {
+  // Stats bar
+  const statsBar = document.getElementById('statsBar');
+  const counts = {};
+  categories.forEach(c => counts[c.id] = 0);
+  entries.forEach(e => counts[e.cat] = (counts[e.cat] || 0) + 1);
+  const total = entries.length;
+
+  let statsHtml = `<div class="stat-pill all ${activeFilter === 'all' ? 'active' : ''}" onclick="setFilter('all')">All (${total})</div>`;
+  categories.forEach(c => {
+    statsHtml += `<div class="stat-pill ${c.color} ${activeFilter === String(c.id) ? 'active' : ''}" onclick="setFilter('${c.id}')">${c.name} (${counts[c.id] || 0})</div>`;
+  });
+  statsBar.innerHTML = statsHtml;
+
+  // Sections
+  const sections = document.getElementById('sections');
+  let html = '';
+
+  categories.forEach(cat => {
+    const catEntries = entries.filter(e => e.cat === cat.id);
+    if (catEntries.length === 0) return;
+    const hidden = (activeFilter !== 'all' && activeFilter !== String(cat.id)) ? 'hidden' : '';
+
+    html += `<div class="category-section ${hidden}">`;
+    html += `<div class="category-header">
+      <span class="category-badge ${cat.color}">${cat.id === 0 ? '?' : cat.id}</span>
+      <h2>${cat.name}</h2>
+      <span style="color:#999; font-size:0.85rem">${catEntries.length} entries</span>
+    </div>`;
+    html += `<p class="category-desc">${cat.desc}</p>`;
+    html += `<div class="entry-grid">`;
+
+    catEntries.forEach((entry, idx) => {
+      const globalIdx = entries.indexOf(entry);
+      html += `<div class="entry-card ${cat.color}">
+        <div>
+          <span class="wrong">${entry.wrong}</span>
+          <span class="arrow">→</span>
+          <span class="correct">${entry.correct}</span>
+        </div>
+        ${entry.variants ? `<div class="variants">Also: ${entry.variants}</div>` : ''}
+        <div class="mechanism">${entry.mechanism}</div>
+        <div class="move-controls">
+          <span style="font-size:0.7rem; color:#999; margin-right:0.25rem">Move to →</span>
+          ${categories.filter(c => c.id !== cat.id).map(c =>
+            `<button class="move-btn" onclick="moveEntry(${globalIdx}, ${c.id})">${c.id === 0 ? '?' : c.id}</button>`
+          ).join('')}
+        </div>
+      </div>`;
+    });
+
+    html += `</div></div>`;
+  });
+
+  sections.innerHTML = html;
+
+  // Change log
+  const logEl = document.getElementById('changeLog');
+  if (changes.length > 0) {
+    logEl.innerHTML = '<strong>Changes made:</strong><br>' + changes.map(c =>
+      `• <span style="font-family:Sarabun">${c.word}</span>: ${c.from} → ${c.to}`
+    ).join('<br>') + '<br><br>';
+  }
+}
+
+function setFilter(f) {
+  activeFilter = f;
+  render();
+}
+
+function moveEntry(idx, newCat) {
+  const entry = entries[idx];
+  const oldCatName = categories.find(c => c.id === entry.cat).name;
+  const newCatName = categories.find(c => c.id === newCat).name;
+  changes.push({ word: entry.wrong, from: oldCatName, to: newCatName });
+  entry.cat = newCat;
+  render();
+}
+
+render();
+</script>
+</body>
+</html>

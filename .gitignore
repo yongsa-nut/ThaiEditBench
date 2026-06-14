@@ -1,0 +1,44 @@
+# --- Secrets — never commit ---
+.env
+*.env
+!.env.example
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# --- Backups & scratch ---
+*.bak*
+*_bak
+*.err_bak
+*.pre_*.bak
+*.orig
+
+# --- Large / regenerable artifacts (comments must be on their OWN line — git .gitignore has no inline comments) ---
+# ~6 MB baked error-viewers (viz.html, viz_t1/t2/t3.html) — rebuild with viz/build_viz.py
+viz/viz*.html
+# cached HuggingFace corpus pulls (delete to re-pull)
+data/clean_cache/
+# licensed raw inputs (VISTEC / bot-history dumps) — NOT redistributed
+data/raw/
+# ~7 MB mining intermediate — regenerate with mine_wiki.py
+data/wiki_raw_pairs.jsonl
+
+# --- LaTeX build artifacts ---
+paper/acl-paper/*.aux
+paper/acl-paper/*.log
+paper/acl-paper/*.out
+paper/acl-paper/*.bbl
+paper/acl-paper/*.blg
+paper/acl-paper/*.fdb_latexmk
+paper/acl-paper/*.fls
+paper/acl-paper/*.synctex.gz
+
+# --- OS cruft ---
+.DS_Store
+Thumbs.db

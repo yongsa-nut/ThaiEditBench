@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EditingBench — Leaderboard</title>
+<style>
+  :root{
+    --bg:#0c1118; --card:#141c28; --card2:#0f1620; --border:#27323f; --fg:#e8eef5;
+    --muted:#8a99ab; --accent:#4c9aff; --bar:#2563eb; --bar2:#1e3a8a;
+    --c0:#7f1d1d; --c1:#b45309; --c2:#ca8a04; --c3:#65a30d; --c4:#16a34a;  /* heat ramp */
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--fg);font-family:"Segoe UI",system-ui,sans-serif;
+       font-size:15px;line-height:1.5}
+  .wrap{max-width:1180px;margin:0 auto;padding:28px 20px 60px}
+  h1{font-size:26px;margin:0 0 4px}
+  .sub{color:var(--muted);margin:0 0 4px}
+  .meta{color:var(--muted);font-size:13px;margin:10px 0 22px}
+  .meta b{color:var(--fg)}
+  h2{font-size:15px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);
+     margin:34px 0 12px;border-bottom:1px solid var(--border);padding-bottom:6px}
+
+  table{width:100%;border-collapse:collapse;font-size:14px}
+  th,td{padding:9px 10px;text-align:right;border-bottom:1px solid var(--border);white-space:nowrap}
+  th:nth-child(2),td:nth-child(2),th:nth-child(3),td:nth-child(3){text-align:left}
+  thead th{color:var(--muted);font-weight:600;cursor:pointer;user-select:none;position:sticky;top:0;
+           background:var(--bg)}
+  thead th:hover{color:var(--fg)}
+  thead th.sorted::after{content:" ▾";color:var(--accent)}
+  tbody tr:hover{background:var(--card)}
+  .rank{color:var(--muted);width:34px}
+  .model{font-weight:650}
+  .tag{font-size:11px;color:var(--muted);background:var(--card);border:1px solid var(--border);
+       border-radius:5px;padding:1px 6px;margin-left:6px}
+  .th{color:#ffd24a;border-color:#6b5a14}
+  .partial{color:var(--muted);font-style:italic}
+  /* correction-F1 bar cell */
+  .f1cell{position:relative;min-width:230px}
+  .f1bar{position:absolute;left:0;top:50%;transform:translateY(-50%);height:22px;border-radius:4px;
+         background:linear-gradient(90deg,var(--bar2),var(--bar));opacity:.55;z-index:0}
+  .f1txt{position:relative;z-index:1;font-variant-numeric:tabular-nums}
+  .ci{color:var(--muted);font-size:12px}
+  td.num{font-variant-numeric:tabular-nums}
+
+  /* heatmap */
+  table.heat td.h{color:#06140c;font-weight:700;text-align:center}
+  .legend{color:var(--muted);font-size:12.5px;margin-top:10px;display:flex;gap:14px;flex-wrap:wrap}
+  .sw{display:inline-block;width:12px;height:12px;border-radius:3px;vertical-align:-1px;margin-right:4px}
+  .tierbtn{background:var(--card2);color:var(--muted);border:1px solid var(--border);border-radius:8px;
+           padding:6px 15px;cursor:pointer;font-size:13.5px}
+  .tierbtn.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+  footer{color:var(--muted);font-size:12.5px;margin-top:36px;border-top:1px solid var(--border);padding-top:14px}
+  code{background:var(--card);padding:1px 5px;border-radius:4px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>EditingBench — Leaderboard</h1>
+  <p class="sub" id="subtitle">—</p>
+  <div id="tiers" style="display:flex;gap:8px;margin:12px 0 4px"></div>
+  <p class="meta" id="meta">—</p>
+
+  <h2>Ranking</h2>
+  <table id="board">
+    <thead><tr>
+      <th data-k="rank">#</th>
+      <th data-k="display">Model</th>
+      <th data-k="provider">Provider</th>
+      <th data-k="corr_f1" class="sorted">Correction F1</th>
+      <th data-k="det_f1">Detection F1</th>
+      <th data-k="sent">Sentence acc</th>
+      <th data-k="fidelity">Clean fidelity</th>
+      <th data-k="gleu">GLEU</th>
+      <th data-k="cherrant">ChERRANT F0.5</th>
+      <th data-k="n">n</th>
+    </tr></thead>
+    <tbody id="body"></tbody>
+  </table>
+
+  <h2>Per-class correction recall</h2>
+  <table class="heat" id="heat">
+    <thead><tr><th style="text-align:left">Model</th>
+      <th>1 tone</th><th>2 consonant</th><th>3 การันต์</th><th>4 vowel</th><th>5 cluster</th><th>6 loanword</th>
+    </tr></thead>
+    <tbody id="heatbody"></tbody>
+  </table>
+  <div class="legend">
+    <span><span class="sw" style="background:var(--c0)"></span>≤0.60</span>
+    <span><span class="sw" style="background:var(--c1)"></span>0.70</span>
+    <span><span class="sw" style="background:var(--c2)"></span>0.80</span>
+    <span><span class="sw" style="background:var(--c3)"></span>0.90</span>
+    <span><span class="sw" style="background:var(--c4)"></span>≥0.95</span>
+  </div>
+
+  <footer id="foot"></footer>
+</div>
+
+<script>
+const BAKED = {"benchmark": "EditingBench — Thai orthographic correction (Track 1 · Subtask 2)", "tiers": [{"label": "T1 · sentence", "max_n": 795, "rows": [{"alias": "gpt55-high", "display": "gpt55-high", "provider": "OpenAI", "thai_native": false, "n": 795, "corr_f1": 0.972568578553616, "corr_ci": [0.9638676844783715, 0.9801192842942346], "det_f1": 0.972568578553616, "sent": 0.9421383647798742, "fidelity": null, "gleu": 0.9926001071338706, "cherrant": 0.9607804493496256, "per_class": {"1": 0.9815950920245399, "2": 1.0, "3": 1.0, "4": 0.994475138121547, "5": 0.9858490566037735, "6": 1.0}}, {"alias": "gpt55-med", "display": "gpt55-med", "provider": "OpenAI", "thai_native": false, "n": 795, "corr_f1": 0.9691848906560636, "corr_ci": [0.9607843137254903, 0.9772612430520464], "det_f1": 0.9691848906560636, "sent": 0.9345911949685535, "fidelity": null, "gleu": 0.9915177105919445, "cherrant": 0.9555076440611525, "per_class": {"1": 0.9815950920245399, "2": 0.9927007299270073, "3": 1.0, "4": 0.988950276243094, "5": 0.9952830188679245, "6": 1.0}}, {"alias": "opus-4.7", "display": "opus-4.7", "provider": "Anthropic", "thai_native": false, "n": 795, "corr_f1": 0.9681274900398407, "corr_ci": [0.9588089330024815, 0.9769820971867007], "det_f1": 0.9711155378486057, "sent": 0.9421383647798742, "fidelity": null, "gleu": 0.9895219190539813, "cherrant": 0.9555642941407786, "per_class": {"1": 0.9938650306748467, "2": 0.9854014598540146, "3": 1.0, "4": 1.0, "5": 0.9716981132075472, "6": 0.991869918699187}}, {"alias": "gemini-3.5-flash", "display": "gemini-3.5-flash", "provider": "Google", "thai_native": false, "n": 795, "corr_f1": 0.9652432969215491, "corr_ci": [0.9547488811536549, 0.9744897959183673], "det_f1": 0.9692154915590864, "sent": 0.9320754716981132, "fidelity": null, "gleu": 0.9908367726197137, "cherrant": 0.9510763209393348, "per_class": {"1": 0.9815950920245399, "2": 0.9927007299270073, "3": 0.9878787878787879, "4": 1.0, "5": 0.9811320754716981, "6": 1.0}}, {"alias": "gemma-4-31b", "display": "gemma-4-31b", "provider": "OpenRouter", "thai_native": false, "n": 795, "corr_f1": 0.9504048582995952, "corr_ci": [0.9392097264437689, 0.960933536276002], "det_f1": 0.9544534412955464, "sent": 0.9031446540880503, "fidelity": null, "gleu": 0.9800307856303301, "cherrant": 0.9469544171036709, "per_class": {"1": 0.9447852760736196, "2": 0.927007299270073, "3": 0.9696969696969697, "4": 0.9668508287292817, "5": 0.9481132075471698, "6": 0.983739837398374}}, {"alias": "gpt54-mini", "display": "gpt54-mini", "provider": "OpenAI", "thai_native": false, "n": 795, "corr_f1": 0.948875255623722, "corr_ci": [0.9375639713408394, 0.9609856262833676], "det_f1": 0.9591002044989775, "sent": 0.9106918238993711, "fidelity": null, "gleu": 0.9808740809383555, "cherrant": 0.951209512095121, "per_class": {"1": 0.9079754601226994, "2": 0.948905109489051, "3": 0.9515151515151515, "4": 0.9779005524861878, "5": 0.9339622641509434, "6": 0.9512195121951219}}, {"alias": "deepseek-flash", "display": "deepseek-flash", "provider": "OpenRouter", "thai_native": false, "n": 795, "corr_f1": 0.9473684210526316, "corr_ci": [0.9351297405189621, 0.9585439838220424], "det_f1": 0.9523809523809524, "sent": 0.8968553459119497, "fidelity": null, "gleu": 0.9826623026522876, "cherrant": 0.9386174016686532, "per_class": {"1": 0.9325153374233128, "2": 0.9781021897810219, "3": 0.9636363636363636, "4": 0.988950276243094, "5": 0.9339622641509434, "6": 0.991869918699187}}, {"alias": "sonnet-4.6", "display": "sonnet-4.6", "provider": "Anthropic", "thai_native": false, "n": 795, "corr_f1": 0.9468937875751503, "corr_ci": [0.9348249027237354, 0.9591226321036889], "det_f1": 0.9519038076152305, "sent": 0.9119496855345912, "fidelity": null, "gleu": 0.9807855426560922, "cherrant": 0.9378721714966255, "per_class": {"1": 0.9693251533742331, "2": 0.9781021897810219, "3": 0.9515151515151515, "4": 0.9723756906077348, "5": 0.9386792452830188, "6": 0.975609756097561}}, {"alias": "deepseek-v4-pro", "display": "deepseek-v4-pro", "provider": "OpenRouter", "thai_native": false, "n": 795, "corr_f1": 0.9263470093919921, "corr_ci": [0.9132374814080317, 0.9395711500974658], "det_f1": 0.9283242708848245, "sent": 0.8616352201257862, "fidelity": null, "gleu": 0.9747905846752225, "cherrant": 0.9104158569762922, "per_class": {"1": 0.9325153374233128, "2": 0.9343065693430657, "3": 0.9696969696969697, "4": 0.9668508287292817, "5": 0.9481132075471698, "6": 0.975609756097561}}, {"alias": "glm-5.1", "display": "glm-5.1", "provider": "OpenRouter", "thai_native": false, "n": 795, "corr_f1": 0.8458626284478097, "corr_ci": [0.8245219347581552, 0.8665231431646933], "det_f1": 0.8512709572742023, "sent": 0.7345911949685534, "fidelity": null, "gleu": 0.9177519778318654, "cherrant": 0.8786516853932584, "per_class": {"1": 0.8220858895705522, "2": 0.8613138686131386, "3": 0.793939393939394, "4": 0.8232044198895028, "5": 0.75, "6": 0.7398373983739838}}, {"alias": "typhoon-s", "display": "typhoon-s", "provider": "ThaiLLM gateway", "thai_native": true, "n": 795, "corr_f1": 0.7822626492325184, "corr_ci": [0.759090909090909, 0.8040426726558114], "det_f1": 0.7879476975554293, "sent": 0.6088050314465409, "fidelity": null, "gleu": 0.8706839121932177, "cherrant": 0.841075794621027, "per_class": {"1": 0.7484662576687117, "2": 0.6642335766423357, "3": 0.7272727272727273, "4": 0.6961325966850829, "5": 0.7264150943396226, "6": 0.6097560975609756}}, {"alias": "thalle", "display": "thalle", "provider": "ThaiLLM gateway", "thai_native": true, "n": 795, "corr_f1": 0.7488986784140969, "corr_ci": [0.717062634989201, 0.7782101167315174], "det_f1": 0.7577092511013216, "sent": 0.6050314465408805, "fidelity": null, "gleu": 0.8675495487048208, "cherrant": 0.7874015748031498, "per_class": {"1": 0.8895705521472392, "2": 0.6788321167883211, "3": 0.8181818181818182, "4": 0.5966850828729282, "5": 0.7547169811320755, "6": 0.3170731707317073}}, {"alias": "typhoon25", "display": "typhoon25", "provider": "OpenTyphoon", "thai_native": true, "n": 795, "corr_f1": 0.7418397626112759, "corr_ci": [0.7156220767072029, 0.7657256067360079], "det_f1": 0.7764589515331355, "sent": 0.6176100628930817, "fidelity": null, "gleu": 0.8948240221534146, "cherrant": 0.7283158304161805, "per_class": {"1": 0.8220858895705522, "2": 0.781021897810219, "3": 0.8606060606060606, "4": 0.6740331491712708, "5": 0.7405660377358491, "6": 0.7073170731707317}}, {"alias": "openthaigpt", "display": "openthaigpt", "provider": "ThaiLLM gateway", "thai_native": true, "n": 795, "corr_f1": 0.7413887370147622, "corr_ci": [0.7005891805034815, 0.7749866381614111], "det_f1": 0.7545106615636961, "sent": 0.6050314465408805, "fidelity": null, "gleu": 0.8715535342793725, "cherrant": 0.7757437070938215, "per_class": {"1": 0.8466257668711656, "2": 0.7007299270072993, "3": 0.8121212121212121, "4": 0.6022099447513812, "5": 0.7311320754716981, "6": 0.37398373983739835}}, {"alias": "minimax-m2.7", "display": "minimax-m2.7", "provider": "OpenRouter", "thai_native": false, "n": 795, "corr_f1": 0.7398047099368179, "corr_ci": [0.7136094674556213, 0.7637178051511758], "det_f1": 0.7466973004020677, "sent": 0.5735849056603773, "fidelity": null, "gleu": 0.8529491572686676, "cherrant": 0.8013937282229964, "per_class": {"1": 0.8220858895705522, "2": 0.7226277372262774, "3": 0.593939393939394, "4": 0.6408839779005525, "5": 0.6509433962264151, "6": 0.4715447154471545}}, {"alias": "qwen3.6-35b-a3b", "display": "qwen3.6-35b-a3b", "provider": "OpenRouter", "thai_native": false, "n": 795, "corr_f1": 0.705054945054945, "corr_ci": [0.6714955262036643, 0.7341772151898734], "det_f1": 0.7208791208791209, "sent": 0.5509433962264151, "fidelity": null, "gleu": 0.8828541781228081, "cherrant": 0.6516087097822555, "per_class": {"1": 0.7668711656441718, "2": 0.8759124087591241, "3": 0.793939393939394, "4": 0.8287292817679558, "5": 0.8113207547169812, "6": 0.8455284552845529}}]}, {"label": "T2 · paragraph", "max_n": 223, "rows": [{"alias": "gpt55-high", "display": "gpt55-high", "provider": "OpenAI", "thai_native": false, "n": 223, "corr_f1": 0.9693693693693693, "corr_ci": [0.952212389380531, 0.984070796460177], "det_f1": 0.9693693693693693, "sent": 0.9372197309417041, "fidelity": 0.9904648390941597, "gleu": 0.9969473739904108, "cherrant": 0.966235632183908, "per_class": {"1": 0.9761904761904762, "2": 0.9722222222222222, "3": 0.9814814814814815, "4": 0.9833333333333333, "5": 0.9454545454545454, "6": 1.0}}, {"alias": "gemini-3.5-flash", "display": "gemini-3.5-flash", "provider": "Google", "thai_native": false, "n": 223, "corr_f1": 0.9595782073813707, "corr_ci": [0.9409660107334527, 0.9756097560975611], "det_f1": 0.9595782073813707, "sent": 0.9103139013452914, "fidelity": 0.9833134684147795, "gleu": 0.9966195748168702, "cherrant": 0.9426795580110497, "per_class": {"1": 1.0, "2": 1.0, "3": 1.0, "4": 1.0, "5": 0.9636363636363636, "6": 0.9655172413793104}}, {"alias": "gpt55-med", "display": "gpt55-med", "provider": "OpenAI", "thai_native": false, "n": 223, "corr_f1": 0.9554367201426024, "corr_ci": [0.9343065693430657, 0.974910394265233], "det_f1": 0.9554367201426024, "sent": 0.9103139013452914, "fidelity": 0.9833134684147795, "gleu": 0.995848462239113, "cherrant": 0.9463276836158194, "per_class": {"1": 0.9761904761904762, "2": 1.0, "3": 0.9629629629629629, "4": 0.9833333333333333, "5": 0.9454545454545454, "6": 0.9655172413793104}}, {"alias": "gemma-4-31b", "display": "gemma-4-31b", "provider": "OpenRouter", "thai_native": false, "n": 223, "corr_f1": 0.9535714285714284, "corr_ci": [0.9314079422382671, 0.9726775956284153], "det_f1": 0.9535714285714284, "sent": 0.9147982062780269, "fidelity": 0.9880810488676997, "gleu": 0.9964550325154968, "cherrant": 0.9454674220963171, "per_class": {"1": 0.9285714285714286, "2": 1.0, "3": 1.0, "4": 0.9666666666666667, "5": 0.9454545454545454, "6": 0.9655172413793104}}, {"alias": "opus-4.7", "display": "opus-4.7", "provider": "Anthropic", "thai_native": false, "n": 223, "corr_f1": 0.9477351916376308, "corr_ci": [0.9228130360205834, 0.9689213893967092], "det_f1": 0.9477351916376308, "sent": 0.9103139013452914, "fidelity": 0.9856972586412396, "gleu": 0.9959510397360408, "cherrant": 0.9264305177111716, "per_class": {"1": 1.0, "2": 1.0, "3": 1.0, "4": 1.0, "5": 0.9454545454545454, "6": 0.9655172413793104}}, {"alias": "deepseek-flash", "display": "deepseek-flash", "provider": "OpenRouter", "thai_native": false, "n": 223, "corr_f1": 0.9447415329768271, "corr_ci": [0.9187279151943464, 0.967391304347826], "det_f1": 0.9554367201426024, "sent": 0.9013452914798207, "fidelity": 0.9856972586412396, "gleu": 0.9954147876305934, "cherrant": 0.9357344632768362, "per_class": {"1": 0.9523809523809523, "2": 0.9722222222222222, "3": 0.9814814814814815, "4": 0.9833333333333333, "5": 0.9090909090909091, "6": 0.9655172413793104}}, {"alias": "deepseek-v4-pro", "display": "deepseek-v4-pro", "provider": "OpenRouter", "thai_native": false, "n": 223, "corr_f1": 0.9259896729776248, "corr_ci": [0.900990099009901, 0.9495652173913043], "det_f1": 0.9259896729776248, "sent": 0.8475336322869955, "fidelity": 0.9702026221692491, "gleu": 0.9936188911106484, "cherrant": 0.8990641711229946, "per_class": {"1": 0.9761904761904762, "2": 1.0, "3": 0.9814814814814815, "4": 0.9833333333333333, "5": 0.9454545454545454, "6": 0.9655172413793104}}, {"alias": "gpt54-mini", "display": "gpt54-mini", "provider": "OpenAI", "thai_native": false, "n": 223, "corr_f1": 0.9166666666666666, "corr_ci": [0.887719298245614, 0.9435336976320582], "det_f1": 0.9311594202898551, "sent": 0.8430493273542601, "fidelity": 0.9856972586412396, "gleu": 0.9925804175015648, "cherrant": 0.9166666666666666, "per_class": {"1": 0.8809523809523809, "2": 1.0, "3": 0.9444444444444444, "4": 0.9333333333333333, "5": 0.8363636363636363, "6": 0.9310344827586207}}, {"alias": "sonnet-4.6", "display": "sonnet-4.6", "provider": "Anthropic", "thai_native": false, "n": 223, "corr_f1": 0.90625, "corr_ci": [0.8719723183391004, 0.9357142857142858], "det_f1": 0.9097222222222222, "sent": 0.8475336322869955, "fidelity": 0.9773539928486293, "gleu": 0.9920860180279112, "cherrant": 0.8841463414634145, "per_class": {"1": 1.0, "2": 1.0, "3": 0.9629629629629629, "4": 0.9833333333333333, "5": 0.8363636363636363, "6": 0.896551724137931}}, {"alias": "glm-5.1", "display": "glm-5.1", "provider": "OpenRouter", "thai_native": false, "n": 223, "corr_f1": 0.8122743682310469, "corr_ci": [0.7673179396092362, 0.8544776119402985], "det_f1": 0.8158844765342962, "sent": 0.672645739910314, "fidelity": 0.9606674612634089, "gleu": 0.9709656814179849, "cherrant": 0.8105187319884726, "per_class": {"1": 0.9285714285714286, "2": 0.8055555555555556, "3": 0.7962962962962963, "4": 0.85, "5": 0.7818181818181819, "6": 0.6896551724137931}}, {"alias": "minimax-m2.7", "display": "minimax-m2.7", "provider": "OpenRouter", "thai_native": false, "n": 223, "corr_f1": 0.7200000000000001, "corr_ci": [0.6748466257668712, 0.7649253731343284], "det_f1": 0.7280000000000001, "sent": 0.5291479820627802, "fidelity": 0.9737783075089392, "gleu": 0.9659625667678816, "cherrant": 0.7679180887372014, "per_class": {"1": 0.7619047619047619, "2": 0.8333333333333334, "3": 0.5185185185185185, "4": 0.7, "5": 0.6363636363636364, "6": 0.4482758620689655}}, {"alias": "typhoon-s", "display": "typhoon-s", "provider": "ThaiLLM gateway", "thai_native": true, "n": 223, "corr_f1": 0.7023809523809524, "corr_ci": [0.6528066528066528, 0.753199268738574], "det_f1": 0.7063492063492064, "sent": 0.5112107623318386, "fidelity": 0.9606674612634089, "gleu": 0.9634891275915782, "cherrant": 0.7449494949494949, "per_class": {"1": 0.5476190476190477, "2": 0.6388888888888888, "3": 0.7222222222222222, "4": 0.6666666666666666, "5": 0.6, "6": 0.6551724137931034}}, {"alias": "typhoon25", "display": "typhoon25", "provider": "OpenTyphoon", "thai_native": true, "n": 223, "corr_f1": 0.631424375917768, "corr_ci": [0.5820689655172413, 0.6865203761755486], "det_f1": 0.6549192364170336, "sent": 0.45739910313901344, "fidelity": 0.8808104886769964, "gleu": 0.963908224309786, "cherrant": 0.5669831223628692, "per_class": {"1": 0.8333333333333334, "2": 0.8333333333333334, "3": 0.8518518518518519, "4": 0.7833333333333333, "5": 0.7090909090909091, "6": 0.6206896551724138}}, {"alias": "thalle", "display": "thalle", "provider": "ThaiLLM gateway", "thai_native": true, "n": 223, "corr_f1": 0.5950155763239875, "corr_ci": [0.5390279823269515, 0.6500829187396351], "det_f1": 0.6012461059190031, "sent": 0.4260089686098655, "fidelity": 0.7747318235995232, "gleu": 0.7959728818833052, "cherrant": 0.5488505747126438, "per_class": {"1": 0.8095238095238095, "2": 0.7777777777777778, "3": 0.6851851851851852, "4": 0.7333333333333333, "5": 0.6545454545454545, "6": 0.41379310344827586}}, {"alias": "openthaigpt", "display": "openthaigpt", "provider": "ThaiLLM gateway", "thai_native": true, "n": 223, "corr_f1": 0.47743813682678315, "corr_ci": [0.3897911832946636, 0.5724381625441697], "det_f1": 0.4803493449781659, "sent": 0.3452914798206278, "fidelity": 0.8867699642431466, "gleu": 0.9012624763560746, "cherrant": 0.42708333333333337, "per_class": {"1": 0.6190476190476191, "2": 0.5277777777777778, "3": 0.6851851851851852, "4": 0.6166666666666667, "5": 0.509090909090909, "6": 0.5862068965517241}}, {"alias": "qwen3.6-35b-a3b", "display": "qwen3.6-35b-a3b", "provider": "OpenRouter", "thai_native": false, "n": 223, "corr_f1": 0.3827046918123274, "corr_ci": [0.3054928517682468, 0.4691891891891892], "det_f1": 0.39374425022999077, "sent": 0.2825112107623318, "fidelity": 0.7759237187127532, "gleu": 0.9173372169777041, "cherrant": 0.2954545454545454, "per_class": {"1": 0.6904761904761905, "2": 0.8055555555555556, "3": 0.7592592592592593, "4": 0.75, "5": 0.7454545454545455, "6": 0.7931034482758621}}]}, {"label": "T3 · page", "max_n": 124, "rows": [{"alias": "gemma-4-31b", "display": "gemma-4-31b", "provider": "OpenRouter", "thai_native": false, "n": 124, "corr_f1": 0.8894117647058823, "corr_ci": [0.8488888888888888, 0.9276018099547512], "det_f1": 0.8941176470588235, "sent": 0.7741935483870968, "fidelity": 0.9814037192561488, "gleu": 0.9962582648599145, "cherrant": 0.8475336322869955, "per_class": {"1": 0.9117647058823529, "2": 1.0, "3": 0.9615384615384616, "4": 0.9743589743589743, "5": 0.9811320754716981, "6": 1.0}}, {"alias": "gpt55-med", "display": "gpt55-med", "provider": "OpenAI", "thai_native": false, "n": 124, "corr_f1": 0.8558139534883721, "corr_ci": [0.8072562358276645, 0.8997429305912596], "det_f1": 0.8558139534883721, "sent": 0.7419354838709677, "fidelity": 0.9706058788242351, "gleu": 0.988072671735026, "cherrant": 0.8105726872246697, "per_class": {"1": 0.9117647058823529, "2": 0.875, "3": 0.8846153846153846, "4": 1.0, "5": 1.0, "6": 0.8947368421052632}}, {"alias": "gpt55-high", "display": "gpt55-high", "provider": "OpenAI", "thai_native": false, "n": 124, "corr_f1": 0.8545034642032331, "corr_ci": [0.8036117381489842, 0.8970588235294118], "det_f1": 0.8545034642032331, "sent": 0.7258064516129032, "fidelity": 0.9742051589682064, "gleu": 0.9942559014550453, "cherrant": 0.8064516129032258, "per_class": {"1": 0.9117647058823529, "2": 0.9166666666666666, "3": 0.9230769230769231, "4": 1.0, "5": 0.9622641509433962, "6": 0.9473684210526315}}, {"alias": "gpt54-mini", "display": "gpt54-mini", "provider": "OpenAI", "thai_native": false, "n": 124, "corr_f1": 0.8534704370179949, "corr_ci": [0.8114285714285714, 0.8942307692307693], "det_f1": 0.8637532133676092, "sent": 0.6612903225806451, "fidelity": 0.9880023995200959, "gleu": 0.9937782393210128, "cherrant": 0.854788877445932, "per_class": {"1": 0.7647058823529411, "2": 0.875, "3": 0.8846153846153846, "4": 0.8461538461538461, "5": 0.8490566037735849, "6": 0.9473684210526315}}, {"alias": "opus-4.7", "display": "opus-4.7", "provider": "Anthropic", "thai_native": false, "n": 124, "corr_f1": 0.8483516483516483, "corr_ci": [0.7791666666666666, 0.9128440366972478], "det_f1": 0.8483516483516483, "sent": 0.7580645161290323, "fidelity": 0.9736052789442111, "gleu": 0.9944611465653992, "cherrant": 0.7813765182186235, "per_class": {"1": 1.0, "2": 0.9583333333333334, "3": 1.0, "4": 1.0, "5": 0.9811320754716981, "6": 1.0}}, {"alias": "deepseek-flash", "display": "deepseek-flash", "provider": "OpenRouter", "thai_native": false, "n": 124, "corr_f1": 0.8281938325991189, "corr_ci": [0.7761194029850746, 0.876355748373102], "det_f1": 0.8281938325991189, "sent": 0.7016129032258065, "fidelity": 0.9658068386322736, "gleu": 0.9926105348590655, "cherrant": 0.7636068237205524, "per_class": {"1": 0.9117647058823529, "2": 0.9583333333333334, "3": 0.9230769230769231, "4": 1.0, "5": 0.9811320754716981, "6": 1.0}}, {"alias": "sonnet-4.6", "display": "sonnet-4.6", "provider": "Anthropic", "thai_native": false, "n": 124, "corr_f1": 0.8237885462555067, "corr_ci": [0.7527839643652562, 0.8904109589041096], "det_f1": 0.8237885462555067, "sent": 0.7258064516129032, "fidelity": 0.9724055188962207, "gleu": 0.9929489690947132, "cherrant": 0.7595450852965069, "per_class": {"1": 1.0, "2": 0.9583333333333334, "3": 0.8846153846153846, "4": 0.9743589743589743, "5": 0.9433962264150944, "6": 1.0}}, {"alias": "gemini-3.5-flash", "display": "gemini-3.5-flash", "provider": "Google", "thai_native": false, "n": 124, "corr_f1": 0.8187633262260129, "corr_ci": [0.7608695652173914, 0.8720173535791758], "det_f1": 0.8230277185501066, "sent": 0.6854838709677419, "fidelity": 0.9598080383923215, "gleu": 0.9932865193181567, "cherrant": 0.7436096049573975, "per_class": {"1": 0.9705882352941176, "2": 0.9583333333333334, "3": 0.9615384615384616, "4": 1.0, "5": 1.0, "6": 1.0}}, {"alias": "deepseek-v4-pro", "display": "deepseek-v4-pro", "provider": "OpenRouter", "thai_native": false, "n": 124, "corr_f1": 0.7463312368972747, "corr_ci": [0.6852589641434262, 0.8034557235421167], "det_f1": 0.7463312368972747, "sent": 0.5483870967741935, "fidelity": 0.9544091181763648, "gleu": 0.9896831825149668, "cherrant": 0.672713529856387, "per_class": {"1": 0.8823529411764706, "2": 0.9166666666666666, "3": 0.9230769230769231, "4": 0.9487179487179487, "5": 0.9056603773584906, "6": 0.8947368421052632}}, {"alias": "glm-5.1", "display": "glm-5.1", "provider": "OpenRouter", "thai_native": false, "n": 124, "corr_f1": 0.665314401622718, "corr_ci": [0.545144804088586, 0.7806004618937644], "det_f1": 0.6734279918864097, "sent": 0.532258064516129, "fidelity": 0.9544091181763648, "gleu": 0.9760438778744153, "cherrant": 0.5912040374909877, "per_class": {"1": 0.7058823529411765, "2": 0.875, "3": 0.8461538461538461, "4": 0.9487179487179487, "5": 0.8490566037735849, "6": 0.7894736842105263}}, {"alias": "typhoon-s", "display": "typhoon-s", "provider": "ThaiLLM gateway", "thai_native": true, "n": 124, "corr_f1": 0.6191646191646191, "corr_ci": [0.5573770491803279, 0.6814814814814815], "det_f1": 0.6240786240786241, "sent": 0.3064516129032258, "fidelity": 0.9646070785842832, "gleu": 0.9826268068440958, "cherrant": 0.6040268456375839, "per_class": {"1": 0.5294117647058824, "2": 0.7083333333333334, "3": 0.5384615384615384, "4": 0.717948717948718, "5": 0.6792452830188679, "6": 0.6842105263157895}}, {"alias": "thalle", "display": "thalle", "provider": "ThaiLLM gateway", "thai_native": true, "n": 124, "corr_f1": 0.5167652859960552, "corr_ci": [0.43739565943238734, 0.6055776892430279], "det_f1": 0.5207100591715975, "sent": 0.29838709677419356, "fidelity": 0.8290341931613677, "gleu": 0.8513957578433066, "cherrant": 0.45391545391545396, "per_class": {"1": 0.8823529411764706, "2": 0.5, "3": 0.6538461538461539, "4": 0.6410256410256411, "5": 0.7358490566037735, "6": 0.42105263157894735}}, {"alias": "minimax-m2.7", "display": "minimax-m2.7", "provider": "OpenRouter", "thai_native": false, "n": 124, "corr_f1": 0.4702702702702703, "corr_ci": [0.39452054794520547, 0.5497382198952879], "det_f1": 0.4702702702702703, "sent": 0.25806451612903225, "fidelity": 0.9676064787042592, "gleu": 0.9748346414540364, "cherrant": 0.48603351955307267, "per_class": {"1": 0.5294117647058824, "2": 0.5416666666666666, "3": 0.3076923076923077, "4": 0.41025641025641024, "5": 0.4716981132075472, "6": 0.3684210526315789}}, {"alias": "typhoon25", "display": "typhoon25", "provider": "OpenTyphoon", "thai_native": true, "n": 124, "corr_f1": 0.4665523156089194, "corr_ci": [0.4, 0.5401709401709401], "det_f1": 0.47684391080617505, "sent": 0.24193548387096775, "fidelity": 0.8956208758248351, "gleu": 0.9736230738300207, "cherrant": 0.38923869490555235, "per_class": {"1": 0.7352941176470589, "2": 0.75, "3": 0.6923076923076923, "4": 0.6923076923076923, "5": 0.6981132075471698, "6": 0.5789473684210527}}, {"alias": "openthaigpt", "display": "openthaigpt", "provider": "ThaiLLM gateway", "thai_native": true, "n": 124, "corr_f1": 0.45392491467576795, "corr_ci": [0.3826086956521739, 0.5377532228360957], "det_f1": 0.4607508532423208, "sent": 0.25806451612903225, "fidelity": 0.8962207558488302, "gleu": 0.9683505787797949, "cherrant": 0.3780557134735646, "per_class": {"1": 0.5882352941176471, "2": 0.875, "3": 0.5769230769230769, "4": 0.7435897435897436, "5": 0.660377358490566, "6": 0.6842105263157895}}, {"alias": "qwen3.6-35b-a3b", "display": "qwen3.6-35b-a3b", "provider": "OpenRouter", "thai_native": false, "n": 124, "corr_f1": 0.30785562632696395, "corr_ci": [0.22330888345558275, 0.41893830703012913], "det_f1": 0.31210191082802546, "sent": 0.23387096774193547, "fidelity": 0.8362327534493101, "gleu": 0.952794599396305, "cherrant": 0.22777254162739552, "per_class": {"1": 0.6764705882352942, "2": 0.625, "3": 0.8461538461538461, "4": 0.7692307692307693, "5": 0.7169811320754716, "6": 0.8947368421052632}}]}]};
+
+const D = BAKED || {benchmark:"(build with build_leaderboard.py)", tiers:[]};
+const $ = s => document.querySelector(s);
+let curTier = 0, sortK = "corr_f1", desc = true;
+
+function heatColor(v){
+  if(v==null) return "var(--border)";
+  if(v>=0.95) return "var(--c4)"; if(v>=0.90) return "var(--c3)";
+  if(v>=0.80) return "var(--c2)"; if(v>=0.70) return "var(--c1)"; return "var(--c0)";
+}
+const f3 = v => v==null ? "—" : v.toFixed(3);
+const pct = v => v==null ? "—" : v.toFixed(2);
+
+function renderTabs(){
+  $("#tiers").innerHTML = D.tiers.map((t,i)=>
+    `<button class="tierbtn${i===curTier?' on':''}" data-i="${i}">${t.label} · ${t.rows.length} models</button>`
+  ).join("");
+  document.querySelectorAll(".tierbtn").forEach(b=>{
+    b.onclick = ()=>{ curTier = +b.dataset.i; render(); };
+  });
+}
+
+function render(){
+  $("#subtitle").textContent = D.benchmark;
+  const T = D.tiers[curTier] || {max_n:0, rows:[]};
+  const isPara = (D.tiers[curTier]||{}).label && D.tiers[curTier].label.includes("paragraph");
+  $("#meta").innerHTML = `Primary metric: <b>TCC-level correction F1</b> (SIGHAN-CSC style, ERRANT span match) · `+
+    `bar = 95% bootstrap CI · graded on up to <b>${T.max_n}</b> items · accepted spelling variants reconciled `+
+    `(สิทธิ~สิทธิ์), defective-gold items excluded.`+
+    (isPara ? ` <b>Clean fidelity</b> = fraction of error-free sentences left untouched (precision under long context).` : "");
+
+  const rows = T.rows.slice().sort((a,b)=>{
+    const x=a[sortK], y=b[sortK];
+    if(x==null) return 1; if(y==null) return -1;
+    if(typeof x==="string") return desc ? y.localeCompare(x) : x.localeCompare(y);
+    return desc ? (y-x) : (x-y);
+  });
+  $("#body").innerHTML = rows.map((r,i)=>{
+    const w = Math.round(r.corr_f1*100);
+    const ci = (r.corr_ci && r.corr_ci[0]!=null) ? `<span class="ci"> [${pct(r.corr_ci[0])}, ${pct(r.corr_ci[1])}]</span>`:"";
+    const partial = r.n < T.max_n ? `<span class="tag">partial ${r.n}</span>`:"";
+    const th = r.thai_native ? `<span class="tag th">🇹🇭 Thai-native</span>`:"";
+    return `<tr>
+      <td class="rank">${sortK==="corr_f1"&&desc ? (i+1) : ""}</td>
+      <td class="model">${r.display}${th}${partial}</td>
+      <td>${r.provider}</td>
+      <td class="f1cell"><div class="f1bar" style="width:${w}%"></div>
+          <span class="f1txt">${f3(r.corr_f1)}${ci}</span></td>
+      <td class="num">${f3(r.det_f1)}</td>
+      <td class="num">${f3(r.sent)}</td>
+      <td class="num">${f3(r.fidelity)}</td>
+      <td class="num">${f3(r.gleu)}</td>
+      <td class="num">${f3(r.cherrant)}</td>
+      <td class="num">${r.n}</td>
+    </tr>`;
+  }).join("");
+
+  $("#heatbody").innerHTML = rows.map(r=>{
+    const cells = [1,2,3,4,5,6].map(c=>{
+      const v=r.per_class[c];
+      return `<td class="h" style="background:${heatColor(v)}">${pct(v)}</td>`;
+    }).join("");
+    return `<tr><td style="text-align:left" class="model">${r.display}</td>${cells}</tr>`;
+  }).join("");
+
+  document.querySelectorAll("thead th").forEach(th=>{
+    th.classList.toggle("sorted", th.dataset.k===sortK);
+  });
+  renderTabs();
+  $("#foot").innerHTML = `EditingBench · Track 1 Subtask 2 · grading via <code>grader.py</code> (TCC F1) + `+
+    `<code>therrant.py</code> (ChERRANT span-F0.5). Click a column header to re-sort; switch tiers above. `+
+    `Thai-native models tagged 🇹🇭. Partial = fewer items (run incomplete).`;
+}
+
+document.querySelectorAll("thead th").forEach(th=>{
+  if(th.dataset.k==="rank") return;
+  th.onclick = ()=>{ const k=th.dataset.k;
+    if(k===sortK){ desc=!desc; } else { sortK=k; desc=true; }
+    render(); };
+});
+renderTabs();
+render();
+</script>
+</body>
+</html>

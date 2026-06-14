@@ -1,0 +1,11 @@
+# --- core: grading, dataset construction, visualization ---
+pythainlp>=4.0        # TCC, newmm tokenizer, thai_words / thai_orst_words lexicons
+requests>=2.28        # Wikipedia / HF dataset-viewer / Wiktionary HTTP calls
+matplotlib>=3.6       # viz/plot_degradation.py (degradation figure)
+
+# --- model harness (optional; lazy-imported, only needed to run run_editing.py) ---
+openai>=1.40          # OpenAI Responses + OpenAI-compatible gateways (Typhoon, Gemini, OpenRouter, ThaiLLM)
+anthropic>=0.40       # Claude (Sonnet / Opus) via the native Messages API
+
+# --- dev (optional) ---
+pytest>=7.0           # the test_*.py files also run as plain scripts

@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EditingBench · Annotation Tool</title>
+<style>
+  :root{
+    --ink:#1a1d24; --muted:#6b7280; --line:#e3e6ea; --bg:#f5f6f8; --card:#fff;
+    --accent:#2563eb; --accent-soft:#eaf1fe; --accent-line:#c3d8fb;
+    --good:#0a7d4d; --good-soft:#e8f6ef; --bad:#c0392b; --bad-soft:#fdecea;
+    --pick:#2563eb; --pick-soft:#eaf1fe; --hl:#fff3bf; --hl-line:#f0c000;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0; height:100%}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Sarabun","Noto Sans Thai",Tahoma,sans-serif;
+    color:var(--ink); background:var(--bg); line-height:1.5;
+  }
+  button{font-family:inherit; cursor:pointer}
+  .hidden{display:none !important}
+
+  /* ---------- Start screen ---------- */
+  #start{max-width:580px; margin:7vh auto; background:var(--card); border:1px solid var(--line);
+         border-radius:14px; padding:32px 34px; box-shadow:0 1px 3px rgba(0,0,0,.05)}
+  #start h1{font-size:1.4rem; margin:0 0 4px}
+  #start .sub{color:var(--muted); margin:0 0 22px; font-size:.95rem}
+  #start label{display:block; font-weight:600; font-size:.9rem; margin:16px 0 6px}
+  #start input[type=text]{width:100%; padding:11px 13px; font-size:1rem; border:1px solid var(--line);
+                          border-radius:9px; font-family:inherit}
+  #start input[type=text]:focus{outline:none; border-color:var(--accent)}
+  .filerow{display:flex; align-items:center; gap:12px; margin-top:6px}
+  .fbtn{background:#eef1f6; border:1px solid var(--line); border-radius:9px; padding:10px 16px;
+        font-size:.9rem; font-weight:600}
+  .fbtn:hover{background:#e3e8f0}
+  #fileName{color:var(--muted); font-size:.85rem}
+  .begin{margin-top:26px; width:100%; background:var(--accent); color:#fff; border:none;
+         border-radius:10px; padding:13px; font-size:1.02rem; font-weight:700}
+  .begin:hover{background:#1d4ed8}
+  .begin:disabled{background:#c3cad6; cursor:not-allowed}
+  .hint{font-size:.82rem; color:var(--muted); margin-top:14px}
+  .resume{margin-top:12px; font-size:.85rem; background:var(--good-soft); color:var(--good);
+          border:1px solid #bfe6d2; border-radius:9px; padding:10px 13px}
+
+  /* ---------- App ---------- */
+  #app{display:flex; flex-direction:column; height:100%}
+  header.bar{display:flex; align-items:center; gap:16px; padding:11px 20px; background:var(--card);
+             border-bottom:1px solid var(--line); flex-wrap:wrap}
+  .bar .who{font-weight:700}
+  .bar .who span{color:var(--muted); font-weight:400; font-size:.85rem}
+  .bar .grow{flex:1}
+  .prog{display:flex; align-items:center; gap:10px; font-size:.85rem; color:var(--muted)}
+  .progbar{width:200px; height:8px; background:#e7ebf1; border-radius:5px; overflow:hidden}
+  .progbar i{display:block; height:100%; background:var(--accent); width:0%}
+  .barbtn{background:#eef1f6; border:1px solid var(--line); border-radius:8px; padding:7px 13px;
+          font-size:.85rem; font-weight:600}
+  .barbtn:hover{background:#e3e8f0}
+  .barbtn.exp{background:var(--accent); color:#fff; border-color:var(--accent)}
+  .barbtn.exp:hover{background:#1d4ed8}
+
+  main{flex:1; overflow:auto; display:flex; justify-content:center; padding:24px 20px 96px}
+  .card{width:100%; max-width:760px}
+  .crumb{display:flex; align-items:center; gap:10px; color:var(--muted); font-size:.85rem; margin-bottom:12px}
+  .chip{background:var(--accent-soft); color:var(--accent); border:1px solid var(--accent-line);
+        border-radius:20px; padding:3px 11px; font-weight:700; font-size:.8rem}
+
+  /* sentence pair */
+  .pairbox{background:var(--card); border:1px solid var(--line); border-radius:12px;
+           padding:18px 22px; margin-bottom:18px}
+  .plabel{font-size:.76rem; font-weight:700; color:var(--muted); letter-spacing:.02em; margin:2px 0 4px}
+  .plabel.c{margin-top:14px}
+  .sent{font-size:1.24rem; line-height:1.95; white-space:pre-wrap; word-break:break-word;
+        font-family:"Sarabun","Noto Sans Thai",Tahoma,serif}
+  .sent mark{background:var(--hl); border-bottom:2px solid var(--hl-line); border-radius:3px;
+             padding:0 1px; font-weight:700}
+  .sent.correct mark{background:var(--good-soft); border-bottom-color:#7ccfa6}
+  .chips{display:flex; flex-wrap:wrap; gap:8px; margin-top:14px}
+  .echip{background:#f7f8fa; border:1px solid var(--line); border-radius:8px; padding:4px 10px;
+         font-size:1.0rem; font-family:"Sarabun","Noto Sans Thai",Tahoma,serif}
+  .echip b{font-weight:700}
+  .echip .arr{color:var(--muted); margin:0 6px}
+
+  /* edit block */
+  .eblock{background:var(--card); border:1px solid var(--line); border-radius:12px;
+          padding:15px 18px; margin-bottom:14px}
+  .eblock.active{box-shadow:0 0 0 2px var(--accent)}
+  .eblock.rejected .sub{opacity:.35; pointer-events:none}
+  .ehead{font-size:.95rem; margin-bottom:10px; font-family:"Sarabun","Noto Sans Thai",Tahoma,serif}
+  .row{display:flex; align-items:flex-start; gap:14px; padding:8px 0; flex-wrap:wrap}
+  .row .rl{flex:0 0 100%; font-size:.85rem; font-weight:600; color:#374151; display:flex;
+           align-items:center; gap:8px}
+  .tg{display:flex; gap:8px}
+  .tg button{padding:8px 18px; font-size:.92rem; font-weight:700; border:1.5px solid var(--line);
+             background:#fafafb; border-radius:8px}
+  .tg button.ok.on{background:var(--good); color:#fff; border-color:var(--good)}
+  .tg button.no.on{background:var(--bad); color:#fff; border-color:var(--bad)}
+  .cbtns{display:flex; gap:7px; flex-wrap:wrap}
+  .cbtn{display:flex; flex-direction:column; align-items:center; min-width:64px; padding:7px 8px;
+        font-size:1.05rem; font-weight:700; border:1.5px solid var(--line); background:#fafafb;
+        border-radius:9px; line-height:1.15}
+  .cbtn span{font-size:.68rem; font-weight:600; color:var(--muted); margin-top:2px}
+  .cbtn:hover{border-color:var(--accent)}
+  .cbtn.on{background:var(--pick); color:#fff; border-color:var(--pick)}
+  .cbtn.on span{color:#dbe7ff}
+  .pills{display:flex; gap:7px; flex-wrap:wrap}
+  .pill{padding:7px 13px; font-size:.85rem; font-weight:600; border:1.5px solid var(--line);
+        background:#fafafb; border-radius:18px; color:var(--ink)}
+  .pill:hover{border-color:var(--accent)}
+  .pill.on{background:var(--pick); color:#fff; border-color:var(--pick)}
+  .sub{margin-top:6px; border-top:1px dashed var(--line); padding-top:6px}
+  .notebox{width:100%; margin-top:4px; padding:9px 12px; border:1px solid var(--line);
+           border-radius:9px; font-family:inherit; font-size:.92rem; resize:vertical; min-height:38px}
+
+  /* footer nav */
+  footer.nav{position:fixed; bottom:0; left:0; right:0; display:flex; align-items:center; gap:14px;
+             padding:12px 20px; background:var(--card); border-top:1px solid var(--line)}
+  footer .navbtn{background:#eef1f6; border:1px solid var(--line); border-radius:9px; padding:11px 22px;
+                 font-size:.95rem; font-weight:700}
+  footer .navbtn:hover{background:#e3e8f0}
+  footer .navbtn:disabled{opacity:.4; cursor:not-allowed}
+  footer .navbtn.next{background:var(--accent); color:#fff; border-color:var(--accent)}
+  footer .navbtn.next:hover{background:#1d4ed8}
+  footer .status{flex:1; text-align:center; font-size:.85rem; color:var(--muted)}
+  footer .status .done{color:var(--good); font-weight:700}
+  footer .status .todo{color:var(--bad); font-weight:700}
+  kbd{background:#e7ebf1; border:1px solid #cfd6e0; border-bottom-width:2px; border-radius:5px;
+      padding:1px 6px; font-size:.78rem; font-family:inherit}
+</style>
+</head>
+<body>
+
+<!-- ===================== START ===================== -->
+<section id="start">
+  <h1>EditingBench — Annotation</h1>
+  <p class="sub">Track 1 · Subtask 2 · Phase 5. For each sentence, confirm the spelling fix: is it a real orthographic error, what mechanism class, etymology, and edit type. Your work autosaves; close and resume anytime.</p>
+
+  <label for="who">Your name / annotator id</label>
+  <input type="text" id="who" placeholder="e.g. ann1" autocomplete="off">
+
+  <div id="fileSection">
+    <label>Items file <span style="font-weight:400;color:var(--muted)">(alpha_set.jsonl exported as JSON array)</span></label>
+    <div class="filerow">
+      <button class="fbtn" id="pick">Choose file…</button>
+      <input type="file" id="file" accept=".json,application/json" class="hidden">
+      <span id="fileName">— using built-in demo set —</span>
+    </div>
+  </div>
+
+  <button class="begin" id="begin">Begin</button>
+  <div class="resume hidden" id="resumeNote"></div>
+  <p class="hint">Keys: <kbd>1</kbd>–<kbd>6</kbd> set the mechanism class · <kbd>y</kbd>/<kbd>n</kbd> accept/reject · <kbd>←</kbd> <kbd>→</kbd> prev/next. Nothing is uploaded — everything stays in this browser until you Export.</p>
+</section>
+
+<!-- ===================== APP ===================== -->
+<section id="app" class="hidden">
+  <header class="bar">
+    <div class="who" id="whoLabel"></div>
+    <div class="grow"></div>
+    <div class="prog">
+      <span id="progText">0 / 0</span>
+      <span class="progbar"><i id="progFill"></i></span>
+    </div>
+    <button class="barbtn" id="rubricBtn">Rubric</button>
+    <button class="barbtn exp" id="exportBtn">Export labels</button>
+  </header>
+
+  <main><div class="card" id="card"></div></main>
+
+  <footer class="nav">
+    <button class="navbtn" id="prevBtn">← Prev</button>
+    <div class="status" id="statusText"></div>
+    <button class="navbtn next" id="nextBtn">Next →</button>
+  </footer>
+</section>
+
+<!-- rubric popover -->
+<div id="rubric" class="hidden" style="position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:50;display:flex;align-items:center;justify-content:center">
+  <div style="background:#fff;max-width:600px;border-radius:14px;padding:26px 30px;max-height:84vh;overflow:auto">
+    <h2 style="margin:0 0 12px;font-size:1.2rem">Rubric — EditingBench mechanism classes</h2>
+    <p style="font-size:.9rem;color:var(--muted);margin:0 0 12px">The yellow span in the top sentence is the misspelling; the green span in the bottom sentence is the gold correction. The class / etymology / edit type are <b>pre-filled</b> with our automatic guess — <b>confirm or override</b> each.</p>
+    <h4 style="margin:12px 0 4px">“Is this a real orthographic error?”</h4>
+    <ul style="margin:4px 0;padding-left:20px;font-size:.9rem">
+      <li><b>✓ ใช่</b> — the bottom sentence genuinely fixes a spelling/orthography mistake.</li>
+      <li><b>✗ ไม่ใช่</b> — it's a stylistic rewrite, a factual change, or not actually wrong. (We drop these.)</li>
+    </ul>
+    <h4 style="margin:14px 0 4px">The 6 mechanism classes</h4>
+    <ul style="margin:4px 0;padding-left:20px;font-size:.9rem;line-height:1.7">
+      <li><b>1 วรรณยุกต์ (tone mark)</b> — wrong/extra/missing tone mark (่ ้ ๊ ๋) or ็</li>
+      <li><b>2 พยัญชนะคู่ (consonant pair)</b> — homophonous consonant chosen wrong (ฎ/ฏ, ณ/น, ศ/ษ/ส, ท/ธ …)</li>
+      <li><b>3 การันต์ (karan)</b> — spurious/missing/misplaced ์ on native or Pali-Sanskrit words</li>
+      <li><b>4 สระ (vowel)</b> — wrong vowel, extra/missing vowel, long↔short (ิ/ี, ึ/ื, ุ/ู)</li>
+      <li><b>5 สลับ/ควบ (cluster · metathesis)</b> — reordered letters, รร↔ัน, spurious/missing cluster consonant</li>
+      <li><b>6 ทับศัพท์ (loanword)</b> — <b>any</b> error on a foreign loanword / proper noun (absorbs the mechanism)</li>
+    </ul>
+    <p style="font-size:.88rem;margin:10px 0 0"><b>Loanword-absorption rule:</b> if the word is a foreign loanword or proper noun (etymology = loan / proper-noun), the class is <b>6</b> regardless of which letter changed.</p>
+    <button class="begin" id="rubricClose" style="margin-top:20px">Close</button>
+  </div>
+</div>
+
+<script>
+"use strict";
+
+// ---------- label vocabularies ----------
+const CLASS_LABELS = {
+  1:"วรรณยุกต์ / tone mark", 2:"พยัญชนะคู่ / consonant pair", 3:"การันต์ / karan",
+  4:"สระ / vowel", 5:"สลับ-ควบ / cluster", 6:"ทับศัพท์ / loanword",
+};
+const CLASS_SHORT = {1:"วรรณยุกต์",2:"พยัญชนะ",3:"การันต์",4:"สระ",5:"สลับ/ควบ",6:"ทับศัพท์"};
+const ETY = ["native","loan","proper-noun"];
+const EDIT_OPS = ["substitution","insertion","deletion","transposition","mixed"];
+
+// ---------- built-in demo set (replaced by Choose file… or baking) ----------
+const DEMO_ITEMS = [
+  { id:"demo-1", source_track:"mined", register:"encyclopedic",
+    text_wrong:"เขาสังเกตุการณ์ดวงดาวทุกคืนอย่างตั้งใจ",
+    text_correct:"เขาสังเกตการณ์ดวงดาวทุกคืนอย่างตั้งใจ",
+    edits:[{char_start:3,char_end:10,wrong:"สังเกตุ",correct:"สังเกต",
+            class:4,class_name:"vowel",etymology:"native",edit_op:"insertion"}] },
+  { id:"demo-2", source_track:"synthetic", register:"news",
+    text_wrong:"ผลการตรวจวัดคุณภาพอากาสภายนอกอาคารอยู่ในเกณฑ์ปกติ",
+    text_correct:"ผลการตรวจวัดคุณภาพอากาศภายนอกอาคารอยู่ในเกณฑ์ปกติ",
+    edits:[{char_start:18,char_end:23,wrong:"อากาส",correct:"อากาศ",
+            class:2,class_name:"consonant_pair",etymology:"native",edit_op:"substitution"}] },
+  { id:"demo-3-multi", source_track:"synthetic", register:"gov",
+    text_wrong:"รายงานฉบับนี้อ้างอิงตามมาตราฐานสากลและตรวจวัดอากาสโดยรอบ",
+    text_correct:"รายงานฉบับนี้อ้างอิงตามมาตรฐานสากลและตรวจวัดอากาศโดยรอบ",
+    edits:[{char_start:22,char_end:30,wrong:"มาตราฐาน",correct:"มาตรฐาน",
+            class:4,class_name:"vowel",etymology:"native",edit_op:"insertion"},
+           {char_start:44,char_end:49,wrong:"อากาส",correct:"อากาศ",
+            class:2,class_name:"consonant_pair",etymology:"native",edit_op:"substitution"}] },
+];
+
+const STORAGE_PREFIX = "thaiwrite_editing_t1s2::";
+let ITEMS = DEMO_ITEMS, loadedName = null;
+
+// Baked by build_sheets.py for self-contained per-annotator files (null = demo / file-picker).
+const BAKED_ITEMS = [{"id": "syn-002039", "source_track": "synthetic", "register": "encyclopedic", "text_wrong": "รหัสที่ทำงานได้ทั้งหมดในภาษาซีถูกบรรจุอยู่ในฟังก์ชั่น", "text_correct": "รหัสที่ทำงานได้ทั้งหมดในภาษาซีถูกบรรจุอยู่ในฟังก์ชัน", "edits": [{"char_start": 44, "char_end": 53, "wrong": "ฟังก์ชั่น", "correct": "ฟังก์ชัน", "class": 6, "class_name": "loanword_translit", "etymology": "loan", "edit_op": "insertion"}]}, {"id": "wik-000081", "source_track": "mined", "register": "encyclopedic", "text_wrong": "อาจา่รย์ไสยศาสตร์ผู้มีวิชาอาคมของจริง", "text_correct": "อาจารย์ไสยศาสตร์ผู้มีวิชาอาคมของจริง", "edits": [{"char_start": 0, "char_end": 8, "wrong": "อาจา่รย์", "correct": "อาจารย์", "class": 1, "class_name": "tone_mark", "etymology": "native", "edit_op": "insertion"}]}, {"id": "syn-000068", "source_track": "synthetic", "register": "encyclopedic", "text_wrong": "เทคนิคการแบ่งกลุ่มข้อมูลแต่ละเทคนิคก้อมีสมมติฐานของโครงสร้างข้อมูลไม่เหมือนกัน", "text_correct": "เทคนิคการแบ่งกลุ่มข้อมูลแต่ละเทคนิคก็มีสมมติฐานของโครงสร้างข้อมูลไม่เหมือนกัน", "edits": [{"char_start": 35, "char_end": 38, "wrong": "ก้อ", "correct": "ก็", "class": 1, "class_name": "tone_mark", "etymology": "native", "edit_op": "substitution"}]}, {"id": "wik-000022", "source_track": "mined", "register": "encyclopedic", "text_wrong": "ซีรีส์อนิเมชันขนาดสั้นของกุเดทามะออกอากาศทางช่องทีบีเอส (Tokyo Broadcasting System) ของญี่ปุ่นระหว่างปี พ.ศ.", "text_correct": "ซีรีส์แอนิเมชันขนาดสั้นของกุเดทามะออกอากาศทางช่องทีบีเอส (Tokyo Broadcasting System) ของญี่ปุ่นระหว่างปี พ.ศ.", "edits": [{"char_start": 6, "char_end": 14, "wrong": "อนิเมชัน", "correct": "แอนิเมชัน", "class": 4, "class_name": "vowel", "etymology": "native", "edit_op": "deletion"}]}, {"id": "wik-000077", "source_track": "mined", "register": "encyclopedic", "text_wrong": "สังเกตุการณ์ในการเลือกตั้ง และก้าวหน้าในการป้องกันและกำจัดเชื้อโรคในประเทศที่กำลังพัฒนา คาร์เตอร์ได้ถือว่าเป็นบุคคลสำคัญในฐานะผู้ใจบุญขององค์การที่อยู่อาศัยเพื่อมนุษยชาติสากล", "text_correct": "สังเกตการณ์ในการเลือกตั้ง และก้าวหน้าในการป้องกันและกำจัดเชื้อโรคในประเทศที่กำลังพัฒนา คาร์เตอร์ได้ถือว่าเป็นบุคคลสำคัญในฐานะผู้ใจบุญขององค์การที่อยู่อาศัยเพื่อมนุษยชาติสากล", "edits": [{"char_start": 0, "char_end": 12, "wrong": "สังเกตุการณ์", "correct": "สังเกตการณ์", "class": 4, "class_name": "vowel", "etymology": "native", "edit_op": "insertion"}]}, {"id": "syn-001976", "source_track": "synthetic", "register": "gov", "text_wrong": "สามารถใช้บัตรประชาชนยื่นลงทะเบียนผ่านตู้ KIOS ใช้แอพพลิเคชัน MOPH Connect ให้บริการประชาชนแบบออนไลน์ สามารถจองคิวตรวจล่วงหน้า", "text_correct": "สามารถใช้บัตรประชาชนยื่นลงทะเบียนผ่านตู้ KIOS ใช้แอปพลิเคชัน MOPH Connect ให้บริการประชาชนแบบออนไลน์ สามารถจองคิวตรวจล่วงหน้า", "edits": [{"char_start": 49, "char_end": 60, "wrong": "แอพพลิเคชัน", "correct": "แอปพลิเคชัน", "class": 6, "class_name": "loanword_translit", "etymology": "loan", "edit_op": "substitution"}]}, {"id": "syn-001531", "source_track": "synthetic", "register": "encyclopedic", "text_wrong": "2500 และมีสถานเอกอัครราชทูต ณ กัวลาลัมเปอร์ เอกอัครราชทูต ณ กัวลาลัมเปอร์ ฅนปัจจุบันคือ นายกฤต ไกรจิตติ ซึ่งเดินทางไปรับหน้าที่เมื่อวันที่ 2 เดือนตุลาคม พ.ศ.", "text_correct": "2500 และมีสถานเอกอัครราชทูต ณ กัวลาลัมเปอร์ เอกอัครราชทูต ณ กัวลาลัมเปอร์ คนปัจจุบันคือ นายกฤต ไกรจิตติ ซึ่งเดินทางไปรับหน้าที่เมื่อวันที่ 2 เดือนตุลาคม พ.ศ.", "edits": [{"char_start": 74, "char_end": 76, "wrong": "ฅน", "correct": "คน", "class": 5, "class_name": "cluster_metathesis", "etymology": "native", "edit_op": "substitution"}]}, {"id": "syn-002058", "source_track": "synthetic", "register": "encyclopedic", "text_wrong": "ธุรกิจหลายรายหันมาสนับสนุนการพัฒนา หรือขายซอฟท์แวร์และบริการทางเทคนิก", "text_correct": "ธุรกิจหลายรายหันมาสนับสนุนการพัฒนา หรือขายซอฟต์แวร์และบริการทางเทคนิก", "edits": [{"char_start": 42, "char_end": 51, "wrong": "ซอฟท์แวร์", "correct": "ซอฟต์แวร์", "class": 6, "class_name": "loanword_translit", "etymology": "loan", "edit_op": "substitution"}]}, {"id": "syn-002214", "source_track": "synthetic", "register": "encyclopedic", "text_wrong": "นักเขียนและนักปรัชญาชาวฝรั่งเศษซึ่งพำนักในลอนดอนในช่วงเวลาที่ฝังศพของนิวตัน", "text_correct": "นักเขียนและนักปรัชญาชาวฝรั่งเศสซึ่งพำนักในลอนดอนในช่วงเวลาที่ฝังศพของนิวตัน", "edits": [{"char_start": 23, "char_end": 31, "wrong": "ฝรั่งเศษ", "correct": "ฝรั่งเศส", "class": 6, "class_name": "loanword_translit", "etymology": "loan", "edit_op": "substitution"}]}, {"id": "wik-000091", "source_track": "mined", "register": "encyclopedic", "text_wrong": "อาทิเทววิทยา ปรัชญา หรือจักรวาลวิทยาในส่วนที่เกี่ยวข้องกับบริเวณของจักรวาลที่อยู่เหนือการสังเกตุการณ์เชิงประจักษ์ใด และซึ่งความรู้เกี่ยวกับมันใด ๆ ได้มาจากจินตนาการของมนุษย์", "text_correct": "อาทิเทววิทยา ปรัชญา หรือจักรวาลวิทยาในส่วนที่เกี่ยวข้องกับบริเวณของจักรวาลที่อยู่เหนือการสังเกตการณ์เชิงประจักษ์ใด และซึ่งความรู้เกี่ยวกับมันใด ๆ ได้มาจากจินตนาการของมนุษย์", "edits": [{"char_start": 89, "char_end": 101, "wrong": "สังเกตุการณ์", "correct": "สังเกตการณ์", "class": 4, "class_name": "vowel", "etymology": "native", "edit_op": "insertion"}]}, {"id": "syn-001168", "source_track": "synthetic", "register": "gov", "text_wrong": "ซึ่งทางสมาคมเฉพาะเจาะจนเชิญกลุ่มที่มีบทบาทสำคัญในเรื่องของการใช้ข้อมูลสำหรับ Digital Transformation ขับเคลื่อนธุระกิจ องค์กร เศรษฐกิจและสังคมโดยรวม เข้าร่วมงาน", "text_correct": "ซึ่งทางสมาคมเฉพาะเจาะจนเชิญกลุ่มที่มีบทบาทสำคัญในเรื่องของการใช้ข้อมูลสำหรับ Digital Transformation ขับเคลื่อนธุรกิจ องค์กร เศรษฐกิจและสังคมโดยรวม เข้าร่วมงาน", "edits": [{"char_start": 110, "char_end": 117, "wrong": "ธุระกิจ", "correct": "ธุรกิจ", "class": 4, "class_name": "vowel", "etymology": "native", "edit_op": "insertion"}]}, {"id": "syn-000113", "source_track": "synthetic", "register": "news", "text_wrong": "จนถึงให้เขาตายหรอก ก้อคือความโมโหของผม ผมก็เมาออกมาด้วย", "text_correct": "จนถึงให้เขาตายหรอก ก็คือความโมโหของผม ผมก็เมาออกมาด้วย", "edits": [{"char_start": 19, "char_end": 22, "wrong": "ก้อ", "correct": "ก็", "class": 1, "class_name": "tone_mark", "etymology": "native", "edit_op": "substitution"}]}, {"id": "syn-001173", "source_track": "synthetic", "register": "gov", "text_wrong": "บริษัท เทพผะดุงพรมะพร้าว จำกัด (กะทิชาวเกาะ) 2.2)", "text_correct": "บริษัท เทพผดุงพรมะพร้าว จำกัด (กะทิชาวเกาะ) 2.2)", "edits": [{"char_start": 10, "char_end": 15, "wrong": "ผะดุง", "correct": "ผดุง", "class": 4, "class_name": "vowel", "etymology": "native", "edit_op": "insertion"}]}, {"id": "syn-002135", "source_track": "synthetic", "register": "encyclopedic", "text_wrong": "ควรใช้เมล็ดใหม่ไม่ควรใช้เมล็ดเก่าเก็บไว้นานเมล็ดใหม่จะมีเปอร์เซนต์ในการงอกเยอะกว่า นำเมล็ดไปเพาะในตะกร้าที่มีส่วนผสมของทรายหยาบกับขุยมะพร้าวในอัตราส่วน", "text_correct": "ควรใช้เมล็ดใหม่ไม่ควรใช้เมล็ดเก่าเก็บไว้นานเมล็ดใหม่จะมีเปอร์เซ็นต์ในการงอกเยอะกว่า นำเมล็ดไปเพาะในตะกร้าที่มีส่วนผสมของทรายหยาบกับขุยมะพร้าวในอัตราส่วน", "edits": [{"char_start": 56, "char_end": 66, "wrong": "เปอร์เซนต์", "correct": "เปอร์เซ็นต์", "class": 6, "class_name": "loanword_translit", "etymology": "loan", "edit_op": "deletion"}]}, {"id": "syn-000349", "source_track": "synthetic", "register": "encyclopedic", "text_wrong": "2005 โครงการโอเพนออฟฟิศดอตอ็อกจึงใช้เพียงสัญญาอนุญาตแบบ LGPL ในเวอร์ชั่นหลังจากนั้นมา", "text_correct": "2005 โครงการโอเพนออฟฟิศดอตอ็อกจึงใช้เพียงสัญญาอนุญาตแบบ LGPL ในเวอร์ชันหลังจากนั้นมา", "edits": [{"char_start": 63, "char_end": 72, "wrong": "เวอร์ชั่น", "correct": "เวอร์ชัน", "class": 1, "class_name": "tone_mark", "etymology": "native", "edit_op": "insertion"}]}, {"id": "syn-000920", "source_track": "synthetic", "register": "gov", "text_wrong": "และในวันนี้ได้เปิดสิทธ์ให้ประชาชนที่อยู่ในพื้นที่กรุงเทพมหานคร สามารถรับสิทธิประโยชน์บริการสร้างเสริมสุขภาพและป้องกันโรคในระบบหลักประกันสุขภาพแห่งชาติ 16 รายการ", "text_correct": "และในวันนี้ได้เปิดสิทธิให้ประชาชนที่อยู่ในพื้นที่กรุงเทพมหานคร สามารถรับสิทธิประโยชน์บริการสร้างเสริมสุขภาพและป้องกันโรคในระบบหลักประกันสุขภาพแห่งชาติ 16 รายการ", "edits": [{"char_start": 18, "char_end": 23, "wrong": "สิทธ์", "correct": "สิทธิ", "class": 3, "class_name": "karan_native", "etymology": "native", "edit_op": "substitution"}]}, {"id": "syn-001062", "source_track": "synthetic", "register": "encyclopedic", "text_wrong": "มาในปลายคริสตศตวรรษที่ 19 คำถามที่ถกเถียงกันมากก็คือ ประวัติศาสตร์เป็นวิทยาศาสตร์หรือศิลปะ?", "text_correct": "มาในปลายคริสต์ศตวรรษที่ 19 คำถามที่ถกเถียงกันมากก็คือ ประวัติศาสตร์เป็นวิทยาศาสตร์หรือศิลปะ?", "edits": [{"char_start": 8, "char_end": 19, "wrong": "คริสตศตวรรษ", "correct": "คริสต์ศตวรรษ", "class": 3, "class_name": "karan_native", "etymology": "native", "edit_op": "deletion"}]}, {"id": "syn-002217", "source_track": "synthetic", "register": "encyclopedic", "text_wrong": "การบำรุงรักษาซอฟท์แวร์: ระบบซอฟต์แวร์ต่าง ๆ มักมีปัญหาหลาย ๆ อย่าง", "text_correct": "การบำรุงรักษาซอฟต์แวร์: ระบบซอฟต์แวร์ต่าง ๆ มักมีปัญหาหลาย ๆ อย่าง", "edits": [{"char_start": 13, "char_end": 22, "wrong": "ซอฟท์แวร์", "correct": "ซอฟต์แวร์", "class": 6, "class_name": "loanword_translit", "etymology": "loan", "edit_op": "substitution"}]}, {"id": "syn-001911", "source_track": "synthetic", "register": "encyclopedic", "text_wrong": "ราชวงศ์ของพระองค์ยังพิชิตชนเผ่าเย่ว์ในกวางสี กวางตุ้ง และเวียตนามตอนเหนือด้วย", "text_correct": "ราชวงศ์ของพระองค์ยังพิชิตชนเผ่าเย่ว์ในกวางสี กวางตุ้ง และเวียดนามตอนเหนือด้วย", "edits": [{"char_start": 57, "char_end": 65, "wrong": "เวียตนาม", "correct": "เวียดนาม", "class": 6, "class_name": "loanword_translit", "etymology": "loan", "edit_op": "substitution"}]}, {"id": "syn-001384", "source_track": "synthetic", "register": "gov", "text_wrong": "โดยมีเป้าหมายให้รัฐวิสาหะกิจเบิกจ่ายงบลงทุนให้ไม่ต่ำกว่าร้อยละ 95 ของกรอบวงเงินอนุมัติให้เบิกจ่ายลงทุน", "text_correct": "โดยมีเป้าหมายให้รัฐวิสาหกิจเบิกจ่ายงบลงทุนให้ไม่ต่ำกว่าร้อยละ 95 ของกรอบวงเงินอนุมัติให้เบิกจ่ายลงทุน", "edits": [{"char_start": 16, "char_end": 28, "wrong": "รัฐวิสาหะกิจ", "correct": "รัฐวิสาหกิจ", "class": 4, "class_name": "vowel", "etymology": "native", "edit_op": "insertion"}]}, {"id": "syn-002183", "source_track": "synthetic", "register": "encyclopedic", "text_wrong": "ย่อว่า OO.o หรือ OOo) เป็นชุดซอฟต์แวร์สำนักงานที่ทำงานบนหลายระบบปฏิบัติการ เผยแพร่ในรูปแบบซอฟท์แวร์เสรี เขียนขึ้นโดยใช้ชุดเครื่องมือส่วนต่อประสานกราฟิกของตัวเอง", "text_correct": "ย่อว่า OO.o หรือ OOo) เป็นชุดซอฟต์แวร์สำนักงานที่ทำงานบนหลายระบบปฏิบัติการ เผยแพร่ในรูปแบบซอฟต์แวร์เสรี เขียนขึ้นโดยใช้ชุดเครื่องมือส่วนต่อประสานกราฟิกของตัวเอง", "edits": [{"char_start": 90, "char_end": 99, "wrong": "ซอฟท์แวร์", "correct": "ซอฟต์แวร์", "class": 6, "class_name": "loanword_translit", "etymology": "loan", "edit_op": "substitution"}]}, {"id": "wik-000001", "source_track": "mined", "register": "encyclopedic", "text_wrong": "ชั้นอัศวินสูงสุด (GCVO) ราชกิจจานุเบกษา, แจ้งความสำนักคณะรัฐมนตรี เรื่อง พระราชทานพระบรมราชานุญาตประดับเครื่องอิสริยาภรณ์ต่างประเทศ, เล่ม 78 ตอนที่ 58 หน้า 1689, 18 กรกฏาคม 2504", "text_correct": "ชั้นอัศวินสูงสุด (GCVO) ราชกิจจานุเบกษา, แจ้งความสำนักคณะรัฐมนตรี เรื่อง พระราชทานพระบรมราชานุญาตประดับเครื่องอิสริยาภรณ์ต่างประเทศ, เล่ม 78 ตอนที่ 58 หน้า 1689, 18 กรกฎาคม 2504", "edits": [{"char_start": 165, "char_end": 172, "wrong": "กรกฏาคม", "correct": "กรกฎาคม", "class": 2, "class_name": "consonant_pair", "etymology": "native", "edit_op": "substitution"}]}, {"id": "syn-000231", "source_track": "synthetic", "register": "news", "text_wrong": "ถึงแม้ทักษิณเองก้อมีคุณูปการทางประวัติศาสตร์ที่เปิดประเด็นวิจารณ์เปรม เพราะที่ผ่านมาสิ่งที่เปรมทำมาตลอดไม่เคยมีใครหยิบยกมาพูด แต่หลังจากนั้น ก็กลับไปจับมือกัน", "text_correct": "ถึงแม้ทักษิณเองก็มีคุณูปการทางประวัติศาสตร์ที่เปิดประเด็นวิจารณ์เปรม เพราะที่ผ่านมาสิ่งที่เปรมทำมาตลอดไม่เคยมีใครหยิบยกมาพูด แต่หลังจากนั้น ก็กลับไปจับมือกัน", "edits": [{"char_start": 15, "char_end": 18, "wrong": "ก้อ", "correct": "ก็", "class": 1, "class_name": "tone_mark", "etymology": "native", "edit_op": "substitution"}]}, {"id": "syn-000555", "source_track": "synthetic", "register": "encyclopedic", "text_wrong": "นอกจากนี้ยังมีส่วนที่คล้ายมงกุฎ  5  แฉก (corona)  ครอบอยู่ตรงกลางเหนือกลีบดอก  เกษรเพศผู้  5  อัน  มีลักษณะคล้ายก้อนขี้ผึ้ง  (polonium)  อยู่ระหว่างแฉกของมงกุฎ", "text_correct": "นอกจากนี้ยังมีส่วนที่คล้ายมงกุฎ  5  แฉก (corona)  ครอบอยู่ตรงกลางเหนือกลีบดอก  เกสรเพศผู้  5  อัน  มีลักษณะคล้ายก้อนขี้ผึ้ง  (polonium)  อยู่ระหว่างแฉกของมงกุฎ", "edits": [{"char_start": 79, "char_end": 83, "wrong": "เกษร", "correct": "เกสร", "class": 2, "class_name": "consonant_pair", "etymology": "native", "edit_op": "substitution"}]}, {"id": "wik-000037", "source_track": "mined", "register": "encyclopedic", "text_wrong": "ขณะที่เลอาได้นำอิสระภาพคืนสู่ผู้คน", "text_correct": "ขณะที่เลอาได้นำอิสรภาพคืนสู่ผู้คน", "edits": [{"char_start": 15, "char_end": 23, "wrong": "อิสระภาพ", "correct": "อิสรภาพ", "class": 4, "class_name": "vowel", "etymology": "native", "edit_op": "insertion"}]}, {"id": "wik-000028", "source_track": "mined", "register": "encyclopedic", "text_wrong": "2490 ได้รื้อ และปฎิสังขรณ์", "text_correct": "2490 ได้รื้อ และปฏิสังขรณ์", "edits": [{"char_start": 16, "char_end": 26, "wrong": "ปฎิสังขรณ์", "correct": "ปฏิสังขรณ์", "class": 2, "class_name": "consonant_pair", "etymology": "native", "edit_op": "substitution"}]}, {"id": "wik-000055", "source_track": "mined", "register": "encyclopedic", "text_wrong": "และยังเป็นแหล่งต้นน้ำทะเลสาปสงขลา ซึ่งอยู่ทางด้านทางทิศตะวันออกของเทือกเขานี้ ได้แก่ คลองนาท่อม คลองหัวมร คลองท่ามะเดื่อ คลองป่าบอน", "text_correct": "และยังเป็นแหล่งต้นน้ำทะเลสาบสงขลา ซึ่งอยู่ทางด้านทางทิศตะวันออกของเทือกเขานี้ ได้แก่ คลองนาท่อม คลองหัวมร คลองท่ามะเดื่อ คลองป่าบอน", "edits": [{"char_start": 21, "char_end": 28, "wrong": "ทะเลสาป", "correct": "ทะเลสาบ", "class": 2, "class_name": "consonant_pair", "etymology": "native", "edit_op": "substitution"}]}, {"id": "syn-000766", "source_track": "synthetic", "register": "gov", "text_wrong": "โดยเฉพาะการขับเคลื่อนโมเดล “เกษตรพาณิชย์ทันสมัย” ซึ่งเป็นความร่วมมือของกระทรวงเกษตรฯ และกระทรวงพาณิชย์ ทั้งโครงการณ์ประกันรายได้ชาวสวนยาง และล่าสุดคือ 6 มาตรการปฏิรูปยางพารา", "text_correct": "โดยเฉพาะการขับเคลื่อนโมเดล “เกษตรพาณิชย์ทันสมัย” ซึ่งเป็นความร่วมมือของกระทรวงเกษตรฯ และกระทรวงพาณิชย์ ทั้งโครงการประกันรายได้ชาวสวนยาง และล่าสุดคือ 6 มาตรการปฏิรูปยางพารา", "edits": [{"char_start": 107, "char_end": 116, "wrong": "โครงการณ์", "correct": "โครงการ", "class": 3, "class_name": "karan_native", "etymology": "native", "edit_op": "insertion"}]}, {"id": "syn-000747", "source_track": "synthetic", "register": "encyclopedic", "text_wrong": "จากนั้นนำผลลัพท์ที่ได้ไปใช้ระบุภาพแมวในตัวอย่างรูปภาพอื่น ๆ โปรแกรมโครงข่ายประสาทเทียมสามารถแยกแยะรูปภาพแมวได้โดยปราศจากการความรู้ก่อนหน้า ว่า ”แมว” คืออะไร (อาทิ", "text_correct": "จากนั้นนำผลลัพธ์ที่ได้ไปใช้ระบุภาพแมวในตัวอย่างรูปภาพอื่น ๆ โปรแกรมโครงข่ายประสาทเทียมสามารถแยกแยะรูปภาพแมวได้โดยปราศจากการความรู้ก่อนหน้า ว่า ”แมว” คืออะไร (อาทิ", "edits": [{"char_start": 9, "char_end": 16, "wrong": "ผลลัพท์", "correct": "ผลลัพธ์", "class": 2, "class_name": "consonant_pair", "etymology": "native", "edit_op": "substitution"}]}, {"id": "syn-001106", "source_track": "synthetic", "register": "encyclopedic", "text_wrong": "จูเชจึงกลายมาเป็นอุดมการของรัฐอย่างเป็นทางการ", "text_correct": "จูเชจึงกลายมาเป็นอุดมการณ์ของรัฐอย่างเป็นทางการ", "edits": [{"char_start": 17, "char_end": 24, "wrong": "อุดมการ", "correct": "อุดมการณ์", "class": 3, "class_name": "karan_native", "etymology": "native", "edit_op": "deletion"}]}, {"id": "syn-001817", "source_track": "synthetic", "register": "news", "text_wrong": "ทหารและตำรวจกัมพูชาปฏิบัติการเข้มป้องกันและสกัดกั้นไม่ให้กลุ่มกบถกัมพูชาสามารถลักลอบเดินทางเข้าประเทศกัมพูชา ได้", "text_correct": "ทหารและตำรวจกัมพูชาปฏิบัติการเข้มป้องกันและสกัดกั้นไม่ให้กลุ่มกบฏกัมพูชาสามารถลักลอบเดินทางเข้าประเทศกัมพูชา ได้", "edits": [{"char_start": 62, "char_end": 65, "wrong": "กบถ", "correct": "กบฏ", "class": 5, "class_name": "cluster_metathesis", "etymology": "native", "edit_op": "substitution"}]}, {"id": "syn-002087", "source_track": "synthetic", "register": "encyclopedic", "text_wrong": "แนวทิศตะวันออก คือ ทิวเขาในลาวและเวียตนาม", "text_correct": "แนวทิศตะวันออก คือ ทิวเขาในลาวและเวียดนาม", "edits": [{"char_start": 33, "char_end": 41, "wrong": "เวียตนาม", "correct": "เวียดนาม", "class": 6, "class_name": "loanword_translit", "etymology": "loan", "edit_op": "substitution"}]}, {"id": "syn-001629", "source_track": "synthetic", "register": "encyclopedic", "text_wrong": "ส่วนใหญ่เป็นชาวเซเนกัลและมาลี แต่ยังต้องใช้เวลาอีกหลายวันกว่าพวกเขาเหล่านั้นจะเดินทางกลับถึงบ้านเกิด และทางการโมรอคโคยังระบุว่ามีผู้หลบหนีเข้าเมืองในดินแดนของตนอีกกว่า 15,000 ฅน", "text_correct": "ส่วนใหญ่เป็นชาวเซเนกัลและมาลี แต่ยังต้องใช้เวลาอีกหลายวันกว่าพวกเขาเหล่านั้นจะเดินทางกลับถึงบ้านเกิด และทางการโมรอคโคยังระบุว่ามีผู้หลบหนีเข้าเมืองในดินแดนของตนอีกกว่า 15,000 คน", "edits": [{"char_start": 175, "char_end": 177, "wrong": "ฅน", "correct": "คน", "class": 5, "class_name": "cluster_metathesis", "etymology": "native", "edit_op": "substitution"}]}, {"id": "syn-001247", "source_track": "synthetic", "register": "gov", "text_wrong": "มีนักกายภาพบำบัดจาก โรงพยาบาลหนองแซง เจ้าหน้าที่โรงพยาบาลส่งเสริมสุขภาพตำบลและทีมอาสาสมัครสาธารณะสุขประจำหมู่บ้าน และจิตอาสาในชุมชนช่วยกันดูแล", "text_correct": "มีนักกายภาพบำบัดจาก โรงพยาบาลหนองแซง เจ้าหน้าที่โรงพยาบาลส่งเสริมสุขภาพตำบลและทีมอาสาสมัครสาธารณสุขประจำหมู่บ้าน และจิตอาสาในชุมชนช่วยกันดูแล", "edits": [{"char_start": 90, "char_end": 100, "wrong": "สาธารณะสุข", "correct": "สาธารณสุข", "class": 4, "class_name": "vowel", "etymology": "native", "edit_op": "insertion"}]}, {"id": "syn-000677", "source_track": "synthetic", "register": "encyclopedic", "text_wrong": "อิเล็กตรอนจะเข้าไปอยู่ในวงย่อยตามกฏของแมนเดลัง เช่นการจัดเรียงอิเล็กตรอนของนีออน คือ 1s2 2s2 2p6 ด้วยเลขอะตอมเท่ากับ 10 นีออนมีอิเล็กตรอน 2 ตัวในวงอิเล็กตรอนแรก", "text_correct": "อิเล็กตรอนจะเข้าไปอยู่ในวงย่อยตามกฎของแมนเดลัง เช่นการจัดเรียงอิเล็กตรอนของนีออน คือ 1s2 2s2 2p6 ด้วยเลขอะตอมเท่ากับ 10 นีออนมีอิเล็กตรอน 2 ตัวในวงอิเล็กตรอนแรก", "edits": [{"char_start": 33, "char_end": 35, "wrong": "กฏ", "correct": "กฎ", "class": 2, "class_name": "consonant_pair", "etymology": "native", "edit_op": "substitution"}]}, {"id": "syn-001952", "source_track": "synthetic", "register": "encyclopedic", "text_wrong": "และยังมีสำนักงานย่อยกระจายในเมืองต่างๆอีก 4 แห่ง โดยศูนย์เอไอทีเวียตนามนั้นก่อตั้งขึ้นตั้งแต่ปี พ.ศ.", "text_correct": "และยังมีสำนักงานย่อยกระจายในเมืองต่างๆอีก 4 แห่ง โดยศูนย์เอไอทีเวียดนามนั้นก่อตั้งขึ้นตั้งแต่ปี พ.ศ.", "edits": [{"char_start": 63, "char_end": 71, "wrong": "เวียตนาม", "correct": "เวียดนาม", "class": 6, "class_name": "loanword_translit", "etymology": "loan", "edit_op": "substitution"}]}, {"id": "wik-000038", "source_track": "mined", "register": "encyclopedic", "text_wrong": "หลังจากที่เขาพ่ายแพ้เคาท์ดูกูในการต่อสู้ที่จีโอโนซิส บ่งบอกถึงผลลัพท์การฝึกได้อย่างชัดเจน", "text_correct": "หลังจากที่เขาพ่ายแพ้เคาท์ดูกูในการต่อสู้ที่จีโอโนซิส บ่งบอกถึงผลลัพธ์การฝึกได้อย่างชัดเจน", "edits": [{"char_start": 62, "char_end": 69, "wrong": "ผลลัพท์", "correct": "ผลลัพธ์", "class": 2, "class_name": "consonant_pair", "etymology": "native", "edit_op": "substitution"}]}, {"id": "wik-000002", "source_track": "mined", "register": "encyclopedic", "text_wrong": "มีเนื้อหาตั้งแต่มนุษย์คนแรกจนถึงประมาณ 922 ปีก่อนคริสต์กาล (ชาวอิสราเอลถูกจับเป็นเชลย) หนังสือพงศาวดารเริ่มด้วยการลำดับเชื้อสายตั้งแต่อาดัมไปจนถึงกษัตริย์ซาอูล", "text_correct": "มีเนื้อหาตั้งแต่มนุษย์คนแรกจนถึงประมาณ 922 ปีก่อนคริสตกาล (ชาวอิสราเอลถูกจับเป็นเชลย) หนังสือพงศาวดารเริ่มด้วยการลำดับเชื้อสายตั้งแต่อาดัมไปจนถึงกษัตริย์ซาอูล", "edits": [{"char_start": 49, "char_end": 58, "wrong": "คริสต์กาล", "correct": "คริสตกาล", "class": 3, "class_name": "karan_native", "etymology": "native", "edit_op": "insertion"}]}, {"id": "wik-000004", "source_track": "mined", "register": "encyclopedic", "text_wrong": "Johnson) เป็นบทความที่อุทิศให้ความเป็นเอเซ็กชวลในมนุษย์อย่างชัดเจน จอห์นสันให้คำนิยามของเอเซ็กชวลเป็นผู้ชายหรือผู้หญิง \"ที่ดูเหมือนจะไม่ชอบการมีกิจกรรมทา่งเพศ", "text_correct": "Johnson) เป็นบทความที่อุทิศให้ความเป็นเอเซ็กชวลในมนุษย์อย่างชัดเจน จอห์นสันให้คำนิยามของเอเซ็กชวลเป็นผู้ชายหรือผู้หญิง \"ที่ดูเหมือนจะไม่ชอบการมีกิจกรรมทางเพศ", "edits": [{"char_start": 151, "char_end": 158, "wrong": "ทา่งเพศ", "correct": "ทางเพศ", "class": 1, "class_name": "tone_mark", "etymology": "native", "edit_op": "insertion"}]}, {"id": "syn-001858", "source_track": "synthetic", "register": "news", "text_wrong": "และจะเป็นก้าวต่อไปของการปองดอง ขณะที่ ประธาน", "text_correct": "และจะเป็นก้าวต่อไปของการปรองดอง ขณะที่ ประธาน", "edits": [{"char_start": 24, "char_end": 30, "wrong": "ปองดอง", "correct": "ปรองดอง", "class": 5, "class_name": "cluster_metathesis", "etymology": "native", "edit_op": "deletion"}]}, {"id": "syn-002213", "source_track": "synthetic", "register": "encyclopedic", "text_wrong": "เป็นที่มาของชื่อลำลองว่า \"สาธารณรัฐไวมาร์\" ซึ่งตลอดช่วงเวลา 14 ปีของเยอรมันนียุคสาธารณรัฐไวมาร์", "text_correct": "เป็นที่มาของชื่อลำลองว่า \"สาธารณรัฐไวมาร์\" ซึ่งตลอดช่วงเวลา 14 ปีของเยอรมนียุคสาธารณรัฐไวมาร์", "edits": [{"char_start": 68, "char_end": 77, "wrong": "เยอรมันนี", "correct": "เยอรมนี", "class": 6, "class_name": "loanword_translit", "etymology": "loan", "edit_op": "insertion"}]}, {"id": "syn-000988", "source_track": "synthetic", "register": "gov", "text_wrong": "นายณรงค์พล ประภานิรินธน์ ผู้ช่วยกรรมการผู้จัดการ สายงานกลยุทธ พร้อมด้วยกรรมการผู้ทรงคุณวุฒิอีก 3 คน คือ 1.", "text_correct": "นายณรงค์พล ประภานิรินธน์ ผู้ช่วยกรรมการผู้จัดการ สายงานกลยุทธ์ พร้อมด้วยกรรมการผู้ทรงคุณวุฒิอีก 3 คน คือ 1.", "edits": [{"char_start": 55, "char_end": 61, "wrong": "กลยุทธ", "correct": "กลยุทธ์", "class": 3, "class_name": "karan_native", "etymology": "native", "edit_op": "deletion"}]}, {"id": "syn-002176", "source_track": "synthetic", "register": "encyclopedic", "text_wrong": "บล็อก-d เป็นบล๊อกที่ประกอบไปด้วยธาตุในหมู่ 3 ถึง หมู่ที่ 12 (3B ถึง 2B ในสหรัฐอเมริกา) ธาตุในบล็อกนี้เป็นธาตุโลหะแทรนซิชันทั้งหมด", "text_correct": "บล็อก-d เป็นบล็อกที่ประกอบไปด้วยธาตุในหมู่ 3 ถึง หมู่ที่ 12 (3B ถึง 2B ในสหรัฐอเมริกา) ธาตุในบล็อกนี้เป็นธาตุโลหะแทรนซิชันทั้งหมด", "edits": [{"char_start": 12, "char_end": 17, "wrong": "บล๊อก", "correct": "บล็อก", "class": 6, "class_name": "loanword_translit", "etymology": "loan", "edit_op": "substitution"}]}, {"id": "wik-000051", "source_track": "mined", "register": "encyclopedic", "text_wrong": "ได้มีเหตุุการณ์กรณีเดียวกันคืออนิเมะเรื่อง YAT ตะลุยอวกาศ ตอนที่ 25 ที่ออกอากาศเมื่อวันที่ 29 มีนาคม ค.ศ.", "text_correct": "ได้มีเหตุการณ์กรณีเดียวกันคืออนิเมะเรื่อง YAT ตะลุยอวกาศ ตอนที่ 25 ที่ออกอากาศเมื่อวันที่ 29 มีนาคม ค.ศ.", "edits": [{"char_start": 5, "char_end": 15, "wrong": "เหตุุการณ์", "correct": "เหตุการณ์", "class": 4, "class_name": "vowel", "etymology": "native", "edit_op": "insertion"}]}, {"id": "syn-000688", "source_track": "synthetic", "register": "encyclopedic", "text_wrong": "Minorsky) ได้กำหนดและวิเคราะห์กฏของ ระบบควบคุมพีไอดี หรือ สัดส่วน-ปริพันธ์-อนุพันธ์ (proportional-integral-derivative) ซึ่งยังเป็นที่นิยมใช้อย่างกว้างขวางในปัจจุบัน", "text_correct": "Minorsky) ได้กำหนดและวิเคราะห์กฎของ ระบบควบคุมพีไอดี หรือ สัดส่วน-ปริพันธ์-อนุพันธ์ (proportional-integral-derivative) ซึ่งยังเป็นที่นิยมใช้อย่างกว้างขวางในปัจจุบัน", "edits": [{"char_start": 30, "char_end": 32, "wrong": "กฏ", "correct": "กฎ", "class": 2, "class_name": "consonant_pair", "etymology": "native", "edit_op": "substitution"}]}, {"id": "syn-001055", "source_track": "synthetic", "register": "gov", "text_wrong": "เปรียบประดุจดั่งจิตอันบริสุทธิของปวงพสกนิกร ที่ล้วนสำนึกในพระมหากรุณาธิคุณอันหาที่สุดมิได้ ปวงข้าพระพุทธเจ้าจักน้อมนำแนวทางพระราชดำริที่ได้พระราชทานไว้", "text_correct": "เปรียบประดุจดั่งจิตอันบริสุทธิ์ของปวงพสกนิกร ที่ล้วนสำนึกในพระมหากรุณาธิคุณอันหาที่สุดมิได้ ปวงข้าพระพุทธเจ้าจักน้อมนำแนวทางพระราชดำริที่ได้พระราชทานไว้", "edits": [{"char_start": 22, "char_end": 30, "wrong": "บริสุทธิ", "correct": "บริสุทธิ์", "class": 3, "class_name": "karan_native", "etymology": "native", "edit_op": "deletion"}]}, {"id": "syn-000095", "source_track": "synthetic", "register": "news", "text_wrong": "ในการต่อรองเก้าอี้รัฐมนตรีนั้น ยอมรับว่าพรรคพลังประชารัฐ ก้อมีปัญหาภายในจริง", "text_correct": "ในการต่อรองเก้าอี้รัฐมนตรีนั้น ยอมรับว่าพรรคพลังประชารัฐ ก็มีปัญหาภายในจริง", "edits": [{"char_start": 57, "char_end": 60, "wrong": "ก้อ", "correct": "ก็", "class": 1, "class_name": "tone_mark", "etymology": "native", "edit_op": "substitution"}]}, {"id": "syn-001111", "source_track": "synthetic", "register": "encyclopedic", "text_wrong": "ไนโตรเจน () เป็นธาตุเคมีในตารางธาตุที่มีสัญลักษ์ N และเลขอะตอม 7 เป็นอโลหะที่มีสถานะเป็นแก๊สที่มีอยู่ทั่วไป", "text_correct": "ไนโตรเจน () เป็นธาตุเคมีในตารางธาตุที่มีสัญลักษณ์ N และเลขอะตอม 7 เป็นอโลหะที่มีสถานะเป็นแก๊สที่มีอยู่ทั่วไป", "edits": [{"char_start": 40, "char_end": 48, "wrong": "สัญลักษ์", "correct": "สัญลักษณ์", "class": 3, "class_name": "karan_native", "etymology": "native", "edit_op": "deletion"}]}, {"id": "syn-001213", "source_track": "synthetic", "register": "encyclopedic", "text_wrong": "คำว่าแอกซอน (Axon) มาจากคำว่า Axis ซึ่งแปลว่าแกนฉนั้นภาพแอกโซโนเมตริจึงเป็นภาพสามมิติที่วัดจากแกนสามแกนมุมรวมกัน 360 องศา", "text_correct": "คำว่าแอกซอน (Axon) มาจากคำว่า Axis ซึ่งแปลว่าแกนฉะนั้นภาพแอกโซโนเมตริจึงเป็นภาพสามมิติที่วัดจากแกนสามแกนมุมรวมกัน 360 องศา", "edits": [{"char_start": 48, "char_end": 53, "wrong": "ฉนั้น", "correct": "ฉะนั้น", "class": 4, "class_name": "vowel", "etymology": "native", "edit_op": "deletion"}]}, {"id": "syn-001578", "source_track": "synthetic", "register": "encyclopedic", "text_wrong": "เขาได้พัฒนามาเรื่อยๆจนกระทั่งสามารถบูทตัวเองได้ (กล่าวคือสามารถคอมไพล์ภายในลินุกซ์ได้เลย) และในปัจจุบันมีนักพัฒนาจากทั่วโลกพันกว่าฅนได้เข้ามามีส่วนรวมในการพัฒนาโครงการ Eric S.", "text_correct": "เขาได้พัฒนามาเรื่อยๆจนกระทั่งสามารถบูทตัวเองได้ (กล่าวคือสามารถคอมไพล์ภายในลินุกซ์ได้เลย) และในปัจจุบันมีนักพัฒนาจากทั่วโลกพันกว่าคนได้เข้ามามีส่วนรวมในการพัฒนาโครงการ Eric S.", "edits": [{"char_start": 130, "char_end": 132, "wrong": "ฅน", "correct": "คน", "class": 5, "class_name": "cluster_metathesis", "etymology": "native", "edit_op": "substitution"}]}, {"id": "syn-001141", "source_track": "synthetic", "register": "encyclopedic", "text_wrong": "นอกเหนือจากนั้น วิกิพีเดียจะต้องเผยแพร่ฉะเพาะความรู้ที่ได้รับการยอมรับเท่านั้น", "text_correct": "นอกเหนือจากนั้น วิกิพีเดียจะต้องเผยแพร่เฉพาะความรู้ที่ได้รับการยอมรับเท่านั้น", "edits": [{"char_start": 39, "char_end": 45, "wrong": "ฉะเพาะ", "correct": "เฉพาะ", "class": 4, "class_name": "vowel", "etymology": "native", "edit_op": "mixed"}]}, {"id": "syn-000860", "source_track": "synthetic", "register": "gov", "text_wrong": "นายบุญยฤทธ กัลยาณมิตร ปลัดกระทรวงพาณิชย์", "text_correct": "นายบุญยฤทธิ์ กัลยาณมิตร ปลัดกระทรวงพาณิชย์", "edits": [{"char_start": 7, "char_end": 10, "wrong": "ฤทธ", "correct": "ฤทธิ์", "class": 3, "class_name": "karan_native", "etymology": "native", "edit_op": "deletion"}]}, {"id": "syn-000592", "source_track": "synthetic", "register": "encyclopedic", "text_wrong": "ดังนั้นการสังเกตการณ์ในช่วงความยาวคลื่นของรังศีเอ็กซ์จึงทำได้โดยอาศัยบัลลูนที่ลอยตัวสูงมาก ๆ หรือจากจรวด หรือจากยานสำรวจอวกาศเท่านั้น", "text_correct": "ดังนั้นการสังเกตการณ์ในช่วงความยาวคลื่นของรังสีเอ็กซ์จึงทำได้โดยอาศัยบัลลูนที่ลอยตัวสูงมาก ๆ หรือจากจรวด หรือจากยานสำรวจอวกาศเท่านั้น", "edits": [{"char_start": 42, "char_end": 47, "wrong": "รังศี", "correct": "รังสี", "class": 2, "class_name": "consonant_pair", "etymology": "native", "edit_op": "substitution"}]}, {"id": "wik-000003", "source_track": "mined", "register": "encyclopedic", "text_wrong": "นักเขียนและนักวิจารณ์ชาวอังกฤษ (เกิด 6 กรกฏาคม พ.ศ.", "text_correct": "นักเขียนและนักวิจารณ์ชาวอังกฤษ (เกิด 6 กรกฎาคม พ.ศ.", "edits": [{"char_start": 39, "char_end": 46, "wrong": "กรกฏาคม", "correct": "กรกฎาคม", "class": 2, "class_name": "consonant_pair", "etymology": "native", "edit_op": "substitution"}]}, {"id": "syn-001497", "source_track": "synthetic", "register": "gov", "text_wrong": "นายกรัฐมนตรีกล่าวเพิ่มเติมว่า สนับสนุนการแก้ไขรัฐธรรมนูญซึ่งเป็นหน้าที่ของรัฐสภา ตามกระบวนการและขั้นตอนของรัฐธรรมนูญฉะบับปัจจุบันด้วย", "text_correct": "นายกรัฐมนตรีกล่าวเพิ่มเติมว่า สนับสนุนการแก้ไขรัฐธรรมนูญซึ่งเป็นหน้าที่ของรัฐสภา ตามกระบวนการและขั้นตอนของรัฐธรรมนูญฉบับปัจจุบันด้วย", "edits": [{"char_start": 116, "char_end": 121, "wrong": "ฉะบับ", "correct": "ฉบับ", "class": 4, "class_name": "vowel", "etymology": "native", "edit_op": "insertion"}]}, {"id": "syn-000325", "source_track": "synthetic", "register": "news", "text_wrong": "ก้อจะโดนแบบเดียวกัน หรือไม่ก็โดนตีด้วยด้ามปืน รถเริ่มออกจากตรงนั้น", "text_correct": "ก็จะโดนแบบเดียวกัน หรือไม่ก็โดนตีด้วยด้ามปืน รถเริ่มออกจากตรงนั้น", "edits": [{"char_start": 0, "char_end": 3, "wrong": "ก้อ", "correct": "ก็", "class": 1, "class_name": "tone_mark", "etymology": "native", "edit_op": "substitution"}]}, {"id": "syn-000050", "source_track": "synthetic", "register": "news", "text_wrong": "ก้อเพราะเจ้าหน้าที่รัฐ หย่อนยาน กับการปราบปรามและจับกุม,ก็รู้ทั้งรู้ว่าถนนสายรองต่างๆคือเส้นทางอันตราย", "text_correct": "ก็เพราะเจ้าหน้าที่รัฐ หย่อนยาน กับการปราบปรามและจับกุม,ก็รู้ทั้งรู้ว่าถนนสายรองต่างๆคือเส้นทางอันตราย", "edits": [{"char_start": 0, "char_end": 3, "wrong": "ก้อ", "correct": "ก็", "class": 1, "class_name": "tone_mark", "etymology": "native", "edit_op": "substitution"}]}, {"id": "syn-000405", "source_track": "synthetic", "register": "encyclopedic", "text_wrong": "243 เขียนด้วยอักษรทมิฬ-พราหมีที่พัฒนามาจากอักสรพราหมี", "text_correct": "243 เขียนด้วยอักษรทมิฬ-พราหมีที่พัฒนามาจากอักษรพราหมี", "edits": [{"char_start": 42, "char_end": 47, "wrong": "อักสร", "correct": "อักษร", "class": 2, "class_name": "consonant_pair", "etymology": "native", "edit_op": "substitution"}]}, {"id": "syn-000111", "source_track": "synthetic", "register": "encyclopedic", "text_wrong": "395 เป็นต้นไป พวกชนเผ่าเยอรมันก้อยิ่งรุกไปทางตะวันตกเฉียงใต้", "text_correct": "395 เป็นต้นไป พวกชนเผ่าเยอรมันก็ยิ่งรุกไปทางตะวันตกเฉียงใต้", "edits": [{"char_start": 30, "char_end": 33, "wrong": "ก้อ", "correct": "ก็", "class": 1, "class_name": "tone_mark", "etymology": "native", "edit_op": "substitution"}]}, {"id": "wik-000011", "source_track": "mined", "register": "encyclopedic", "text_wrong": "โดยคำนวนจากระยะเวลาที่ทำสัญญา", "text_correct": "โดยคำนวณจากระยะเวลาที่ทำสัญญา", "edits": [{"char_start": 3, "char_end": 8, "wrong": "คำนวน", "correct": "คำนวณ", "class": 2, "class_name": "consonant_pair", "etymology": "native", "edit_op": "substitution"}]}, {"id": "wik-000047", "source_track": "mined", "register": "encyclopedic", "text_wrong": "2559 และรวบรวมตีพิมพ์เป็นหนังสือมังงะรวมเล่ม (ทังโกบง) ถึงเล่มที่ 6 มังงะมีลิขสิทธิ์ในประเทศไทยโดยสำนักพิมพ์ฟีินิกซ์", "text_correct": "2559 และรวบรวมตีพิมพ์เป็นหนังสือมังงะรวมเล่ม (ทังโกบง) ถึงเล่มที่ 6 มังงะมีลิขสิทธิ์ในประเทศไทยโดยสำนักพิมพ์ฟีนิกซ์", "edits": [{"char_start": 108, "char_end": 116, "wrong": "ฟีินิกซ์", "correct": "ฟีนิกซ์", "class": 4, "class_name": "vowel", "etymology": "native", "edit_op": "insertion"}]}, {"id": "wik-000066", "source_track": "mined", "register": "encyclopedic", "text_wrong": "โดยนักบินที่มีใบอนุญาติสำหรับการบินโบอิง 757 แล้ว ยังสามารถบินเครื่องบินโบอิง 767 ได้ สิ่งนี้จะช่วยลดคาใช้จ่ายสำหรับสายการบินมีเครื่องบินทั้งสองประจำการในฝูงบิน", "text_correct": "โดยนักบินที่มีใบอนุญาตสำหรับการบินโบอิง 757 แล้ว ยังสามารถบินเครื่องบินโบอิง 767 ได้ สิ่งนี้จะช่วยลดคาใช้จ่ายสำหรับสายการบินมีเครื่องบินทั้งสองประจำการในฝูงบิน", "edits": [{"char_start": 14, "char_end": 23, "wrong": "ใบอนุญาติ", "correct": "ใบอนุญาต", "class": 4, "class_name": "vowel", "etymology": "native", "edit_op": "insertion"}]}, {"id": "syn-001624", "source_track": "synthetic", "register": "encyclopedic", "text_wrong": "นอกจากนี้ยังมีการโปรแกรมตรรกะเชิงอุปนัย เป็นวิธีการเรียนรู้จากกฎโดยใช้การโปรแกรมตรรกกะ", "text_correct": "นอกจากนี้ยังมีการโปรแกรมตรรกะเชิงอุปนัย เป็นวิธีการเรียนรู้จากกฎโดยใช้การโปรแกรมตรรกะ", "edits": [{"char_start": 80, "char_end": 86, "wrong": "ตรรกกะ", "correct": "ตรรกะ", "class": 5, "class_name": "cluster_metathesis", "etymology": "native", "edit_op": "insertion"}]}, {"id": "wik-000085", "source_track": "mined", "register": "encyclopedic", "text_wrong": "ได้มีการประกาศดัดแปลงเป็นซีีรีส์อนิเมะโทรทัศน์เมื่อวันที่ 17 เมษายน พ.ศ.", "text_correct": "ได้มีการประกาศดัดแปลงเป็นซีรีส์อนิเมะโทรทัศน์เมื่อวันที่ 17 เมษายน พ.ศ.", "edits": [{"char_start": 25, "char_end": 32, "wrong": "ซีีรีส์", "correct": "ซีรีส์", "class": 4, "class_name": "vowel", "etymology": "native", "edit_op": "insertion"}]}, {"id": "wik-000087", "source_track": "mined", "register": "encyclopedic", "text_wrong": "คู่สุดท้้าย โกคู ปะทะนักสู้หน้ากากแมว นักสู้ลึกลับเป็นยอดยุทธที่น่ากลัว", "text_correct": "คู่สุดท้าย โกคู ปะทะนักสู้หน้ากากแมว นักสู้ลึกลับเป็นยอดยุทธที่น่ากลัว", "edits": [{"char_start": 3, "char_end": 11, "wrong": "สุดท้้าย", "correct": "สุดท้าย", "class": 1, "class_name": "tone_mark", "etymology": "native", "edit_op": "insertion"}]}, {"id": "wik-000072", "source_track": "mined", "register": "encyclopedic", "text_wrong": "ด้วยความเชื่อเหล่านี้ทำให้สหภาพโซเวียตได้ปรับเปลี่ยนนโยบายต่างประเทศของตนในการสร้างสา่ยสัมพันธ์ไมตรีกับเยอรมนี", "text_correct": "ด้วยความเชื่อเหล่านี้ทำให้สหภาพโซเวียตได้ปรับเปลี่ยนนโยบายต่างประเทศของตนในการสร้างสายสัมพันธ์ไมตรีกับเยอรมนี", "edits": [{"char_start": 83, "char_end": 95, "wrong": "สา่ยสัมพันธ์", "correct": "สายสัมพันธ์", "class": 1, "class_name": "tone_mark", "etymology": "native", "edit_op": "insertion"}]}, {"id": "syn-002125", "source_track": "synthetic", "register": "encyclopedic", "text_wrong": "บ่อยครั้งมีจำนวนหนึ่งคาดว่าจะเริ่มต้นเป็นโปรแกรมเมอร์คอมพิวเตอร์ก่อนที่จะมีการ เลื่อนขั้นให้เป็นวิศวกรซอฟต์แวร์ดังนั้น อาชีพทางวิศวกรรมซอฟท์แวร์มีความยากลำบาก", "text_correct": "บ่อยครั้งมีจำนวนหนึ่งคาดว่าจะเริ่มต้นเป็นโปรแกรมเมอร์คอมพิวเตอร์ก่อนที่จะมีการ เลื่อนขั้นให้เป็นวิศวกรซอฟต์แวร์ดังนั้น อาชีพทางวิศวกรรมซอฟต์แวร์มีความยากลำบาก", "edits": [{"char_start": 135, "char_end": 144, "wrong": "ซอฟท์แวร์", "correct": "ซอฟต์แวร์", "class": 6, "class_name": "loanword_translit", "etymology": "loan", "edit_op": "substitution"}]}, {"id": "syn-001678", "source_track": "synthetic", "register": "encyclopedic", "text_wrong": "ปฏิทินสุริยคติไทย คือปฏิทินอย่างเป็นทางการของประเทศไทยในปัจจุบัน เป็นระบบปฏิทินสุริยคติอ้างวันเดือนปีตรงตามปติทินกริกอเรียนที่มีจำนวนวัน 365 หรือ 366 วันในแต่ละปี", "text_correct": "ปฏิทินสุริยคติไทย คือปฏิทินอย่างเป็นทางการของประเทศไทยในปัจจุบัน เป็นระบบปฏิทินสุริยคติอ้างวันเดือนปีตรงตามปฏิทินกริกอเรียนที่มีจำนวนวัน 365 หรือ 366 วันในแต่ละปี", "edits": [{"char_start": 107, "char_end": 113, "wrong": "ปติทิน", "correct": "ปฏิทิน", "class": 5, "class_name": "cluster_metathesis", "etymology": "native", "edit_op": "substitution"}]}, {"id": "syn-001769", "source_track": "synthetic", "register": "gov", "text_wrong": "ตาก ให้ได้อีก 5 พันฅนภายในสัปดาห์นี้ พร้อมตรวจกลุ่มเสี่ยงในพื้นที่ 4 อำเภอของจังหวัดตาก ได้แก่ อุ้มผาง พบพระ แม่ระมาด และท่าสองยาง", "text_correct": "ตาก ให้ได้อีก 5 พันคนภายในสัปดาห์นี้ พร้อมตรวจกลุ่มเสี่ยงในพื้นที่ 4 อำเภอของจังหวัดตาก ได้แก่ อุ้มผาง พบพระ แม่ระมาด และท่าสองยาง", "edits": [{"char_start": 19, "char_end": 21, "wrong": "ฅน", "correct": "คน", "class": 5, "class_name": "cluster_metathesis", "etymology": "native", "edit_op": "substitution"}]}, {"id": "syn-001352", "source_track": "synthetic", "register": "encyclopedic", "text_wrong": "อายุขัยของมนุษย์อยู่ระหว่าง 10 ปีถึง 1 อสงขัยปี (1 × 10140 ปี) แต่พระโพธิสัตว์ทรงเลือกอายุขัยมนุษย์ระหว่าง 100-100,000 ปี", "text_correct": "อายุขัยของมนุษย์อยู่ระหว่าง 10 ปีถึง 1 อสงไขยปี (1 × 10140 ปี) แต่พระโพธิสัตว์ทรงเลือกอายุขัยมนุษย์ระหว่าง 100-100,000 ปี", "edits": [{"char_start": 39, "char_end": 45, "wrong": "อสงขัย", "correct": "อสงไขย", "class": 4, "class_name": "vowel", "etymology": "native", "edit_op": "mixed"}]}, {"id": "wik-000101", "source_track": "mined", "register": "encyclopedic", "text_wrong": "อันเป็นจุดเริ่มต้นของสายอาชีพ Anima เวทมนต์ Lara", "text_correct": "อันเป็นจุดเริ่มต้นของสายอาชีพ Anima เวทมนตร์ Lara", "edits": [{"char_start": 36, "char_end": 43, "wrong": "เวทมนต์", "correct": "เวทมนตร์", "class": 3, "class_name": "karan_native", "etymology": "native", "edit_op": "deletion"}]}, {"id": "syn-001103", "source_track": "synthetic", "register": "gov", "text_wrong": "พบว่า ประชาชนร้อยละ 94.71 มีความกังวลต่อสถานการโรคโควิด 19 ส่วนใหญ่ร้อยละ 98.42 เห็นด้วยกับมาตรการสวมหน้ากากป้องกันโควิด 19 เมื่อออกจากบ้าน", "text_correct": "พบว่า ประชาชนร้อยละ 94.71 มีความกังวลต่อสถานการณ์โรคโควิด 19 ส่วนใหญ่ร้อยละ 98.42 เห็นด้วยกับมาตรการสวมหน้ากากป้องกันโควิด 19 เมื่อออกจากบ้าน", "edits": [{"char_start": 40, "char_end": 47, "wrong": "สถานการ", "correct": "สถานการณ์", "class": 3, "class_name": "karan_native", "etymology": "native", "edit_op": "deletion"}]}, {"id": "syn-000429", "source_track": "synthetic", "register": "gov", "text_wrong": "ปลัดกระทรวงสาธารณสุข ให้สัมภาสน์ภายหลังประชุมคณะกรรมการระบบสุขภาพปฐมภูมิ ครั้งที่ 4/2563 ว่า นายอนุทิน ชาญวีรกูล รองนายกรัฐมนตรีและรัฐมนตรีว่าการกระทรวงสาธารณสุข", "text_correct": "ปลัดกระทรวงสาธารณสุข ให้สัมภาษณ์ภายหลังประชุมคณะกรรมการระบบสุขภาพปฐมภูมิ ครั้งที่ 4/2563 ว่า นายอนุทิน ชาญวีรกูล รองนายกรัฐมนตรีและรัฐมนตรีว่าการกระทรวงสาธารณสุข", "edits": [{"char_start": 24, "char_end": 32, "wrong": "สัมภาสน์", "correct": "สัมภาษณ์", "class": 2, "class_name": "consonant_pair", "etymology": "native", "edit_op": "substitution"}]}, {"id": "wik-000095", "source_track": "mined", "register": "encyclopedic", "text_wrong": "2561 ทางเว็บไซต์นิยายสร้างโดยผู้ใช้ โชเซ็ตสึกะ นิ นาโร ภายหลังสำนักพิมพ์คาโดกาวะโชเต็งได้ลิขสิทธิ์ตีัพิมพ์เป็นหนังสือในเคร่อคาโดกาวะสนีกเกอร์บุงโกะ ตั้งแต่เดือนกุมภาพันธ์ พ.ศ.", "text_correct": "2561 ทางเว็บไซต์นิยายสร้างโดยผู้ใช้ โชเซ็ตสึกะ นิ นาโร ภายหลังสำนักพิมพ์คาโดกาวะโชเต็งได้ลิขสิทธิ์ตีพิมพ์เป็นหนังสือในเคร่อคาโดกาวะสนีกเกอร์บุงโกะ ตั้งแต่เดือนกุมภาพันธ์ พ.ศ.", "edits": [{"char_start": 98, "char_end": 106, "wrong": "ตีัพิมพ์", "correct": "ตีพิมพ์", "class": 4, "class_name": "vowel", "etymology": "native", "edit_op": "insertion"}]}, {"id": "syn-002216", "source_track": "synthetic", "register": "gov", "text_wrong": "แรงงาน ห่วงใยชาวสวนลำไยในจังหวัดจันทบุรี เร่งหามาตรการการนำเข้าแรงงานกัมพูชาเข้ามาเก็บผลผลิตลำใยที่จังหวัดจันทบุรี ร่วมกับภาครัฐและเอกชนที่เกี่ยวข้อง", "text_correct": "แรงงาน ห่วงใยชาวสวนลำไยในจังหวัดจันทบุรี เร่งหามาตรการการนำเข้าแรงงานกัมพูชาเข้ามาเก็บผลผลิตลำไยที่จังหวัดจันทบุรี ร่วมกับภาครัฐและเอกชนที่เกี่ยวข้อง", "edits": [{"char_start": 92, "char_end": 96, "wrong": "ลำใย", "correct": "ลำไย", "class": 6, "class_name": "loanword_translit", "etymology": "loan", "edit_op": "substitution"}]}, {"id": "wik-000017", "source_track": "mined", "register": "encyclopedic", "text_wrong": "ศตวรรษที่ 3 ก่อนคริสต์กาล", "text_correct": "ศตวรรษที่ 3 ก่อนคริสตกาล", "edits": [{"char_start": 16, "char_end": 25, "wrong": "คริสต์กาล", "correct": "คริสตกาล", "class": 3, "class_name": "karan_native", "etymology": "native", "edit_op": "insertion"}]}, {"id": "wik-000053", "source_track": "mined", "register": "encyclopedic", "text_wrong": "ปลั๊กอิน ไฮบริดได้ถูกแสดงในงานแสดงรถยนต์โตเกียวประจำปี 2009 งานแสดงรถยนต์แฟรงก์เฟิร์ตประจำปี 2009 และงานแสดงรถยนต์ลอสแองเจลลิสประจำปี 2009 ในจำนวนจำกัดสำหรับโปรแกรมสาธิตตัวต้นแบบนี้", "text_correct": "ปลั๊กอิน ไฮบริดได้ถูกแสดงในงานแสดงรถยนต์โตเกียวประจำปี 2009 งานแสดงรถยนต์แฟรงก์เฟิร์ตประจำปี 2009 และงานแสดงรถยนต์ลอสแอนเจลิสประจำปี 2009 ในจำนวนจำกัดสำหรับโปรแกรมสาธิตตัวต้นแบบนี้", "edits": [{"char_start": 114, "char_end": 126, "wrong": "ลอสแองเจลลิส", "correct": "ลอสแอนเจลิส", "class": 5, "class_name": "cluster_metathesis", "etymology": "native", "edit_op": "mixed"}]}, {"id": "wik-000097", "source_track": "mined", "register": "encyclopedic", "text_wrong": "บานหน้าต่างเป็นบานประกบ หน้าอาคารมีบรรไดทางขึ้น ต่อกับส่วนระเบียงที่มีซี่กรงฉลุ เป็นช่อง เหนือซี่กรงระเบียง เป็นตารางโปร่งจนถึงส่วนหลังคา บริเวณมุขยื่น ส่วนหลังคามีช่องแสงทำด้วยไม้", "text_correct": "บานหน้าต่างเป็นบานประกบ หน้าอาคารมีบันไดทางขึ้น ต่อกับส่วนระเบียงที่มีซี่กรงฉลุ เป็นช่อง เหนือซี่กรงระเบียง เป็นตารางโปร่งจนถึงส่วนหลังคา บริเวณมุขยื่น ส่วนหลังคามีช่องแสงทำด้วยไม้", "edits": [{"char_start": 35, "char_end": 40, "wrong": "บรรได", "correct": "บันได", "class": 5, "class_name": "cluster_metathesis", "etymology": "native", "edit_op": "substitution"}]}, {"id": "wik-000090", "source_track": "mined", "register": "encyclopedic", "text_wrong": "เด็กที่โนบิตะช่วยเ้หลือเอาไว้ มาสิบวันแล้ว", "text_correct": "เด็กที่โนบิตะช่วยเหลือเอาไว้ มาสิบวันแล้ว", "edits": [{"char_start": 13, "char_end": 23, "wrong": "ช่วยเ้หลือ", "correct": "ช่วยเหลือ", "class": 1, "class_name": "tone_mark", "etymology": "native", "edit_op": "insertion"}]}, {"id": "wik-000098", "source_track": "mined", "register": "encyclopedic", "text_wrong": "อรวีณัฏฐ์ นิมิตรวงศ์สกุล จักษุแพทย์ ผู้เชี่ยวชาญสาขาศัลยกรรมตกแต่งเสริมสร้่างเบ้าตาและอวัยวะรอบดวงตา และหัวหน้าศูนย์ตาปลอมโรงพยาบาลเมตตาประชารักษ์ (วัดไร่ขิง)", "text_correct": "อรวีณัฏฐ์ นิมิตรวงศ์สกุล จักษุแพทย์ ผู้เชี่ยวชาญสาขาศัลยกรรมตกแต่งเสริมสร้างเบ้าตาและอวัยวะรอบดวงตา และหัวหน้าศูนย์ตาปลอมโรงพยาบาลเมตตาประชารักษ์ (วัดไร่ขิง)", "edits": [{"char_start": 66, "char_end": 77, "wrong": "เสริมสร้่าง", "correct": "เสริมสร้าง", "class": 1, "class_name": "tone_mark", "etymology": "native", "edit_op": "insertion"}]}, {"id": "syn-001341", "source_track": "synthetic", "register": "gov", "text_wrong": "“ถุงเงิน” ที่เข้าร่วมโครงการเพื่อรับสิทธได้", "text_correct": "“ถุงเงิน” ที่เข้าร่วมโครงการเพื่อรับสิทธิได้", "edits": [{"char_start": 36, "char_end": 40, "wrong": "สิทธ", "correct": "สิทธิ", "class": 4, "class_name": "vowel", "etymology": "native", "edit_op": "deletion"}]}, {"id": "syn-000742", "source_track": "synthetic", "register": "encyclopedic", "text_wrong": "อีกทั้งยังรองรับรูปแบบเอกสารจากไมโครซอฟท์ ออฟฟิศ และอื่น ๆ กระทั่งเดือนพฤษจิกายน พ.ศ.", "text_correct": "อีกทั้งยังรองรับรูปแบบเอกสารจากไมโครซอฟท์ ออฟฟิศ และอื่น ๆ กระทั่งเดือนพฤศจิกายน พ.ศ.", "edits": [{"char_start": 71, "char_end": 80, "wrong": "พฤษจิกายน", "correct": "พฤศจิกายน", "class": 2, "class_name": "consonant_pair", "etymology": "native", "edit_op": "substitution"}]}, {"id": "syn-002181", "source_track": "synthetic", "register": "gov", "text_wrong": ")​ เป็นประธานการประชุมคณะอนุกรรมการบริหารจัดการขยะพลาสติคและขยะอิเล็กทรอนิกส์", "text_correct": ")​ เป็นประธานการประชุมคณะอนุกรรมการบริหารจัดการขยะพลาสติกและขยะอิเล็กทรอนิกส์", "edits": [{"char_start": 50, "char_end": 57, "wrong": "พลาสติค", "correct": "พลาสติก", "class": 6, "class_name": "loanword_translit", "etymology": "loan", "edit_op": "substitution"}]}, {"id": "wik-000083", "source_track": "mined", "register": "encyclopedic", "text_wrong": "เป็นการเรียก Buddy Call หรือส่งมอนสเตอร์ลงสนาม สวมใส่อาวุธ และ ร่ายเวทมนต์", "text_correct": "เป็นการเรียก Buddy Call หรือส่งมอนสเตอร์ลงสนาม สวมใส่อาวุธ และ ร่ายเวทมนตร์", "edits": [{"char_start": 67, "char_end": 74, "wrong": "เวทมนต์", "correct": "เวทมนตร์", "class": 3, "class_name": "karan_native", "etymology": "native", "edit_op": "deletion"}]}, {"id": "syn-001627", "source_track": "synthetic", "register": "news", "text_wrong": "ในเว็บไซต์ทวิตเตอร์ hashtag #1malaysiaemail ติดอันดับสองของหัวข้อยอดนิยมในมาเลเซียในวันที่มีการออกข่าว ในเฟสบุ๊กมีการตั้งกลุ่มเพื่อแสดงความไม่เห็นด้วยกับโครงการดังกล่าวด้วย", "text_correct": "ในเว็บไซต์ทวิตเตอร์ hashtag #1malaysiaemail ติดอันดับสองของหัวข้อยอดนิยมในมาเลเซียในวันที่มีการออกข่าว ในเฟซบุ๊กมีการตั้งกลุ่มเพื่อแสดงความไม่เห็นด้วยกับโครงการดังกล่าวด้วย", "edits": [{"char_start": 105, "char_end": 112, "wrong": "เฟสบุ๊ก", "correct": "เฟซบุ๊ก", "class": 5, "class_name": "cluster_metathesis", "etymology": "native", "edit_op": "substitution"}]}, {"id": "wik-000010", "source_track": "mined", "register": "encyclopedic", "text_wrong": "โดยใช้ชื่อเพลงว่า Remembered Love และอีกบทเพลงภาษาญี่ปุ่นจากภาพยนต์ทางที.วี.", "text_correct": "โดยใช้ชื่อเพลงว่า Remembered Love และอีกบทเพลงภาษาญี่ปุ่นจากภาพยนตร์ทางที.วี.", "edits": [{"char_start": 60, "char_end": 67, "wrong": "ภาพยนต์", "correct": "ภาพยนตร์", "class": 3, "class_name": "karan_native", "etymology": "native", "edit_op": "deletion"}]}, {"id": "syn-002077", "source_track": "synthetic", "register": "encyclopedic", "text_wrong": "ตั้งแต่นั้นก็ยังคงมีการเปรียบเทียบวิศวกรรมซอฟท์แวร์กับวิศวกรรมแขนงอื่น", "text_correct": "ตั้งแต่นั้นก็ยังคงมีการเปรียบเทียบวิศวกรรมซอฟต์แวร์กับวิศวกรรมแขนงอื่น", "edits": [{"char_start": 42, "char_end": 51, "wrong": "ซอฟท์แวร์", "correct": "ซอฟต์แวร์", "class": 6, "class_name": "loanword_translit", "etymology": "loan", "edit_op": "substitution"}]}, {"id": "wik-000096", "source_track": "mined", "register": "encyclopedic", "text_wrong": "จะมีการห้ามเข้าถึงเซอร์เวอร์", "text_correct": "จะมีการห้ามเข้าถึงเซิร์ฟเวอร์", "edits": [{"char_start": 18, "char_end": 28, "wrong": "เซอร์เวอร์", "correct": "เซิร์ฟเวอร์", "class": 5, "class_name": "cluster_metathesis", "etymology": "native", "edit_op": "mixed"}]}, {"id": "syn-000876", "source_track": "synthetic", "register": "gov", "text_wrong": "เพื่อความรวดเร็วป้องกันไม่ให้อาการลุกลาม และได้สิทธ์ทันทีเมื่อย้ายหน่วยบริการโดยไม่ต้องรอ 15 วัน", "text_correct": "เพื่อความรวดเร็วป้องกันไม่ให้อาการลุกลาม และได้สิทธิทันทีเมื่อย้ายหน่วยบริการโดยไม่ต้องรอ 15 วัน", "edits": [{"char_start": 47, "char_end": 52, "wrong": "สิทธ์", "correct": "สิทธิ", "class": 3, "class_name": "karan_native", "etymology": "native", "edit_op": "substitution"}]}, {"id": "syn-000630", "source_track": "synthetic", "register": "encyclopedic", "text_wrong": "และอักศรสันสกฤตในสมัยราชวงศ์ปัลลวะ ซึ่งแพร่หลายบริเวณอินเดียตอนใต้ อักษรอินเดียทั้งคู่นี้ต่างก็รับแบบมาจากอักษรฟินิเชียนอีกชั้นหนึ่ง", "text_correct": "และอักษรสันสกฤตในสมัยราชวงศ์ปัลลวะ ซึ่งแพร่หลายบริเวณอินเดียตอนใต้ อักษรอินเดียทั้งคู่นี้ต่างก็รับแบบมาจากอักษรฟินิเชียนอีกชั้นหนึ่ง", "edits": [{"char_start": 3, "char_end": 8, "wrong": "อักศร", "correct": "อักษร", "class": 2, "class_name": "consonant_pair", "etymology": "native", "edit_op": "substitution"}]}, {"id": "syn-001830", "source_track": "synthetic", "register": "encyclopedic", "text_wrong": "เหล่านี้เป็นแรงกระตุ้นให้ปรีดีดำหริเปลี่ยนแปลงสังคม เศรษฐกิจ และการเมืองของประเทศในเวลาต่อมา", "text_correct": "เหล่านี้เป็นแรงกระตุ้นให้ปรีดีดำริเปลี่ยนแปลงสังคม เศรษฐกิจ และการเมืองของประเทศในเวลาต่อมา", "edits": [{"char_start": 30, "char_end": 35, "wrong": "ดำหริ", "correct": "ดำริ", "class": 5, "class_name": "cluster_metathesis", "etymology": "native", "edit_op": "insertion"}]}, {"id": "wik-000025", "source_track": "mined", "register": "encyclopedic", "text_wrong": "สามารถคำนวนได้จากก่อนวันอีสเตอร์สองวัน", "text_correct": "สามารถคำนวณได้จากก่อนวันอีสเตอร์สองวัน", "edits": [{"char_start": 6, "char_end": 11, "wrong": "คำนวน", "correct": "คำนวณ", "class": 2, "class_name": "consonant_pair", "etymology": "native", "edit_op": "substitution"}]}, {"id": "syn-000610", "source_track": "synthetic", "register": "news", "text_wrong": "มาถึงร้อยละ 231,000,000 เมื่อเดือนกรกฎาคม ปี 2551 จนถึงขนาดแบงก์ชาติซิมบับเวต้องออกธนบัตรใบละ 1 แสนล้านดอลลาร์มาใช้ในเดือนพฤษจิกายน 2551", "text_correct": "มาถึงร้อยละ 231,000,000 เมื่อเดือนกรกฎาคม ปี 2551 จนถึงขนาดแบงก์ชาติซิมบับเวต้องออกธนบัตรใบละ 1 แสนล้านดอลลาร์มาใช้ในเดือนพฤศจิกายน 2551", "edits": [{"char_start": 122, "char_end": 131, "wrong": "พฤษจิกายน", "correct": "พฤศจิกายน", "class": 2, "class_name": "consonant_pair", "etymology": "native", "edit_op": "substitution"}]}, {"id": "syn-002171", "source_track": "synthetic", "register": "gov", "text_wrong": ")​ เป็นประธานการประชุมคณะอนุกรรมการบริหารจัดการขยะพลาสติกและขยะอิเล็กโทรนิกส์", "text_correct": ")​ เป็นประธานการประชุมคณะอนุกรรมการบริหารจัดการขยะพลาสติกและขยะอิเล็กทรอนิกส์", "edits": [{"char_start": 63, "char_end": 77, "wrong": "อิเล็กโทรนิกส์", "correct": "อิเล็กทรอนิกส์", "class": 6, "class_name": "loanword_translit", "etymology": "loan", "edit_op": "mixed"}]}, {"id": "syn-001546", "source_track": "synthetic", "register": "news", "text_wrong": "ดูแรง เพราะอุ้มเล่นบทนางร้าย อุ้มเป็นตัวร้าย ก็สามารถที่จะคิดกันไปได้ค่ะว่าฅนๆ นั้นเป็นอย่างไรแล้วแต่เค้าจะคิด", "text_correct": "ดูแรง เพราะอุ้มเล่นบทนางร้าย อุ้มเป็นตัวร้าย ก็สามารถที่จะคิดกันไปได้ค่ะว่าคนๆ นั้นเป็นอย่างไรแล้วแต่เค้าจะคิด", "edits": [{"char_start": 75, "char_end": 77, "wrong": "ฅน", "correct": "คน", "class": 5, "class_name": "cluster_metathesis", "etymology": "native", "edit_op": "substitution"}]}, {"id": "syn-002038", "source_track": "synthetic", "register": "encyclopedic", "text_wrong": "1624) ชาวดัตช์เข้ามารุกรานและยึดครองเกาะใต้หวัน", "text_correct": "1624) ชาวดัตช์เข้ามารุกรานและยึดครองเกาะไต้หวัน", "edits": [{"char_start": 40, "char_end": 47, "wrong": "ใต้หวัน", "correct": "ไต้หวัน", "class": 6, "class_name": "loanword_translit", "etymology": "loan", "edit_op": "substitution"}]}, {"id": "wik-000034", "source_track": "mined", "register": "encyclopedic", "text_wrong": "นบีอีซาเป็นที่นับถืออย่างกว้างขวางในลัทธิศูฟีโดยมีการเขียนและท่องวรรณกรรมนักพรตและนักเวทย์มนต์มากมายเกี่ยวกับบรรดานบีของอิสลาม", "text_correct": "นบีอีซาเป็นที่นับถืออย่างกว้างขวางในลัทธิศูฟีโดยมีการเขียนและท่องวรรณกรรมนักพรตและนักเวทมนตร์มากมายเกี่ยวกับบรรดานบีของอิสลาม", "edits": [{"char_start": 85, "char_end": 94, "wrong": "เวทย์มนต์", "correct": "เวทมนตร์", "class": 3, "class_name": "karan_native", "etymology": "native", "edit_op": "mixed"}]}, {"id": "syn-001859", "source_track": "synthetic", "register": "encyclopedic", "text_wrong": "2508 คลาร์กได้กล่าวว่า ในชีวิตของเขาปราถนาจะเห็น 3 สิ่งต่อไปนี้", "text_correct": "2508 คลาร์กได้กล่าวว่า ในชีวิตของเขาปรารถนาจะเห็น 3 สิ่งต่อไปนี้", "edits": [{"char_start": 36, "char_end": 42, "wrong": "ปราถนา", "correct": "ปรารถนา", "class": 5, "class_name": "cluster_metathesis", "etymology": "native", "edit_op": "deletion"}]}, {"id": "syn-001456", "source_track": "synthetic", "register": "gov", "text_wrong": "ทีมควบคุมโรคลงพื้นที่เริ่มปฏิบัติงานเฝ้าระวัง ป้องกัน ควบคุมโรคที่เร็วซึ่งมีผลโดยตรงต่อการควบคุมการแพร่ระบาด อาสาสมัครสาธารณะสุข (อสม.", "text_correct": "ทีมควบคุมโรคลงพื้นที่เริ่มปฏิบัติงานเฝ้าระวัง ป้องกัน ควบคุมโรคที่เร็วซึ่งมีผลโดยตรงต่อการควบคุมการแพร่ระบาด อาสาสมัครสาธารณสุข (อสม.", "edits": [{"char_start": 118, "char_end": 128, "wrong": "สาธารณะสุข", "correct": "สาธารณสุข", "class": 4, "class_name": "vowel", "etymology": "native", "edit_op": "insertion"}]}, {"id": "syn-000433", "source_track": "synthetic", "register": "gov", "text_wrong": "ในโอกาศการเดินทางเยือนไทยอย่างเป็นทางการ", "text_correct": "ในโอกาสการเดินทางเยือนไทยอย่างเป็นทางการ", "edits": [{"char_start": 2, "char_end": 7, "wrong": "โอกาศ", "correct": "โอกาส", "class": 2, "class_name": "consonant_pair", "etymology": "native", "edit_op": "substitution"}]}, {"id": "syn-000832", "source_track": "synthetic", "register": "gov", "text_wrong": "การคัดกรอง จัดหาหน้ากากอนามัย และเจลแอลกอฮอล์รองรับสถานการ ลดความเสี่ยงโรคโควิด 19", "text_correct": "การคัดกรอง จัดหาหน้ากากอนามัย และเจลแอลกอฮอล์รองรับสถานการณ์ ลดความเสี่ยงโรคโควิด 19", "edits": [{"char_start": 51, "char_end": 58, "wrong": "สถานการ", "correct": "สถานการณ์", "class": 3, "class_name": "karan_native", "etymology": "native", "edit_op": "deletion"}]}, {"id": "syn-000018", "source_track": "synthetic", "register": "news", "text_wrong": "ถ้าเรามัวยึดติดว่าจะอยู่ยงคงกระพันก้อไม่ได้", "text_correct": "ถ้าเรามัวยึดติดว่าจะอยู่ยงคงกระพันก็ไม่ได้", "edits": [{"char_start": 34, "char_end": 37, "wrong": "ก้อ", "correct": "ก็", "class": 1, "class_name": "tone_mark", "etymology": "native", "edit_op": "substitution"}]}, {"id": "syn-000040", "source_track": "synthetic", "register": "encyclopedic", "text_wrong": "และสาขาวิชาส่วนใหญ่ก้อจำเป็นต้องใช้ความรู้จากสาขาอื่นด้วย", "text_correct": "และสาขาวิชาส่วนใหญ่ก็จำเป็นต้องใช้ความรู้จากสาขาอื่นด้วย", "edits": [{"char_start": 19, "char_end": 22, "wrong": "ก้อ", "correct": "ก็", "class": 1, "class_name": "tone_mark", "etymology": "native", "edit_op": "substitution"}]}, {"id": "wik-000009", "source_track": "mined", "register": "encyclopedic", "text_wrong": "; หนันอัน) มณฑลเลียงจิ๋ว ซึ่งตั้่งอยู่ทางตะวันออกของอำเภอหล่งซี มณฑลกานซู่ในปัจจุบัน บังเต๊กในวัยเยาว์รับราชการเป็นเจ้าหน้าที่ผู้ช่วย (", "text_correct": "; หนันอัน) มณฑลเลียงจิ๋ว ซึ่งตั้งอยู่ทางตะวันออกของอำเภอหล่งซี มณฑลกานซู่ในปัจจุบัน บังเต๊กในวัยเยาว์รับราชการเป็นเจ้าหน้าที่ผู้ช่วย (", "edits": [{"char_start": 29, "char_end": 38, "wrong": "ตั้่งอยู่", "correct": "ตั้งอยู่", "class": 1, "class_name": "tone_mark", "etymology": "native", "edit_op": "insertion"}]}, {"id": "wik-000000", "source_track": "mined", "register": "encyclopedic", "text_wrong": "แผนการเรียนพิเศษภาษาฝรั่งเศษ แผนการเรียนคณิตศาสตร์-ภาษาอังกฤษ แผนการเรียนวิทยาศาสตร์-คณิตศาสตร์ แผนการเรียนวิทยาศาสตร์ คณิตศาสตร์และ เทคโนโลยี รวมทั้ง โครงการห้องเรียนพิเศษ", "text_correct": "แผนการเรียนพิเศษภาษาฝรั่งเศส แผนการเรียนคณิตศาสตร์-ภาษาอังกฤษ แผนการเรียนวิทยาศาสตร์-คณิตศาสตร์ แผนการเรียนวิทยาศาสตร์ คณิตศาสตร์และ เทคโนโลยี รวมทั้ง โครงการห้องเรียนพิเศษ", "edits": [{"char_start": 20, "char_end": 28, "wrong": "ฝรั่งเศษ", "correct": "ฝรั่งเศส", "class": 2, "class_name": "consonant_pair", "etymology": "native", "edit_op": "substitution"}]}, {"id": "wik-000074", "source_track": "mined", "register": "encyclopedic", "text_wrong": "อิทธิฤทธิ์เวทย์มนต์ เข้ามาเกี่ยวข้องด้วย", "text_correct": "อิทธิฤทธิ์เวทมนตร์ เข้ามาเกี่ยวข้องด้วย", "edits": [{"char_start": 10, "char_end": 19, "wrong": "เวทย์มนต์", "correct": "เวทมนตร์", "class": 3, "class_name": "karan_native", "etymology": "native", "edit_op": "mixed"}]}, {"id": "syn-001556", "source_track": "synthetic", "register": "news", "text_wrong": "ประยุทธ์ยังกล่าวถึงมาตรการเยียวยาประชาชนว่า ขณะนี้รัฐบาลช่วยเหลือทุกกลุ่มไม่ว่าเกษตรกร ประกันสังคม ทั้งในระบบ นอกระบบ หรืออาชีพอิสระ จนยอดจากเดิม 3 ล้านฅน", "text_correct": "ประยุทธ์ยังกล่าวถึงมาตรการเยียวยาประชาชนว่า ขณะนี้รัฐบาลช่วยเหลือทุกกลุ่มไม่ว่าเกษตรกร ประกันสังคม ทั้งในระบบ นอกระบบ หรืออาชีพอิสระ จนยอดจากเดิม 3 ล้านคน", "edits": [{"char_start": 152, "char_end": 154, "wrong": "ฅน", "correct": "คน", "class": 5, "class_name": "cluster_metathesis", "etymology": "native", "edit_op": "substitution"}]}, {"id": "syn-001933", "source_track": "synthetic", "register": "encyclopedic", "text_wrong": "รูปหัวใจหรือเว้าตื้น 5-7 แฉก กว้าง 8-10 เซนติเมตร  ยาว 10-12 เซ็นติเมตร ปลายใบแหลม", "text_correct": "รูปหัวใจหรือเว้าตื้น 5-7 แฉก กว้าง 8-10 เซนติเมตร  ยาว 10-12 เซนติเมตร ปลายใบแหลม", "edits": [{"char_start": 61, "char_end": 71, "wrong": "เซ็นติเมตร", "correct": "เซนติเมตร", "class": 6, "class_name": "loanword_translit", "etymology": "loan", "edit_op": "insertion"}]}, {"id": "wik-000062", "source_track": "mined", "register": "encyclopedic", "text_wrong": "Calendar for artists – ปฎิทินงานเทศกาลที่เกี่ยวกับทัศนศิลป์", "text_correct": "Calendar for artists – ปฏิทินงานเทศกาลที่เกี่ยวกับทัศนศิลป์", "edits": [{"char_start": 23, "char_end": 29, "wrong": "ปฎิทิน", "correct": "ปฏิทิน", "class": 2, "class_name": "consonant_pair", "etymology": "native", "edit_op": "substitution"}]}, {"id": "wik-000023", "source_track": "mined", "register": "encyclopedic", "text_wrong": "ซุปเปอร์ลูกทุ่ง รับบท ป๋อง แสดงร่่วมกับ กรุง ศรีวิไล และ มยุรา ธนะบุตร", "text_correct": "ซุปเปอร์ลูกทุ่ง รับบท ป๋อง แสดงร่วมกับ กรุง ศรีวิไล และ มยุรา ธนะบุตร", "edits": [{"char_start": 31, "char_end": 39, "wrong": "ร่่วมกับ", "correct": "ร่วมกับ", "class": 1, "class_name": "tone_mark", "etymology": "native", "edit_op": "insertion"}]}, {"id": "syn-001172", "source_track": "synthetic", "register": "gov", "text_wrong": "เปิดเผยว่า ธนาคารฯ ได้นำนวตกรรมทางการเงินครบวงจรเข้าร่วมงานมหกรรมการเงิน Money Expo 2020 ครั้งที่ 20 ระหว่างวันที่ 22-25 ตุลาคม 2563 ณ อาคารชาเลนเจอร์ 1-2 อิมแพคเมืองทองธานี", "text_correct": "เปิดเผยว่า ธนาคารฯ ได้นำนวัตกรรมทางการเงินครบวงจรเข้าร่วมงานมหกรรมการเงิน Money Expo 2020 ครั้งที่ 20 ระหว่างวันที่ 22-25 ตุลาคม 2563 ณ อาคารชาเลนเจอร์ 1-2 อิมแพคเมืองทองธานี", "edits": [{"char_start": 24, "char_end": 31, "wrong": "นวตกรรม", "correct": "นวัตกรรม", "class": 4, "class_name": "vowel", "etymology": "native", "edit_op": "deletion"}]}, {"id": "syn-001749", "source_track": "synthetic", "register": "encyclopedic", "text_wrong": "และยังเป็นประเทศประชาธิปไตยใหญ่ที่สุดในโลกและมีประชากรมากที่สุดในโลก (ประมาณ 1,400 ล้านฅน) มีอาณาเขตทางทิศเหนือติดกับจีน เนปาล และภูฏาน ทางตะวันตกเฉียงเหนือติดกับปากีสถาน", "text_correct": "และยังเป็นประเทศประชาธิปไตยใหญ่ที่สุดในโลกและมีประชากรมากที่สุดในโลก (ประมาณ 1,400 ล้านคน) มีอาณาเขตทางทิศเหนือติดกับจีน เนปาล และภูฏาน ทางตะวันตกเฉียงเหนือติดกับปากีสถาน", "edits": [{"char_start": 87, "char_end": 89, "wrong": "ฅน", "correct": "คน", "class": 5, "class_name": "cluster_metathesis", "etymology": "native", "edit_op": "substitution"}]}, {"id": "syn-002027", "source_track": "synthetic", "register": "encyclopedic", "text_wrong": "ขนาดของดอกยาวประมาณ 12-16 เซ็นติเมตร ก้านดอกสั้น", "text_correct": "ขนาดของดอกยาวประมาณ 12-16 เซนติเมตร ก้านดอกสั้น", "edits": [{"char_start": 26, "char_end": 36, "wrong": "เซ็นติเมตร", "correct": "เซนติเมตร", "class": 6, "class_name": "loanword_translit", "etymology": "loan", "edit_op": "insertion"}]}, {"id": "wik-000012", "source_track": "mined", "register": "encyclopedic", "text_wrong": "เรื่องราวของเด็ก ๆ ในเมืองที่เริ่มหายตัวไปในเมืองวินเดน ประเทศเยอรมันนี เป็นเรื่องราวที่แสดงให้เห็นถึงความสัมพันธ์ที่ร้าวฉาน ชีวิตคู่ และอดีตอันดำมืดของสี่ครอบครัวที่อาศัยอยู่ที่เมืองแห่งนี้", "text_correct": "เรื่องราวของเด็ก ๆ ในเมืองที่เริ่มหายตัวไปในเมืองวินเดน ประเทศเยอรมนี เป็นเรื่องราวที่แสดงให้เห็นถึงความสัมพันธ์ที่ร้าวฉาน ชีวิตคู่ และอดีตอันดำมืดของสี่ครอบครัวที่อาศัยอยู่ที่เมืองแห่งนี้", "edits": [{"char_start": 62, "char_end": 71, "wrong": "เยอรมันนี", "correct": "เยอรมนี", "class": 5, "class_name": "cluster_metathesis", "etymology": "native", "edit_op": "insertion"}]}, {"id": "syn-001714", "source_track": "synthetic", "register": "gov", "text_wrong": "นายณรงค์พล ประภานิรินธน์ ผู้ช่วยกรรมการผู้จัดการ สายงานกลยุทธ์ พร้อมด้วยกรรมการผู้ทรงคุณวุฒิอีก 3 ฅน คือ 1.", "text_correct": "นายณรงค์พล ประภานิรินธน์ ผู้ช่วยกรรมการผู้จัดการ สายงานกลยุทธ์ พร้อมด้วยกรรมการผู้ทรงคุณวุฒิอีก 3 คน คือ 1.", "edits": [{"char_start": 98, "char_end": 100, "wrong": "ฅน", "correct": "คน", "class": 5, "class_name": "cluster_metathesis", "etymology": "native", "edit_op": "substitution"}]}, {"id": "wik-000014", "source_track": "mined", "register": "encyclopedic", "text_wrong": "คริสตศักราช 1932 (นับแบบใหม่) เป็นปีอธิกสุรทินที่วันแรกเป็นวันศุกร์ตามปฏิทินเกรกอเรียน หรือ 1 เมษายน ค.ศ.", "text_correct": "คริสต์ศักราช 1932 (นับแบบใหม่) เป็นปีอธิกสุรทินที่วันแรกเป็นวันศุกร์ตามปฏิทินเกรกอเรียน หรือ 1 เมษายน ค.ศ.", "edits": [{"char_start": 0, "char_end": 11, "wrong": "คริสตศักราช", "correct": "คริสต์ศักราช", "class": 3, "class_name": "karan_native", "etymology": "native", "edit_op": "deletion"}]}, {"id": "syn-000799", "source_track": "synthetic", "register": "encyclopedic", "text_wrong": "1991 ถือเป็นการปะทุที่รุนแรงที่สุดเป็นอันดับที่ 2 ของโลกในคริสตศตวรรษที่ 20 อย่างไรก็ตาม ไม่ใช่ว่าภูมิลักษณ์ที่โดดเด่นทุกแห่งจะมีความรุนแรงหรือมีอำนาจทำลายล้างเสมอไป", "text_correct": "1991 ถือเป็นการปะทุที่รุนแรงที่สุดเป็นอันดับที่ 2 ของโลกในคริสต์ศตวรรษที่ 20 อย่างไรก็ตาม ไม่ใช่ว่าภูมิลักษณ์ที่โดดเด่นทุกแห่งจะมีความรุนแรงหรือมีอำนาจทำลายล้างเสมอไป", "edits": [{"char_start": 58, "char_end": 69, "wrong": "คริสตศตวรรษ", "correct": "คริสต์ศตวรรษ", "class": 3, "class_name": "karan_native", "etymology": "native", "edit_op": "deletion"}]}, {"id": "syn-000319", "source_track": "synthetic", "register": "encyclopedic", "text_wrong": "และมาร์วิน มินสกีก้อเห็นพ้องโดยการเขียนว่า \"เพียงชั่วอายุคน", "text_correct": "และมาร์วิน มินสกีก็เห็นพ้องโดยการเขียนว่า \"เพียงชั่วอายุคน", "edits": [{"char_start": 17, "char_end": 20, "wrong": "ก้อ", "correct": "ก็", "class": 1, "class_name": "tone_mark", "etymology": "native", "edit_op": "substitution"}]}, {"id": "wik-000042", "source_track": "mined", "register": "encyclopedic", "text_wrong": "ที่โรงเรียน ENO ขอครูกานต์ อะคาเดมี่ (กานต์ จั่นทอง) ภายหลังได้ร่วมทำโปรเจ็คต์ ออกอัลบั้มในนาม “bunny beat girls (ปันนี่ บีท เกิร์ล)” ปีพ.ศ.", "text_correct": "ที่โรงเรียน ENO ขอครูกานต์ อะคาเดมี่ (กานต์ จั่นทอง) ภายหลังได้ร่วมทำโปรเจกต์ ออกอัลบั้มในนาม “bunny beat girls (ปันนี่ บีท เกิร์ล)” ปีพ.ศ.", "edits": [{"char_start": 69, "char_end": 78, "wrong": "โปรเจ็คต์", "correct": "โปรเจกต์", "class": 1, "class_name": "tone_mark", "etymology": "native", "edit_op": "substitution"}]}, {"id": "wik-000063", "source_track": "mined", "register": "encyclopedic", "text_wrong": "2445 เป็นต้นมา เพื่อหนีราชภัย ส่วนมานพ พิพิธภักดีเป็นทายาทที่ครอบครองวังพิพิธภักดีสืบมา เมื่อลำดับเครือญาติแล้วจะพบว่า สมเด็จพระราชินีอานิซเป็นหลานปู่ของพระพิพิธภักดี (ตนกูมุกดา อับดุลบุตร) และบรรเทิง", "text_correct": "2445 เป็นต้นมา เพื่อหนีราชภัย ส่วนมานพ พิพิธภักดีเป็นทายาทที่ครอบครองวังพิพิธภักดีสืบมา เมื่อลำดับเครือญาติแล้วจะพบว่า สมเด็จพระราชินีอานิซเป็นหลานปู่ของพระพิพิธภักดี (ตนกูมุกดา อับดุลบุตร) และบันเทิง", "edits": [{"char_start": 193, "char_end": 200, "wrong": "บรรเทิง", "correct": "บันเทิง", "class": 5, "class_name": "cluster_metathesis", "etymology": "native", "edit_op": "substitution"}]}];
+const BAKED_NAME  = "ann3";
+
+const S = { annotator:"", idx:0, labels:{}, started:null, activeEdit:0 };
+
+// ---------- DOM ----------
+const $ = s => document.querySelector(s);
+const startEl=$("#start"), appEl=$("#app"), cardEl=$("#card");
+
+// ---------- start screen wiring ----------
+$("#pick").onclick = () => $("#file").click();
+$("#file").onchange = e => {
+  const f = e.target.files[0]; if(!f) return;
+  const r = new FileReader();
+  r.onload = () => {
+    try{
+      let data = JSON.parse(r.result);
+      if(!Array.isArray(data)) throw new Error("not a JSON array");
+      ITEMS = data; loadedName = f.name;
+      $("#fileName").textContent = `${f.name} — ${data.length} items`;
+      $("#fileName").style.color = "var(--good)";
+    }catch(err){ alert("Could not read items file: "+err.message); }
+  };
+  r.readAsText(f);
+};
+
+const whoInput = $("#who");
+whoInput.oninput = checkResume;
+function storageKey(name){ return STORAGE_PREFIX + name.trim(); }
+function checkResume(){
+  const name = whoInput.value.trim();
+  const note = $("#resumeNote");
+  if(name && localStorage.getItem(storageKey(name))){
+    const saved = JSON.parse(localStorage.getItem(storageKey(name)));
+    const n = Object.keys(saved.labels||{}).length;
+    note.textContent = `Found saved progress for “${name}” — ${n} item(s) touched. Begin to resume.`;
+    note.classList.remove("hidden");
+  } else { note.classList.add("hidden"); }
+}
+
+$("#begin").onclick = () => {
+  const name = whoInput.value.trim();
+  if(!name){ whoInput.focus(); whoInput.style.borderColor="var(--bad)"; return; }
+  S.annotator = name;
+  const saved = localStorage.getItem(storageKey(name));
+  if(saved){ const o=JSON.parse(saved); S.labels=o.labels||{}; S.started=o.started||new Date().toISOString(); }
+  else { S.labels={}; S.started=new Date().toISOString(); }
+  startEl.classList.add("hidden"); appEl.classList.remove("hidden");
+  $("#whoLabel").innerHTML = `${name} <span>· ${ITEMS.length} items${loadedName?" · "+loadedName:" · demo set"}</span>`;
+  S.idx = firstUnlabeled();
+  render();
+};
+function firstUnlabeled(){
+  for(let i=0;i<ITEMS.length;i++){ if(!isComplete(ITEMS[i])) return i; }
+  return 0;
+}
+
+// ---------- label helpers ----------
+function lab(id){ return S.labels[id] || (S.labels[id]={edits:[],note:""}); }
+function labEdit(id,i){
+  const l=lab(id); if(!l.edits) l.edits=[];
+  if(!l.edits[i]) l.edits[i]={};
+  return l.edits[i];
+}
+function isComplete(it){
+  const l=S.labels[it.id]; if(!l||!l.edits) return false;
+  for(let i=0;i<it.edits.length;i++){
+    const el=l.edits[i];
+    if(!el || typeof el.accept!=="boolean") return false;
+    if(el.accept===true && (el.class==null||el.etymology==null||el.edit_op==null)) return false;
+  }
+  return true;
+}
+function countDone(){ return ITEMS.filter(isComplete).length; }
+
+function save(){
+  localStorage.setItem(storageKey(S.annotator), JSON.stringify({
+    annotator:S.annotator, started:S.started, updated:new Date().toISOString(), labels:S.labels
+  }));
+  updateProgress();
+}
+
+// ---------- highlight ----------
+function escapeHtml(s){ return String(s).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c])); }
+function markRanges(text, ranges){
+  let html="", cur=0;
+  for(const [s,e,ei] of ranges){
+    if(s<cur || e<=s) continue;                       // skip overlaps / empties
+    html += escapeHtml(text.slice(cur,s));
+    html += `<mark data-ei="${ei}">`+escapeHtml(text.slice(s,e))+`</mark>`;
+    cur = e;
+  }
+  html += escapeHtml(text.slice(cur));
+  return html;
+}
+function wrongRanges(it){
+  const t=it.text_wrong;
+  return it.edits.map((e,i)=>{
+    let s=e.char_start, en=e.char_end;
+    if(t.slice(s,en)!==e.wrong){ const k=t.indexOf(e.wrong); if(k>=0){ s=k; en=k+e.wrong.length; } }
+    return [s,en,i];
+  }).sort((a,b)=>a[0]-b[0]);
+}
+function correctRanges(it){
+  // text_wrong and text_correct are identical before each edit, so the corrected token
+  // sits at char_start shifted by the accumulated length change of earlier edits.
+  const order = it.edits.map((e,i)=>({e,i})).sort((a,b)=>a.e.char_start-b.e.char_start);
+  let delta=0; const ranges=[];
+  for(const {e,i} of order){
+    const s=e.char_start+delta, en=s+e.correct.length;
+    ranges.push([s,en,i]);
+    delta += e.correct.length - (e.char_end-e.char_start);
+  }
+  return ranges;
+}
+
+// ---------- render ----------
+function render(){
+  const it = ITEMS[S.idx];
+  S.activeEdit = 0;
+  cardEl.innerHTML = renderCard(it);
+  wire(it);
+  updateProgress();
+  $("#prevBtn").disabled = S.idx===0;
+  $("#nextBtn").disabled = S.idx===ITEMS.length-1;
+}
+
+function renderCard(it){
+  const l = lab(it.id);
+  const chips = it.edits.map((e,i)=>
+    `<span class="echip" data-ei="${i}"><b>${escapeHtml(e.wrong)}</b><span class="arr">→</span><b>${escapeHtml(e.correct)}</b></span>`).join("");
+  const blocks = it.edits.map((e,i)=>editBlock(it,e,i)).join("");
+  return `
+    <div class="crumb"><span class="chip">${it.source_track||"item"}</span> ${it.register||""}
+      · ${it.edits.length} error${it.edits.length>1?"s":""}</div>
+    <div class="pairbox">
+      <div class="plabel">ข้อความที่มีคำผิด · input</div>
+      <div class="sent wrong">${markRanges(it.text_wrong, wrongRanges(it))}</div>
+      <div class="plabel c">ฉบับที่แก้แล้ว · gold to verify</div>
+      <div class="sent correct">${markRanges(it.text_correct, correctRanges(it))}</div>
+      <div class="chips">${chips}</div>
+    </div>
+    ${blocks}
+    <div class="eblock"><textarea class="notebox" id="note" placeholder="optional note (ambiguity, why rejected, …)">${escapeHtml(l.note||"")}</textarea></div>`;
+}
+
+function editBlock(it,e,i){
+  const el = (lab(it.id).edits||[])[i] || {};
+  const curClass = el.class!=null ? el.class : e.class;
+  const curEty   = el.etymology!=null ? el.etymology : e.etymology;
+  const curOp    = el.edit_op!=null ? el.edit_op : e.edit_op;
+  const acc      = el.accept;
+  const head = it.edits.length>1
+    ? `<div class="ehead">Edit ${i+1} of ${it.edits.length}: <b>${escapeHtml(e.wrong)}</b> → <b>${escapeHtml(e.correct)}</b></div>` : "";
+  const accRow = `<div class="row"><span class="rl">เป็นการสะกดผิดจริงหรือไม่? · real orthographic error?</span>
+    <div class="tg" data-field="accept" data-ei="${i}">
+      <button class="ok ${acc===true?"on":""}" data-v="1">✓ ใช่</button>
+      <button class="no ${acc===false?"on":""}" data-v="0">✗ ไม่ใช่</button>
+    </div></div>`;
+  const classBtns = [1,2,3,4,5,6].map(c=>
+    `<button class="cbtn ${curClass===c?"on":""}" data-field="class" data-ei="${i}" data-v="${c}">${c}<span>${CLASS_SHORT[c]}</span></button>`).join("");
+  const etyBtns = ETY.map(x=>
+    `<button class="pill ${curEty===x?"on":""}" data-field="etymology" data-ei="${i}" data-v="${x}">${x}</button>`).join("");
+  const opBtns = EDIT_OPS.map(x=>
+    `<button class="pill ${curOp===x?"on":""}" data-field="edit_op" data-ei="${i}" data-v="${x}">${x}</button>`).join("");
+  return `
+    <div class="eblock ${i===S.activeEdit?"active":""} ${acc===false?"rejected":""}" data-eblock="${i}">
+      ${head}
+      ${accRow}
+      <div class="sub">
+        <div class="row"><span class="rl">ประเภทกลไก · mechanism class <kbd>1–6</kbd></span>
+          <div class="cbtns">${classBtns}</div></div>
+        <div class="row"><span class="rl">ที่มา · etymology</span><div class="pills">${etyBtns}</div></div>
+        <div class="row"><span class="rl">การแก้ · edit op</span><div class="pills">${opBtns}</div></div>
+      </div>
+    </div>`;
+}
+
+function setActiveEdit(i){
+  S.activeEdit=i;
+  cardEl.querySelectorAll("[data-eblock]").forEach(b=>
+    b.classList.toggle("active", +b.dataset.eblock===i));
+}
+
+function wire(it){
+  // accept toggle (re-render to grey/ungrey the sub-section)
+  cardEl.querySelectorAll(".tg[data-field='accept'] button").forEach(b=>{
+    const i=+b.parentElement.dataset.ei;
+    b.onclick=()=>{
+      const v=b.dataset.v==="1";
+      const el=labEdit(it.id,i); el.accept=v;
+      if(v){ const c=it.edits[i];                       // lock in pre-filled defaults
+        if(el.class==null) el.class=c.class;
+        if(el.etymology==null) el.etymology=c.etymology;
+        if(el.edit_op==null) el.edit_op=c.edit_op; }
+      S.activeEdit=i; render(); save();
+    };
+  });
+  // class buttons
+  cardEl.querySelectorAll(".cbtn").forEach(b=>{
+    const i=+b.dataset.ei;
+    b.onclick=()=>{ labEdit(it.id,i).class=+b.dataset.v; setActiveEdit(i); refreshGroup(it,i); save(); };
+  });
+  // etymology / edit_op pills
+  cardEl.querySelectorAll(".pill").forEach(b=>{
+    const i=+b.dataset.ei, field=b.dataset.field;
+    b.onclick=()=>{ labEdit(it.id,i)[field]=b.dataset.v; setActiveEdit(i); refreshGroup(it,i); save(); };
+  });
+  const note=$("#note"); if(note) note.oninput=()=>{ lab(it.id).note=note.value; save(); };
+}
+
+// repaint the .on state of one edit block's groups without a full re-render
+function refreshGroup(it,i){
+  const el=labEdit(it.id,i);
+  const block=cardEl.querySelector(`[data-eblock="${i}"]`); if(!block) return;
+  block.querySelectorAll(".cbtn").forEach(b=>b.classList.toggle("on", +b.dataset.v===el.class));
+  block.querySelectorAll(".pill[data-field='etymology']").forEach(b=>b.classList.toggle("on", b.dataset.v===el.etymology));
+  block.querySelectorAll(".pill[data-field='edit_op']").forEach(b=>b.classList.toggle("on", b.dataset.v===el.edit_op));
+}
+
+// ---------- nav ----------
+$("#prevBtn").onclick=()=>{ if(S.idx>0){S.idx--;render();} };
+$("#nextBtn").onclick=()=>{ if(S.idx<ITEMS.length-1){S.idx++;render();} };
+document.addEventListener("keydown",e=>{
+  if(appEl.classList.contains("hidden")) return;
+  if(e.target.tagName==="TEXTAREA"||e.target.tagName==="INPUT") return;
+  const it=ITEMS[S.idx];
+  if(e.key==="ArrowRight"){ $("#nextBtn").click(); }
+  else if(e.key==="ArrowLeft"){ $("#prevBtn").click(); }
+  else if(/^[1-6]$/.test(e.key)){
+    labEdit(it.id,S.activeEdit).class=+e.key; refreshGroup(it,S.activeEdit); save();
+  }
+  else if(e.key==="y"||e.key==="n"){
+    const i=S.activeEdit, el=labEdit(it.id,i); el.accept=(e.key==="y");
+    if(el.accept){ const c=it.edits[i];
+      if(el.class==null) el.class=c.class;
+      if(el.etymology==null) el.etymology=c.etymology;
+      if(el.edit_op==null) el.edit_op=c.edit_op; }
+    render(); save();
+  }
+});
+
+// ---------- progress / status ----------
+function updateProgress(){
+  const done=countDone(), tot=ITEMS.length;
+  $("#progText").textContent=`${done} / ${tot}`;
+  $("#progFill").style.width=(tot? (done/tot*100):0)+"%";
+  const it=ITEMS[S.idx];
+  $("#statusText").innerHTML = `item ${S.idx+1} of ${tot} · ` +
+    (isComplete(it)?`<span class="done">complete ✓</span>`:`<span class="todo">incomplete</span>`);
+}
+
+// ---------- rubric ----------
+$("#rubricBtn").onclick=()=>$("#rubric").classList.remove("hidden");
+$("#rubricClose").onclick=()=>$("#rubric").classList.add("hidden");
+$("#rubric").onclick=e=>{ if(e.target.id==="rubric") $("#rubric").classList.add("hidden"); };
+
+// ---------- export ----------
+$("#exportBtn").onclick=()=>{
+  const done=countDone();
+  if(done<ITEMS.length && !confirm(`${ITEMS.length-done} item(s) still incomplete. Export anyway?`)) return;
+  const payload={ annotator:S.annotator, item_source:loadedName||"(embedded)",
+    n_items:ITEMS.length, n_labeled:done, started:S.started, exported:new Date().toISOString(),
+    labels:S.labels };
+  const blob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json"});
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);
+  a.download=`labels_${S.annotator}.json`;
+  a.click(); URL.revokeObjectURL(a.href);
+};
+
+// ---------- baked (self-contained per-annotator) ----------
+function applyBaked(){
+  if(Array.isArray(BAKED_ITEMS) && BAKED_ITEMS.length){
+    ITEMS = BAKED_ITEMS; loadedName = "(embedded)";
+    const fs=$("#fileSection"); if(fs) fs.classList.add("hidden");
+    if(BAKED_NAME){ whoInput.value = BAKED_NAME; }
+    $("#start .sub").textContent =
+      `Track 1 · Subtask 2 · Phase 5 — ${ITEMS.length} items embedded. For each, confirm the spelling fix (real error? class? etymology? edit type). Your work autosaves; close and resume anytime.`;
+  }
+}
+
+applyBaked();
+checkResume();
+</script>
+</body>
+</html>

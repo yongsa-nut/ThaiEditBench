@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EditingBench · Annotation Tool</title>
+<style>
+  :root{
+    --ink:#1a1d24; --muted:#6b7280; --line:#e3e6ea; --bg:#f5f6f8; --card:#fff;
+    --accent:#2563eb; --accent-soft:#eaf1fe; --accent-line:#c3d8fb;
+    --good:#0a7d4d; --good-soft:#e8f6ef; --bad:#c0392b; --bad-soft:#fdecea;
+    --pick:#2563eb; --pick-soft:#eaf1fe; --hl:#fff3bf; --hl-line:#f0c000;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0; height:100%}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Sarabun","Noto Sans Thai",Tahoma,sans-serif;
+    color:var(--ink); background:var(--bg); line-height:1.5;
+  }
+  button{font-family:inherit; cursor:pointer}
+  .hidden{display:none !important}
+
+  /* ---------- Start screen ---------- */
+  #start{max-width:580px; margin:7vh auto; background:var(--card); border:1px solid var(--line);
+         border-radius:14px; padding:32px 34px; box-shadow:0 1px 3px rgba(0,0,0,.05)}
+  #start h1{font-size:1.4rem; margin:0 0 4px}
+  #start .sub{color:var(--muted); margin:0 0 22px; font-size:.95rem}
+  #start label{display:block; font-weight:600; font-size:.9rem; margin:16px 0 6px}
+  #start input[type=text]{width:100%; padding:11px 13px; font-size:1rem; border:1px solid var(--line);
+                          border-radius:9px; font-family:inherit}
+  #start input[type=text]:focus{outline:none; border-color:var(--accent)}
+  .filerow{display:flex; align-items:center; gap:12px; margin-top:6px}
+  .fbtn{background:#eef1f6; border:1px solid var(--line); border-radius:9px; padding:10px 16px;
+        font-size:.9rem; font-weight:600}
+  .fbtn:hover{background:#e3e8f0}
+  #fileName{color:var(--muted); font-size:.85rem}
+  .begin{margin-top:26px; width:100%; background:var(--accent); color:#fff; border:none;
+         border-radius:10px; padding:13px; font-size:1.02rem; font-weight:700}
+  .begin:hover{background:#1d4ed8}
+  .begin:disabled{background:#c3cad6; cursor:not-allowed}
+  .hint{font-size:.82rem; color:var(--muted); margin-top:14px}
+  .resume{margin-top:12px; font-size:.85rem; background:var(--good-soft); color:var(--good);
+          border:1px solid #bfe6d2; border-radius:9px; padding:10px 13px}
+
+  /* ---------- App ---------- */
+  #app{display:flex; flex-direction:column; height:100%}
+  header.bar{display:flex; align-items:center; gap:16px; padding:11px 20px; background:var(--card);
+             border-bottom:1px solid var(--line); flex-wrap:wrap}
+  .bar .who{font-weight:700}
+  .bar .who span{color:var(--muted); font-weight:400; font-size:.85rem}
+  .bar .grow{flex:1}
+  .prog{display:flex; align-items:center; gap:10px; font-size:.85rem; color:var(--muted)}
+  .progbar{width:200px; height:8px; background:#e7ebf1; border-radius:5px; overflow:hidden}
+  .progbar i{display:block; height:100%; background:var(--accent); width:0%}
+  .barbtn{background:#eef1f6; border:1px solid var(--line); border-radius:8px; padding:7px 13px;
+          font-size:.85rem; font-weight:600}
+  .barbtn:hover{background:#e3e8f0}
+  .barbtn.exp{background:var(--accent); color:#fff; border-color:var(--accent)}
+  .barbtn.exp:hover{background:#1d4ed8}
+
+  main{flex:1; overflow:auto; display:flex; justify-content:center; padding:24px 20px 96px}
+  .card{width:100%; max-width:760px}
+  .crumb{display:flex; align-items:center; gap:10px; color:var(--muted); font-size:.85rem; margin-bottom:12px}
+  .chip{background:var(--accent-soft); color:var(--accent); border:1px solid var(--accent-line);
+        border-radius:20px; padding:3px 11px; font-weight:700; font-size:.8rem}
+
+  /* sentence pair */
+  .pairbox{background:var(--card); border:1px solid var(--line); border-radius:12px;
+           padding:18px 22px; margin-bottom:18px}
+  .plabel{font-size:.76rem; font-weight:700; color:var(--muted); letter-spacing:.02em; margin:2px 0 4px}
+  .plabel.c{margin-top:14px}
+  .sent{font-size:1.24rem; line-height:1.95; white-space:pre-wrap; word-break:break-word;
+        font-family:"Sarabun","Noto Sans Thai",Tahoma,serif}
+  .sent mark{background:var(--hl); border-bottom:2px solid var(--hl-line); border-radius:3px;
+             padding:0 1px; font-weight:700}
+  .sent.correct mark{background:var(--good-soft); border-bottom-color:#7ccfa6}
+  .chips{display:flex; flex-wrap:wrap; gap:8px; margin-top:14px}
+  .echip{background:#f7f8fa; border:1px solid var(--line); border-radius:8px; padding:4px 10px;
+         font-size:1.0rem; font-family:"Sarabun","Noto Sans Thai",Tahoma,serif}
+  .echip b{font-weight:700}
+  .echip .arr{color:var(--muted); margin:0 6px}
+
+  /* edit block */
+  .eblock{background:var(--card); border:1px solid var(--line); border-radius:12px;
+          padding:15px 18px; margin-bottom:14px}
+  .eblock.active{box-shadow:0 0 0 2px var(--accent)}
+  .eblock.rejected .sub{opacity:.35; pointer-events:none}
+  .ehead{font-size:.95rem; margin-bottom:10px; font-family:"Sarabun","Noto Sans Thai",Tahoma,serif}
+  .row{display:flex; align-items:flex-start; gap:14px; padding:8px 0; flex-wrap:wrap}
+  .row .rl{flex:0 0 100%; font-size:.85rem; font-weight:600; color:#374151; display:flex;
+           align-items:center; gap:8px}
+  .tg{display:flex; gap:8px}
+  .tg button{padding:8px 18px; font-size:.92rem; font-weight:700; border:1.5px solid var(--line);
+             background:#fafafb; border-radius:8px}
+  .tg button.ok.on{background:var(--good); color:#fff; border-color:var(--good)}
+  .tg button.no.on{background:var(--bad); color:#fff; border-color:var(--bad)}
+  .cbtns{display:flex; gap:7px; flex-wrap:wrap}
+  .cbtn{display:flex; flex-direction:column; align-items:center; min-width:64px; padding:7px 8px;
+        font-size:1.05rem; font-weight:700; border:1.5px solid var(--line); background:#fafafb;
+        border-radius:9px; line-height:1.15}
+  .cbtn span{font-size:.68rem; font-weight:600; color:var(--muted); margin-top:2px}
+  .cbtn:hover{border-color:var(--accent)}
+  .cbtn.on{background:var(--pick); color:#fff; border-color:var(--pick)}
+  .cbtn.on span{color:#dbe7ff}
+  .pills{display:flex; gap:7px; flex-wrap:wrap}
+  .pill{padding:7px 13px; font-size:.85rem; font-weight:600; border:1.5px solid var(--line);
+        background:#fafafb; border-radius:18px; color:var(--ink)}
+  .pill:hover{border-color:var(--accent)}
+  .pill.on{background:var(--pick); color:#fff; border-color:var(--pick)}
+  .sub{margin-top:6px; border-top:1px dashed var(--line); padding-top:6px}
+  .notebox{width:100%; margin-top:4px; padding:9px 12px; border:1px solid var(--line);
+           border-radius:9px; font-family:inherit; font-size:.92rem; resize:vertical; min-height:38px}
+
+  /* footer nav */
+  footer.nav{position:fixed; bottom:0; left:0; right:0; display:flex; align-items:center; gap:14px;
+             padding:12px 20px; background:var(--card); border-top:1px solid var(--line)}
+  footer .navbtn{background:#eef1f6; border:1px solid var(--line); border-radius:9px; padding:11px 22px;
+                 font-size:.95rem; font-weight:700}
+  footer .navbtn:hover{background:#e3e8f0}
+  footer .navbtn:disabled{opacity:.4; cursor:not-allowed}
+  footer .navbtn.next{background:var(--accent); color:#fff; border-color:var(--accent)}
+  footer .navbtn.next:hover{background:#1d4ed8}
+  footer .status{flex:1; text-align:center; font-size:.85rem; color:var(--muted)}
+  footer .status .done{color:var(--good); font-weight:700}
+  footer .status .todo{color:var(--bad); font-weight:700}
+  kbd{background:#e7ebf1; border:1px solid #cfd6e0; border-bottom-width:2px; border-radius:5px;
+      padding:1px 6px; font-size:.78rem; font-family:inherit}
+</style>
+</head>
+<body>
+
+<!-- ===================== START ===================== -->
+<section id="start">
+  <h1>EditingBench — Annotation</h1>
+  <p class="sub">Track 1 · Subtask 2 · Phase 5. For each sentence, confirm the spelling fix: is it a real orthographic error, what mechanism class, etymology, and edit type. Your work autosaves; close and resume anytime.</p>
+
+  <label for="who">Your name / annotator id</label>
+  <input type="text" id="who" placeholder="e.g. ann1" autocomplete="off">
+
+  <div id="fileSection">
+    <label>Items file <span style="font-weight:400;color:var(--muted)">(alpha_set.jsonl exported as JSON array)</span></label>
+    <div class="filerow">
+      <button class="fbtn" id="pick">Choose file…</button>
+      <input type="file" id="file" accept=".json,application/json" class="hidden">
+      <span id="fileName">— using built-in demo set —</span>
+    </div>
+  </div>
+
+  <button class="begin" id="begin">Begin</button>
+  <div class="resume hidden" id="resumeNote"></div>
+  <p class="hint">Keys: <kbd>1</kbd>–<kbd>6</kbd> set the mechanism class · <kbd>y</kbd>/<kbd>n</kbd> accept/reject · <kbd>←</kbd> <kbd>→</kbd> prev/next. Nothing is uploaded — everything stays in this browser until you Export.</p>
+</section>
+
+<!-- ===================== APP ===================== -->
+<section id="app" class="hidden">
+  <header class="bar">
+    <div class="who" id="whoLabel"></div>
+    <div class="grow"></div>
+    <div class="prog">
+      <span id="progText">0 / 0</span>
+      <span class="progbar"><i id="progFill"></i></span>
+    </div>
+    <button class="barbtn" id="rubricBtn">Rubric</button>
+    <button class="barbtn exp" id="exportBtn">Export labels</button>
+  </header>
+
+  <main><div class="card" id="card"></div></main>
+
+  <footer class="nav">
+    <button class="navbtn" id="prevBtn">← Prev</button>
+    <div class="status" id="statusText"></div>
+    <button class="navbtn next" id="nextBtn">Next →</button>
+  </footer>
+</section>
+
+<!-- rubric popover -->
+<div id="rubric" class="hidden" style="position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:50;display:flex;align-items:center;justify-content:center">
+  <div style="background:#fff;max-width:600px;border-radius:14px;padding:26px 30px;max-height:84vh;overflow:auto">
+    <h2 style="margin:0 0 12px;font-size:1.2rem">Rubric — EditingBench mechanism classes</h2>
+    <p style="font-size:.9rem;color:var(--muted);margin:0 0 12px">The yellow span in the top sentence is the misspelling; the green span in the bottom sentence is the gold correction. The class / etymology / edit type are <b>pre-filled</b> with our automatic guess — <b>confirm or override</b> each.</p>
+    <h4 style="margin:12px 0 4px">“Is this a real orthographic error?”</h4>
+    <ul style="margin:4px 0;padding-left:20px;font-size:.9rem">
+      <li><b>✓ ใช่</b> — the bottom sentence genuinely fixes a spelling/orthography mistake.</li>
+      <li><b>✗ ไม่ใช่</b> — it's a stylistic rewrite, a factual change, or not actually wrong. (We drop these.)</li>
+    </ul>
+    <h4 style="margin:14px 0 4px">The 6 mechanism classes</h4>
+    <ul style="margin:4px 0;padding-left:20px;font-size:.9rem;line-height:1.7">
+      <li><b>1 วรรณยุกต์ (tone mark)</b> — wrong/extra/missing tone mark (่ ้ ๊ ๋) or ็</li>
+      <li><b>2 พยัญชนะคู่ (consonant pair)</b> — homophonous consonant chosen wrong (ฎ/ฏ, ณ/น, ศ/ษ/ส, ท/ธ …)</li>
+      <li><b>3 การันต์ (karan)</b> — spurious/missing/misplaced ์ on native or Pali-Sanskrit words</li>
+      <li><b>4 สระ (vowel)</b> — wrong vowel, extra/missing vowel, long↔short (ิ/ี, ึ/ื, ุ/ู)</li>
+      <li><b>5 สลับ/ควบ (cluster · metathesis)</b> — reordered letters, รร↔ัน, spurious/missing cluster consonant</li>
+      <li><b>6 ทับศัพท์ (loanword)</b> — <b>any</b> error on a foreign loanword / proper noun (absorbs the mechanism)</li>
+    </ul>
+    <p style="font-size:.88rem;margin:10px 0 0"><b>Loanword-absorption rule:</b> if the word is a foreign loanword or proper noun (etymology = loan / proper-noun), the class is <b>6</b> regardless of which letter changed.</p>
+    <button class="begin" id="rubricClose" style="margin-top:20px">Close</button>
+  </div>
+</div>
+
+<script>
+"use strict";
+
+// ---------- label vocabularies ----------
+const CLASS_LABELS = {
+  1:"วรรณยุกต์ / tone mark", 2:"พยัญชนะคู่ / consonant pair", 3:"การันต์ / karan",
+  4:"สระ / vowel", 5:"สลับ-ควบ / cluster", 6:"ทับศัพท์ / loanword",
+};
+const CLASS_SHORT = {1:"วรรณยุกต์",2:"พยัญชนะ",3:"การันต์",4:"สระ",5:"สลับ/ควบ",6:"ทับศัพท์"};
+const ETY = ["native","loan","proper-noun"];
+const EDIT_OPS = ["substitution","insertion","deletion","transposition","mixed"];
+
+// ---------- built-in demo set (replaced by Choose file… or baking) ----------
+const DEMO_ITEMS = [
+  { id:"demo-1", source_track:"mined", register:"encyclopedic",
+    text_wrong:"เขาสังเกตุการณ์ดวงดาวทุกคืนอย่างตั้งใจ",
+    text_correct:"เขาสังเกตการณ์ดวงดาวทุกคืนอย่างตั้งใจ",
+    edits:[{char_start:3,char_end:10,wrong:"สังเกตุ",correct:"สังเกต",
+            class:4,class_name:"vowel",etymology:"native",edit_op:"insertion"}] },
+  { id:"demo-2", source_track:"synthetic", register:"news",
+    text_wrong:"ผลการตรวจวัดคุณภาพอากาสภายนอกอาคารอยู่ในเกณฑ์ปกติ",
+    text_correct:"ผลการตรวจวัดคุณภาพอากาศภายนอกอาคารอยู่ในเกณฑ์ปกติ",
+    edits:[{char_start:18,char_end:23,wrong:"อากาส",correct:"อากาศ",
+            class:2,class_name:"consonant_pair",etymology:"native",edit_op:"substitution"}] },
+  { id:"demo-3-multi", source_track:"synthetic", register:"gov",
+    text_wrong:"รายงานฉบับนี้อ้างอิงตามมาตราฐานสากลและตรวจวัดอากาสโดยรอบ",
+    text_correct:"รายงานฉบับนี้อ้างอิงตามมาตรฐานสากลและตรวจวัดอากาศโดยรอบ",
+    edits:[{char_start:22,char_end:30,wrong:"มาตราฐาน",correct:"มาตรฐาน",
+            class:4,class_name:"vowel",etymology:"native",edit_op:"insertion"},
+           {char_start:44,char_end:49,wrong:"อากาส",correct:"อากาศ",
+            class:2,class_name:"consonant_pair",etymology:"native",edit_op:"substitution"}] },
+];
+
+const STORAGE_PREFIX = "thaiwrite_editing_t1s2::";
+let ITEMS = DEMO_ITEMS, loadedName = null;
+
+// Baked by build_sheets.py for self-contained per-annotator files (null = demo / file-picker).
+const BAKED_ITEMS = null; /* BAKED_ITEMS_PLACEHOLDER */
+const BAKED_NAME  = null; /* BAKED_NAME_PLACEHOLDER */
+
+const S = { annotator:"", idx:0, labels:{}, started:null, activeEdit:0 };
+
+// ---------- DOM ----------
+const $ = s => document.querySelector(s);
+const startEl=$("#start"), appEl=$("#app"), cardEl=$("#card");
+
+// ---------- start screen wiring ----------
+$("#pick").onclick = () => $("#file").click();
+$("#file").onchange = e => {
+  const f = e.target.files[0]; if(!f) return;
+  const r = new FileReader();
+  r.onload = () => {
+    try{
+      let data = JSON.parse(r.result);
+      if(!Array.isArray(data)) throw new Error("not a JSON array");
+      ITEMS = data; loadedName = f.name;
+      $("#fileName").textContent = `${f.name} — ${data.length} items`;
+      $("#fileName").style.color = "var(--good)";
+    }catch(err){ alert("Could not read items file: "+err.message); }
+  };
+  r.readAsText(f);
+};
+
+const whoInput = $("#who");
+whoInput.oninput = checkResume;
+function storageKey(name){ return STORAGE_PREFIX + name.trim(); }
+function checkResume(){
+  const name = whoInput.value.trim();
+  const note = $("#resumeNote");
+  if(name && localStorage.getItem(storageKey(name))){
+    const saved = JSON.parse(localStorage.getItem(storageKey(name)));
+    const n = Object.keys(saved.labels||{}).length;
+    note.textContent = `Found saved progress for “${name}” — ${n} item(s) touched. Begin to resume.`;
+    note.classList.remove("hidden");
+  } else { note.classList.add("hidden"); }
+}
+
+$("#begin").onclick = () => {
+  const name = whoInput.value.trim();
+  if(!name){ whoInput.focus(); whoInput.style.borderColor="var(--bad)"; return; }
+  S.annotator = name;
+  const saved = localStorage.getItem(storageKey(name));
+  if(saved){ const o=JSON.parse(saved); S.labels=o.labels||{}; S.started=o.started||new Date().toISOString(); }
+  else { S.labels={}; S.started=new Date().toISOString(); }
+  startEl.classList.add("hidden"); appEl.classList.remove("hidden");
+  $("#whoLabel").innerHTML = `${name} <span>· ${ITEMS.length} items${loadedName?" · "+loadedName:" · demo set"}</span>`;
+  S.idx = firstUnlabeled();
+  render();
+};
+function firstUnlabeled(){
+  for(let i=0;i<ITEMS.length;i++){ if(!isComplete(ITEMS[i])) return i; }
+  return 0;
+}
+
+// ---------- label helpers ----------
+function lab(id){ return S.labels[id] || (S.labels[id]={edits:[],note:""}); }
+function labEdit(id,i){
+  const l=lab(id); if(!l.edits) l.edits=[];
+  if(!l.edits[i]) l.edits[i]={};
+  return l.edits[i];
+}
+function isComplete(it){
+  const l=S.labels[it.id]; if(!l||!l.edits) return false;
+  for(let i=0;i<it.edits.length;i++){
+    const el=l.edits[i];
+    if(!el || typeof el.accept!=="boolean") return false;
+    if(el.accept===true && (el.class==null||el.etymology==null||el.edit_op==null)) return false;
+  }
+  return true;
+}
+function countDone(){ return ITEMS.filter(isComplete).length; }
+
+function save(){
+  localStorage.setItem(storageKey(S.annotator), JSON.stringify({
+    annotator:S.annotator, started:S.started, updated:new Date().toISOString(), labels:S.labels
+  }));
+  updateProgress();
+}
+
+// ---------- highlight ----------
+function escapeHtml(s){ return String(s).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c])); }
+function markRanges(text, ranges){
+  let html="", cur=0;
+  for(const [s,e,ei] of ranges){
+    if(s<cur || e<=s) continue;                       // skip overlaps / empties
+    html += escapeHtml(text.slice(cur,s));
+    html += `<mark data-ei="${ei}">`+escapeHtml(text.slice(s,e))+`</mark>`;
+    cur = e;
+  }
+  html += escapeHtml(text.slice(cur));
+  return html;
+}
+function wrongRanges(it){
+  const t=it.text_wrong;
+  return it.edits.map((e,i)=>{
+    let s=e.char_start, en=e.char_end;
+    if(t.slice(s,en)!==e.wrong){ const k=t.indexOf(e.wrong); if(k>=0){ s=k; en=k+e.wrong.length; } }
+    return [s,en,i];
+  }).sort((a,b)=>a[0]-b[0]);
+}
+function correctRanges(it){
+  // text_wrong and text_correct are identical before each edit, so the corrected token
+  // sits at char_start shifted by the accumulated length change of earlier edits.
+  const order = it.edits.map((e,i)=>({e,i})).sort((a,b)=>a.e.char_start-b.e.char_start);
+  let delta=0; const ranges=[];
+  for(const {e,i} of order){
+    const s=e.char_start+delta, en=s+e.correct.length;
+    ranges.push([s,en,i]);
+    delta += e.correct.length - (e.char_end-e.char_start);
+  }
+  return ranges;
+}
+
+// ---------- render ----------
+function render(){
+  const it = ITEMS[S.idx];
+  S.activeEdit = 0;
+  cardEl.innerHTML = renderCard(it);
+  wire(it);
+  updateProgress();
+  $("#prevBtn").disabled = S.idx===0;
+  $("#nextBtn").disabled = S.idx===ITEMS.length-1;
+}
+
+function renderCard(it){
+  const l = lab(it.id);
+  const chips = it.edits.map((e,i)=>
+    `<span class="echip" data-ei="${i}"><b>${escapeHtml(e.wrong)}</b><span class="arr">→</span><b>${escapeHtml(e.correct)}</b></span>`).join("");
+  const blocks = it.edits.map((e,i)=>editBlock(it,e,i)).join("");
+  return `
+    <div class="crumb"><span class="chip">${it.source_track||"item"}</span> ${it.register||""}
+      · ${it.edits.length} error${it.edits.length>1?"s":""}</div>
+    <div class="pairbox">
+      <div class="plabel">ข้อความที่มีคำผิด · input</div>
+      <div class="sent wrong">${markRanges(it.text_wrong, wrongRanges(it))}</div>
+      <div class="plabel c">ฉบับที่แก้แล้ว · gold to verify</div>
+      <div class="sent correct">${markRanges(it.text_correct, correctRanges(it))}</div>
+      <div class="chips">${chips}</div>
+    </div>
+    ${blocks}
+    <div class="eblock"><textarea class="notebox" id="note" placeholder="optional note (ambiguity, why rejected, …)">${escapeHtml(l.note||"")}</textarea></div>`;
+}
+
+function editBlock(it,e,i){
+  const el = (lab(it.id).edits||[])[i] || {};
+  const curClass = el.class!=null ? el.class : e.class;
+  const curEty   = el.etymology!=null ? el.etymology : e.etymology;
+  const curOp    = el.edit_op!=null ? el.edit_op : e.edit_op;
+  const acc      = el.accept;
+  const head = it.edits.length>1
+    ? `<div class="ehead">Edit ${i+1} of ${it.edits.length}: <b>${escapeHtml(e.wrong)}</b> → <b>${escapeHtml(e.correct)}</b></div>` : "";
+  const accRow = `<div class="row"><span class="rl">เป็นการสะกดผิดจริงหรือไม่? · real orthographic error?</span>
+    <div class="tg" data-field="accept" data-ei="${i}">
+      <button class="ok ${acc===true?"on":""}" data-v="1">✓ ใช่</button>
+      <button class="no ${acc===false?"on":""}" data-v="0">✗ ไม่ใช่</button>
+    </div></div>`;
+  const classBtns = [1,2,3,4,5,6].map(c=>
+    `<button class="cbtn ${curClass===c?"on":""}" data-field="class" data-ei="${i}" data-v="${c}">${c}<span>${CLASS_SHORT[c]}</span></button>`).join("");
+  const etyBtns = ETY.map(x=>
+    `<button class="pill ${curEty===x?"on":""}" data-field="etymology" data-ei="${i}" data-v="${x}">${x}</button>`).join("");
+  const opBtns = EDIT_OPS.map(x=>
+    `<button class="pill ${curOp===x?"on":""}" data-field="edit_op" data-ei="${i}" data-v="${x}">${x}</button>`).join("");
+  return `
+    <div class="eblock ${i===S.activeEdit?"active":""} ${acc===false?"rejected":""}" data-eblock="${i}">
+      ${head}
+      ${accRow}
+      <div class="sub">
+        <div class="row"><span class="rl">ประเภทกลไก · mechanism class <kbd>1–6</kbd></span>
+          <div class="cbtns">${classBtns}</div></div>
+        <div class="row"><span class="rl">ที่มา · etymology</span><div class="pills">${etyBtns}</div></div>
+        <div class="row"><span class="rl">การแก้ · edit op</span><div class="pills">${opBtns}</div></div>
+      </div>
+    </div>`;
+}
+
+function setActiveEdit(i){
+  S.activeEdit=i;
+  cardEl.querySelectorAll("[data-eblock]").forEach(b=>
+    b.classList.toggle("active", +b.dataset.eblock===i));
+}
+
+function wire(it){
+  // accept toggle (re-render to grey/ungrey the sub-section)
+  cardEl.querySelectorAll(".tg[data-field='accept'] button").forEach(b=>{
+    const i=+b.parentElement.dataset.ei;
+    b.onclick=()=>{
+      const v=b.dataset.v==="1";
+      const el=labEdit(it.id,i); el.accept=v;
+      if(v){ const c=it.edits[i];                       // lock in pre-filled defaults
+        if(el.class==null) el.class=c.class;
+        if(el.etymology==null) el.etymology=c.etymology;
+        if(el.edit_op==null) el.edit_op=c.edit_op; }
+      S.activeEdit=i; render(); save();
+    };
+  });
+  // class buttons
+  cardEl.querySelectorAll(".cbtn").forEach(b=>{
+    const i=+b.dataset.ei;
+    b.onclick=()=>{ labEdit(it.id,i).class=+b.dataset.v; setActiveEdit(i); refreshGroup(it,i); save(); };
+  });
+  // etymology / edit_op pills
+  cardEl.querySelectorAll(".pill").forEach(b=>{
+    const i=+b.dataset.ei, field=b.dataset.field;
+    b.onclick=()=>{ labEdit(it.id,i)[field]=b.dataset.v; setActiveEdit(i); refreshGroup(it,i); save(); };
+  });
+  const note=$("#note"); if(note) note.oninput=()=>{ lab(it.id).note=note.value; save(); };
+}
+
+// repaint the .on state of one edit block's groups without a full re-render
+function refreshGroup(it,i){
+  const el=labEdit(it.id,i);
+  const block=cardEl.querySelector(`[data-eblock="${i}"]`); if(!block) return;
+  block.querySelectorAll(".cbtn").forEach(b=>b.classList.toggle("on", +b.dataset.v===el.class));
+  block.querySelectorAll(".pill[data-field='etymology']").forEach(b=>b.classList.toggle("on", b.dataset.v===el.etymology));
+  block.querySelectorAll(".pill[data-field='edit_op']").forEach(b=>b.classList.toggle("on", b.dataset.v===el.edit_op));
+}
+
+// ---------- nav ----------
+$("#prevBtn").onclick=()=>{ if(S.idx>0){S.idx--;render();} };
+$("#nextBtn").onclick=()=>{ if(S.idx<ITEMS.length-1){S.idx++;render();} };
+document.addEventListener("keydown",e=>{
+  if(appEl.classList.contains("hidden")) return;
+  if(e.target.tagName==="TEXTAREA"||e.target.tagName==="INPUT") return;
+  const it=ITEMS[S.idx];
+  if(e.key==="ArrowRight"){ $("#nextBtn").click(); }
+  else if(e.key==="ArrowLeft"){ $("#prevBtn").click(); }
+  else if(/^[1-6]$/.test(e.key)){
+    labEdit(it.id,S.activeEdit).class=+e.key; refreshGroup(it,S.activeEdit); save();
+  }
+  else if(e.key==="y"||e.key==="n"){
+    const i=S.activeEdit, el=labEdit(it.id,i); el.accept=(e.key==="y");
+    if(el.accept){ const c=it.edits[i];
+      if(el.class==null) el.class=c.class;
+      if(el.etymology==null) el.etymology=c.etymology;
+      if(el.edit_op==null) el.edit_op=c.edit_op; }
+    render(); save();
+  }
+});
+
+// ---------- progress / status ----------
+function updateProgress(){
+  const done=countDone(), tot=ITEMS.length;
+  $("#progText").textContent=`${done} / ${tot}`;
+  $("#progFill").style.width=(tot? (done/tot*100):0)+"%";
+  const it=ITEMS[S.idx];
+  $("#statusText").innerHTML = `item ${S.idx+1} of ${tot} · ` +
+    (isComplete(it)?`<span class="done">complete ✓</span>`:`<span class="todo">incomplete</span>`);
+}
+
+// ---------- rubric ----------
+$("#rubricBtn").onclick=()=>$("#rubric").classList.remove("hidden");
+$("#rubricClose").onclick=()=>$("#rubric").classList.add("hidden");
+$("#rubric").onclick=e=>{ if(e.target.id==="rubric") $("#rubric").classList.add("hidden"); };
+
+// ---------- export ----------
+$("#exportBtn").onclick=()=>{
+  const done=countDone();
+  if(done<ITEMS.length && !confirm(`${ITEMS.length-done} item(s) still incomplete. Export anyway?`)) return;
+  const payload={ annotator:S.annotator, item_source:loadedName||"(embedded)",
+    n_items:ITEMS.length, n_labeled:done, started:S.started, exported:new Date().toISOString(),
+    labels:S.labels };
+  const blob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json"});
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);
+  a.download=`labels_${S.annotator}.json`;
+  a.click(); URL.revokeObjectURL(a.href);
+};
+
+// ---------- baked (self-contained per-annotator) ----------
+function applyBaked(){
+  if(Array.isArray(BAKED_ITEMS) && BAKED_ITEMS.length){
+    ITEMS = BAKED_ITEMS; loadedName = "(embedded)";
+    const fs=$("#fileSection"); if(fs) fs.classList.add("hidden");
+    if(BAKED_NAME){ whoInput.value = BAKED_NAME; }
+    $("#start .sub").textContent =
+      `Track 1 · Subtask 2 · Phase 5 — ${ITEMS.length} items embedded. For each, confirm the spelling fix (real error? class? etymology? edit type). Your work autosaves; close and resume anytime.`;
+  }
+}
+
+applyBaked();
+checkResume();
+</script>
+</body>
+</html>
