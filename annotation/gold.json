@@ -1,0 +1,1258 @@
+{
+  "generated": "2026-09-30T04:18:16",
+  "threshold": 0.7,
+  "n_set": 60,
+  "n_mined": 40,
+  "n_dropped": 0,
+  "headline_alpha": 0.7517,
+  "per_class_alpha": {
+    "1": 0.7934,
+    "2": 0.9213,
+    "3": 0.6111,
+    "4": 0.7733,
+    "5": 1.0,
+    "6": 0.4848
+  },
+  "labels": {
+    "syn-002039": {
+      "source_track": "synthetic",
+      "accept": true,
+      "class": 1,
+      "class_name": "tone_mark",
+      "etymology": null,
+      "edit_op": null,
+      "consensus": "adjudicate",
+      "verified": false,
+      "votes": {
+        "class": [
+          1,
+          6
+        ],
+        "annotators": [
+          "ann1",
+          "ann2"
+        ]
+      },
+      "construction_class": 6,
+      "class_mismatch": true
+    },
+    "wik-000081": {
+      "source_track": "mined",
+      "accept": true,
+      "class": 1,
+      "class_name": "tone_mark",
+      "etymology": null,
+      "edit_op": null,
+      "consensus": "unanimous",
+      "verified": true,
+      "votes": {
+        "class": [
+          1,
+          1
+        ],
+        "annotators": [
+          "ann1",
+          "ann2"
+        ]
+      }
+    },
+    "syn-000068": {
+      "source_track": "synthetic",
+      "accept": true,
+      "class": 1,
+      "class_name": "tone_mark",
+      "etymology": null,
+      "edit_op": null,
+      "consensus": "unanimous",
+      "verified": true,
+      "votes": {
+        "class": [
+          1,
+          1
+        ],
+        "annotators": [
+          "ann1",
+          "ann2"
+        ]
+      },
+      "construction_class": 1,
+      "class_mismatch": false
+    },
+    "wik-000022": {
+      "source_track": "mined",
+      "accept": true,
+      "class": 4,
+      "class_name": "vowel",
+      "etymology": null,
+      "edit_op": null,
+      "consensus": "adjudicate",
+      "verified": false,
+      "votes": {
+        "class": [
+          4,
+          6
+        ],
+        "annotators": [
+          "ann1",
+          "ann2"
+        ]
+      }
+    },
+    "wik-000077": {
+      "source_track": "mined",
+      "accept": true,
+      "class": 1,
+      "class_name": "tone_mark",
+      "etymology": null,
+      "edit_op": null,
+      "consensus": "unanimous",
+      "verified": true,
+      "votes": {
+        "class": [
+          1,
+          1
+        ],
+        "annotators": [
+          "ann1",
+          "ann2"
+        ]
+      }
+    },
+    "syn-001976": {
+      "source_track": "synthetic",
+      "accept": true,
+      "class": 2,
+      "class_name": "consonant_pair",
+      "etymology": null,
+      "edit_op": null,
+      "consensus": "unanimous",
+      "verified": true,
+      "votes": {
+        "class": [
+          2,
+          2
+        ],
+        "annotators": [
+          "ann1",
+          "ann2"
+        ]
+      },
+      "construction_class": 6,
+      "class_mismatch": true
+    },
+    "syn-001531": {
+      "source_track": "synthetic",
+      "accept": true,
+      "class": 2,
+      "class_name": "consonant_pair",
+      "etymology": null,
+      "edit_op": null,
+      "consensus": "unanimous",
+      "verified": true,
+      "votes": {
+        "class": [
+          2,
+          2
+        ],
+        "annotators": [
+          "ann1",
+          "ann2"
+        ]
+      },
+      "construction_class": 5,
+      "class_mismatch": true
+    },
+    "syn-002058": {
+      "source_track": "synthetic",
+      "accept": true,
+      "class": 3,
+      "class_name": "karan_native",
+      "etymology": null,
+      "edit_op": null,
+      "consensus": "adjudicate",
+      "verified": false,
+      "votes": {
+        "class": [
+          3,
+          6
+        ],
+        "annotators": [
+          "ann1",
+          "ann2"
+        ]
+      },
+      "construction_class": 6,
+      "class_mismatch": true
+    },
+    "syn-002214": {
+      "source_track": "synthetic",
+      "accept": true,
+      "class": 2,
+      "class_name": "consonant_pair",
+      "etymology": null,
+      "edit_op": null,
+      "consensus": "unanimous",
+      "verified": true,
+      "votes": {
+        "class": [
+          2,
+          2
+        ],
+        "annotators": [
+          "ann1",
+          "ann2"
+        ]
+      },
+      "construction_class": 6,
+      "class_mismatch": true
+    },
+    "wik-000091": {
+      "source_track": "mined",
+      "accept": true,
+      "class": 4,
+      "class_name": "vowel",
+      "etymology": null,
+      "edit_op": null,
+      "consensus": "adjudicate",
+      "verified": false,
+      "votes": {
+        "class": [
+          4,
+          1
+        ],
+        "annotators": [
+          "ann1",
+          "ann2"
+        ]
+      }
+    },
+    "syn-001168": {
+      "source_track": "synthetic",
+      "accept": true,
+      "class": 4,
+      "class_name": "vowel",
+      "etymology": null,
+      "edit_op": null,
+      "consensus": "unanimous",
+      "verified": true,
+      "votes": {
+        "class": [
+          4,
+          4
+        ],
+        "annotators": [
+          "ann1",
+          "ann2"
+        ]
+      },
+      "construction_class": 4,
+      "class_mismatch": false
+    },
+    "syn-002135": {
+      "source_track": "synthetic",
+      "accept": true,
+      "class": 6,
+      "class_name": "loanword",
+      "etymology": null,
+      "edit_op": null,
+      "consensus": "adjudicate",
+      "verified": false,
+      "votes": {
+        "class": [
+          6,
+          1
+        ],
+        "annotators": [
+          "ann1",
+          "ann2"
+        ]
+      },
+      "construction_class": 6,
+      "class_mismatch": false
+    },
+    "syn-000920": {
+      "source_track": "synthetic",
+      "accept": true,
+      "class": 3,
+      "class_name": "karan_native",
+      "etymology": null,
+      "edit_op": null,
+      "consensus": "unanimous",
+      "verified": true,
+      "votes": {
+        "class": [
+          3,
+          3
+        ],
+        "annotators": [
+          "ann1",
+          "ann2"
+        ]
+      },
+      "construction_class": 3,
+      "class_mismatch": false
+    },
+    "syn-001062": {
+      "source_track": "synthetic",
+      "accept": true,
+      "class": 6,
+      "class_name": "loanword",
+      "etymology": null,
+      "edit_op": null,
+      "consensus": "adjudicate",
+      "verified": false,
+      "votes": {
+        "class": [
+          6,
+          3
+        ],
+        "annotators": [
+          "ann1",
+          "ann2"
+        ]
+      },
+      "construction_class": 3,
+      "class_mismatch": true
+    },
+    "syn-002217": {
+      "source_track": "synthetic",
+      "accept": true,
+      "class": 6,
+      "class_name": "loanword",
+      "etymology": null,
+      "edit_op": null,
+      "consensus": "unanimous",
+      "verified": true,
+      "votes": {
+        "class": [
+          6,
+          6
+        ],
+        "annotators": [
+          "ann1",
+          "ann2"
+        ]
+      },
+      "construction_class": 6,
+      "class_mismatch": false
+    },
+    "syn-001911": {
+      "source_track": "synthetic",
+      "accept": true,
+      "class": 2,
+      "class_name": "consonant_pair",
+      "etymology": null,
+      "edit_op": null,
+      "consensus": "adjudicate",
+      "verified": false,
+      "votes": {
+        "class": [
+          2,
+          6
+        ],
+        "annotators": [
+          "ann1",
+          "ann2"
+        ]
+      },
+      "construction_class": 6,
+      "class_mismatch": true
+    },
+    "syn-002183": {
+      "source_track": "synthetic",
+      "accept": true,
+      "class": 6,
+      "class_name": "loanword",
+      "etymology": null,
+      "edit_op": null,
+      "consensus": "unanimous",
+      "verified": true,
+      "votes": {
+        "class": [
+          6,
+          6
+        ],
+        "annotators": [
+          "ann1",
+          "ann2"
+        ]
+      },
+      "construction_class": 6,
+      "class_mismatch": false
+    },
+    "wik-000001": {
+      "source_track": "mined",
+      "accept": true,
+      "class": 2,
+      "class_name": "consonant_pair",
+      "etymology": null,
+      "edit_op": null,
+      "consensus": "unanimous",
+      "verified": true,
+      "votes": {
+        "class": [
+          2,
+          2
+        ],
+        "annotators": [
+          "ann1",
+          "ann2"
+        ]
+      }
+    },
+    "syn-000555": {
+      "source_track": "synthetic",
+      "accept": true,
+      "class": 2,
+      "class_name": "consonant_pair",
+      "etymology": null,
+      "edit_op": null,
+      "consensus": "unanimous",
+      "verified": true,
+      "votes": {
+        "class": [
+          2,
+          2
+        ],
+        "annotators": [
+          "ann1",
+          "ann2"
+        ]
+      },
+      "construction_class": 2,
+      "class_mismatch": false
+    },
+    "wik-000037": {
+      "source_track": "mined",
+      "accept": true,
+      "class": 4,
+      "class_name": "vowel",
+      "etymology": null,
+      "edit_op": null,
+      "consensus": "unanimous",
+      "verified": true,
+      "votes": {
+        "class": [
+          4,
+          4
+        ],
+        "annotators": [
+          "ann1",
+          "ann2"
+        ]
+      }
+    },
+    "wik-000028": {
+      "source_track": "mined",
+      "accept": true,
+      "class": 2,
+      "class_name": "consonant_pair",
+      "etymology": null,
+      "edit_op": null,
+      "consensus": "unanimous",
+      "verified": true,
+      "votes": {
+        "class": [
+          2,
+          2
+        ],
+        "annotators": [
+          "ann1",
+          "ann2"
+        ]
+      }
+    },
+    "wik-000055": {
+      "source_track": "mined",
+      "accept": true,
+      "class": 2,
+      "class_name": "consonant_pair",
+      "etymology": null,
+      "edit_op": null,
+      "consensus": "unanimous",
+      "verified": true,
+      "votes": {
+        "class": [
+          2,
+          2
+        ],
+        "annotators": [
+          "ann1",
+          "ann2"
+        ]
+      }
+    },
+    "syn-001817": {
+      "source_track": "synthetic",
+      "accept": true,
+      "class": 2,
+      "class_name": "consonant_pair",
+      "etymology": null,
+      "edit_op": null,
+      "consensus": "unanimous",
+      "verified": true,
+      "votes": {
+        "class": [
+          2,
+          2
+        ],
+        "annotators": [
+          "ann1",
+          "ann2"
+        ]
+      },
+      "construction_class": 5,
+      "class_mismatch": true
+    },
+    "syn-002087": {
+      "source_track": "synthetic",
+      "accept": true,
+      "class": 2,
+      "class_name": "consonant_pair",
+      "etymology": null,
+      "edit_op": null,
+      "consensus": "unanimous",
+      "verified": true,
+      "votes": {
+        "class": [
+          2,
+          2
+        ],
+        "annotators": [
+          "ann1",
+          "ann2"
+        ]
+      },
+      "construction_class": 6,
+      "class_mismatch": true
+    },
+    "syn-001629": {
+      "source_track": "synthetic",
+      "accept": true,
+      "class": 2,
+      "class_name": "consonant_pair",
+      "etymology": null,
+      "edit_op": null,
+      "consensus": "unanimous",
+      "verified": true,
+      "votes": {
+        "class": [
+          2,
+          2
+        ],
+        "annotators": [
+          "ann1",
+          "ann2"
+        ]
+      },
+      "construction_class": 5,
+      "class_mismatch": true
+    },
+    "syn-001952": {
+      "source_track": "synthetic",
+      "accept": true,
+      "class": 2,
+      "class_name": "consonant_pair",
+      "etymology": null,
+      "edit_op": null,
+      "consensus": "unanimous",
+      "verified": true,
+      "votes": {
+        "class": [
+          2,
+          2
+        ],
+        "annotators": [
+          "ann1",
+          "ann2"
+        ]
+      },
+      "construction_class": 6,
+      "class_mismatch": true
+    },
+    "wik-000038": {
+      "source_track": "mined",
+      "accept": true,
+      "class": 3,
+      "class_name": "karan_native",
+      "etymology": null,
+      "edit_op": null,
+      "consensus": "adjudicate",
+      "verified": false,
+      "votes": {
+        "class": [
+          3,
+          2
+        ],
+        "annotators": [
+          "ann1",
+          "ann2"
+        ]
+      }
+    },
+    "wik-000002": {
+      "source_track": "mined",
+      "accept": true,
+      "class": 3,
+      "class_name": "karan_native",
+      "etymology": null,
+      "edit_op": null,
+      "consensus": "unanimous",
+      "verified": true,
+      "votes": {
+        "class": [
+          3,
+          3
+        ],
+        "annotators": [
+          "ann1",
+          "ann2"
+        ]
+      }
+    },
+    "wik-000004": {
+      "source_track": "mined",
+      "accept": true,
+      "class": 1,
+      "class_name": "tone_mark",
+      "etymology": null,
+      "edit_op": null,
+      "consensus": "unanimous",
+      "verified": true,
+      "votes": {
+        "class": [
+          1,
+          1
+        ],
+        "annotators": [
+          "ann1",
+          "ann2"
+        ]
+      }
+    },
+    "syn-001858": {
+      "source_track": "synthetic",
+      "accept": true,
+      "class": 5,
+      "class_name": "cluster_metathesis",
+      "etymology": null,
+      "edit_op": null,
+      "consensus": "unanimous",
+      "verified": true,
+      "votes": {
+        "class": [
+          5,
+          5
+        ],
+        "annotators": [
+          "ann1",
+          "ann2"
+        ]
+      },
+      "construction_class": 5,
+      "class_mismatch": false
+    },
+    "wik-000051": {
+      "source_track": "mined",
+      "accept": true,
+      "class": 4,
+      "class_name": "vowel",
+      "etymology": null,
+      "edit_op": null,
+      "consensus": "unanimous",
+      "verified": true,
+      "votes": {
+        "class": [
+          4,
+          4
+        ],
+        "annotators": [
+          "ann1",
+          "ann2"
+        ]
+      }
+    },
+    "syn-001578": {
+      "source_track": "synthetic",
+      "accept": true,
+      "class": 2,
+      "class_name": "consonant_pair",
+      "etymology": null,
+      "edit_op": null,
+      "consensus": "unanimous",
+      "verified": true,
+      "votes": {
+        "class": [
+          2,
+          2
+        ],
+        "annotators": [
+          "ann1",
+          "ann2"
+        ]
+      },
+      "construction_class": 5,
+      "class_mismatch": true
+    },
+    "wik-000003": {
+      "source_track": "mined",
+      "accept": true,
+      "class": 2,
+      "class_name": "consonant_pair",
+      "etymology": null,
+      "edit_op": null,
+      "consensus": "unanimous",
+      "verified": true,
+      "votes": {
+        "class": [
+          2,
+          2
+        ],
+        "annotators": [
+          "ann1",
+          "ann2"
+        ]
+      }
+    },
+    "wik-000011": {
+      "source_track": "mined",
+      "accept": true,
+      "class": 2,
+      "class_name": "consonant_pair",
+      "etymology": null,
+      "edit_op": null,
+      "consensus": "unanimous",
+      "verified": true,
+      "votes": {
+        "class": [
+          2,
+          2
+        ],
+        "annotators": [
+          "ann1",
+          "ann2"
+        ]
+      }
+    },
+    "wik-000047": {
+      "source_track": "mined",
+      "accept": true,
+      "class": 4,
+      "class_name": "vowel",
+      "etymology": null,
+      "edit_op": null,
+      "consensus": "unanimous",
+      "verified": true,
+      "votes": {
+        "class": [
+          4,
+          4
+        ],
+        "annotators": [
+          "ann1",
+          "ann2"
+        ]
+      }
+    },
+    "wik-000066": {
+      "source_track": "mined",
+      "accept": true,
+      "class": 4,
+      "class_name": "vowel",
+      "etymology": null,
+      "edit_op": null,
+      "consensus": "unanimous",
+      "verified": true,
+      "votes": {
+        "class": [
+          4,
+          4
+        ],
+        "annotators": [
+          "ann1",
+          "ann2"
+        ]
+      }
+    },
+    "wik-000085": {
+      "source_track": "mined",
+      "accept": true,
+      "class": 4,
+      "class_name": "vowel",
+      "etymology": null,
+      "edit_op": null,
+      "consensus": "unanimous",
+      "verified": true,
+      "votes": {
+        "class": [
+          4,
+          4
+        ],
+        "annotators": [
+          "ann1",
+          "ann2"
+        ]
+      }
+    },
+    "wik-000087": {
+      "source_track": "mined",
+      "accept": true,
+      "class": 1,
+      "class_name": "tone_mark",
+      "etymology": null,
+      "edit_op": null,
+      "consensus": "unanimous",
+      "verified": true,
+      "votes": {
+        "class": [
+          1,
+          1
+        ],
+        "annotators": [
+          "ann1",
+          "ann2"
+        ]
+      }
+    },
+    "wik-000072": {
+      "source_track": "mined",
+      "accept": true,
+      "class": 1,
+      "class_name": "tone_mark",
+      "etymology": null,
+      "edit_op": null,
+      "consensus": "unanimous",
+      "verified": true,
+      "votes": {
+        "class": [
+          1,
+          1
+        ],
+        "annotators": [
+          "ann1",
+          "ann2"
+        ]
+      }
+    },
+    "wik-000101": {
+      "source_track": "mined",
+      "accept": true,
+      "class": 6,
+      "class_name": "loanword",
+      "etymology": null,
+      "edit_op": null,
+      "consensus": "adjudicate",
+      "verified": false,
+      "votes": {
+        "class": [
+          6,
+          3
+        ],
+        "annotators": [
+          "ann1",
+          "ann2"
+        ]
+      }
+    },
+    "wik-000095": {
+      "source_track": "mined",
+      "accept": true,
+      "class": 1,
+      "class_name": "tone_mark",
+      "etymology": null,
+      "edit_op": null,
+      "consensus": "adjudicate",
+      "verified": false,
+      "votes": {
+        "class": [
+          1,
+          4
+        ],
+        "annotators": [
+          "ann1",
+          "ann2"
+        ]
+      }
+    },
+    "wik-000017": {
+      "source_track": "mined",
+      "accept": true,
+      "class": 3,
+      "class_name": "karan_native",
+      "etymology": null,
+      "edit_op": null,
+      "consensus": "unanimous",
+      "verified": true,
+      "votes": {
+        "class": [
+          3,
+          3
+        ],
+        "annotators": [
+          "ann1",
+          "ann2"
+        ]
+      }
+    },
+    "wik-000053": {
+      "source_track": "mined",
+      "accept": true,
+      "class": 6,
+      "class_name": "loanword",
+      "etymology": null,
+      "edit_op": null,
+      "consensus": "unanimous",
+      "verified": true,
+      "votes": {
+        "class": [
+          6,
+          6
+        ],
+        "annotators": [
+          "ann1",
+          "ann2"
+        ]
+      }
+    },
+    "wik-000097": {
+      "source_track": "mined",
+      "accept": true,
+      "class": 5,
+      "class_name": "cluster_metathesis",
+      "etymology": null,
+      "edit_op": null,
+      "consensus": "unanimous",
+      "verified": true,
+      "votes": {
+        "class": [
+          5,
+          5
+        ],
+        "annotators": [
+          "ann1",
+          "ann2"
+        ]
+      }
+    },
+    "wik-000090": {
+      "source_track": "mined",
+      "accept": true,
+      "class": 1,
+      "class_name": "tone_mark",
+      "etymology": null,
+      "edit_op": null,
+      "consensus": "unanimous",
+      "verified": true,
+      "votes": {
+        "class": [
+          1,
+          1
+        ],
+        "annotators": [
+          "ann1",
+          "ann2"
+        ]
+      }
+    },
+    "wik-000098": {
+      "source_track": "mined",
+      "accept": true,
+      "class": 1,
+      "class_name": "tone_mark",
+      "etymology": null,
+      "edit_op": null,
+      "consensus": "unanimous",
+      "verified": true,
+      "votes": {
+        "class": [
+          1,
+          1
+        ],
+        "annotators": [
+          "ann1",
+          "ann2"
+        ]
+      }
+    },
+    "wik-000083": {
+      "source_track": "mined",
+      "accept": true,
+      "class": 3,
+      "class_name": "karan_native",
+      "etymology": null,
+      "edit_op": null,
+      "consensus": "unanimous",
+      "verified": true,
+      "votes": {
+        "class": [
+          3,
+          3
+        ],
+        "annotators": [
+          "ann1",
+          "ann2"
+        ]
+      }
+    },
+    "wik-000010": {
+      "source_track": "mined",
+      "accept": true,
+      "class": 3,
+      "class_name": "karan_native",
+      "etymology": null,
+      "edit_op": null,
+      "consensus": "unanimous",
+      "verified": true,
+      "votes": {
+        "class": [
+          3,
+          3
+        ],
+        "annotators": [
+          "ann1",
+          "ann2"
+        ]
+      }
+    },
+    "wik-000096": {
+      "source_track": "mined",
+      "accept": true,
+      "class": 6,
+      "class_name": "loanword",
+      "etymology": null,
+      "edit_op": null,
+      "consensus": "unanimous",
+      "verified": true,
+      "votes": {
+        "class": [
+          6,
+          6
+        ],
+        "annotators": [
+          "ann1",
+          "ann2"
+        ]
+      }
+    },
+    "wik-000025": {
+      "source_track": "mined",
+      "accept": true,
+      "class": 2,
+      "class_name": "consonant_pair",
+      "etymology": null,
+      "edit_op": null,
+      "consensus": "unanimous",
+      "verified": true,
+      "votes": {
+        "class": [
+          2,
+          2
+        ],
+        "annotators": [
+          "ann1",
+          "ann2"
+        ]
+      }
+    },
+    "wik-000034": {
+      "source_track": "mined",
+      "accept": true,
+      "class": 6,
+      "class_name": "loanword",
+      "etymology": null,
+      "edit_op": null,
+      "consensus": "adjudicate",
+      "verified": false,
+      "votes": {
+        "class": [
+          6,
+          3
+        ],
+        "annotators": [
+          "ann1",
+          "ann2"
+        ]
+      }
+    },
+    "wik-000009": {
+      "source_track": "mined",
+      "accept": true,
+      "class": 1,
+      "class_name": "tone_mark",
+      "etymology": null,
+      "edit_op": null,
+      "consensus": "unanimous",
+      "verified": true,
+      "votes": {
+        "class": [
+          1,
+          1
+        ],
+        "annotators": [
+          "ann1",
+          "ann2"
+        ]
+      }
+    },
+    "wik-000000": {
+      "source_track": "mined",
+      "accept": true,
+      "class": 2,
+      "class_name": "consonant_pair",
+      "etymology": null,
+      "edit_op": null,
+      "consensus": "unanimous",
+      "verified": true,
+      "votes": {
+        "class": [
+          2,
+          2
+        ],
+        "annotators": [
+          "ann1",
+          "ann2"
+        ]
+      }
+    },
+    "wik-000074": {
+      "source_track": "mined",
+      "accept": true,
+      "class": 3,
+      "class_name": "karan_native",
+      "etymology": null,
+      "edit_op": null,
+      "consensus": "unanimous",
+      "verified": true,
+      "votes": {
+        "class": [
+          3,
+          3
+        ],
+        "annotators": [
+          "ann1",
+          "ann2"
+        ]
+      }
+    },
+    "wik-000062": {
+      "source_track": "mined",
+      "accept": true,
+      "class": 2,
+      "class_name": "consonant_pair",
+      "etymology": null,
+      "edit_op": null,
+      "consensus": "unanimous",
+      "verified": true,
+      "votes": {
+        "class": [
+          2,
+          2
+        ],
+        "annotators": [
+          "ann1",
+          "ann2"
+        ]
+      }
+    },
+    "wik-000023": {
+      "source_track": "mined",
+      "accept": true,
+      "class": 1,
+      "class_name": "tone_mark",
+      "etymology": null,
+      "edit_op": null,
+      "consensus": "unanimous",
+      "verified": true,
+      "votes": {
+        "class": [
+          1,
+          1
+        ],
+        "annotators": [
+          "ann1",
+          "ann2"
+        ]
+      }
+    },
+    "wik-000012": {
+      "source_track": "mined",
+      "accept": true,
+      "class": 6,
+      "class_name": "loanword",
+      "etymology": null,
+      "edit_op": null,
+      "consensus": "unanimous",
+      "verified": true,
+      "votes": {
+        "class": [
+          6,
+          6
+        ],
+        "annotators": [
+          "ann1",
+          "ann2"
+        ]
+      }
+    },
+    "wik-000014": {
+      "source_track": "mined",
+      "accept": true,
+      "class": 6,
+      "class_name": "loanword",
+      "etymology": null,
+      "edit_op": null,
+      "consensus": "adjudicate",
+      "verified": false,
+      "votes": {
+        "class": [
+          6,
+          3
+        ],
+        "annotators": [
+          "ann1",
+          "ann2"
+        ]
+      }
+    },
+    "wik-000042": {
+      "source_track": "mined",
+      "accept": true,
+      "class": 6,
+      "class_name": "loanword",
+      "etymology": null,
+      "edit_op": null,
+      "consensus": "unanimous",
+      "verified": true,
+      "votes": {
+        "class": [
+          6,
+          6
+        ],
+        "annotators": [
+          "ann1",
+          "ann2"
+        ]
+      }
+    },
+    "wik-000063": {
+      "source_track": "mined",
+      "accept": true,
+      "class": 5,
+      "class_name": "cluster_metathesis",
+      "etymology": null,
+      "edit_op": null,
+      "consensus": "unanimous",
+      "verified": true,
+      "votes": {
+        "class": [
+          5,
+          5
+        ],
+        "annotators": [
+          "ann1",
+          "ann2"
+        ]
+      }
+    }
+  }
+}

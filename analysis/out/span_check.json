@@ -1,0 +1,348 @@
+{
+ "T1": {
+  "pooled": {
+   "fixed": 0.8663,
+   "missed_untouched": 0.1126,
+   "missed_touched": 0.0133,
+   "wrong_corr": 0.0078,
+   "n": 15712
+  },
+  "per_model": {
+   "deepseek-flash": {
+    "fixed": 0.9623,
+    "missed_untouched": 0.0214,
+    "missed_touched": 0.0112,
+    "wrong_corr": 0.0051,
+    "n": 982
+   },
+   "deepseek-v4-pro": {
+    "fixed": 0.9542,
+    "missed_untouched": 0.0377,
+    "wrong_corr": 0.002,
+    "missed_touched": 0.0061,
+    "n": 982
+   },
+   "gemini-3.5-flash": {
+    "fixed": 0.9898,
+    "missed_untouched": 0.0031,
+    "wrong_corr": 0.0041,
+    "missed_touched": 0.0031,
+    "n": 982
+   },
+   "gemma-4-31b": {
+    "fixed": 0.9562,
+    "missed_untouched": 0.0346,
+    "missed_touched": 0.0051,
+    "wrong_corr": 0.0041,
+    "n": 982
+   },
+   "glm-5.1": {
+    "fixed": 0.7963,
+    "missed_untouched": 0.1843,
+    "missed_touched": 0.0143,
+    "wrong_corr": 0.0051,
+    "n": 982
+   },
+   "gpt54-mini": {
+    "fixed": 0.945,
+    "missed_untouched": 0.0346,
+    "missed_touched": 0.0102,
+    "wrong_corr": 0.0102,
+    "n": 982
+   },
+   "gpt55-high": {
+    "fixed": 0.9929,
+    "missed_untouched": 0.0041,
+    "missed_touched": 0.0031,
+    "n": 982
+   },
+   "gpt55-med": {
+    "fixed": 0.9929,
+    "missed_untouched": 0.0041,
+    "missed_touched": 0.0031,
+    "n": 982
+   },
+   "minimax-m2.7": {
+    "fixed": 0.6558,
+    "missed_untouched": 0.3167,
+    "wrong_corr": 0.0061,
+    "missed_touched": 0.0214,
+    "n": 982
+   },
+   "openthaigpt": {
+    "fixed": 0.6904,
+    "missed_untouched": 0.279,
+    "wrong_corr": 0.0122,
+    "missed_touched": 0.0183,
+    "n": 982
+   },
+   "opus-4.7": {
+    "fixed": 0.9898,
+    "missed_touched": 0.002,
+    "missed_untouched": 0.0051,
+    "wrong_corr": 0.0031,
+    "n": 982
+   },
+   "qwen3.6-35b-a3b": {
+    "missed_untouched": 0.1303,
+    "fixed": 0.8167,
+    "wrong_corr": 0.0183,
+    "missed_touched": 0.0346,
+    "n": 982
+   },
+   "sonnet-4.6": {
+    "fixed": 0.9623,
+    "missed_untouched": 0.0265,
+    "wrong_corr": 0.0051,
+    "missed_touched": 0.0061,
+    "n": 982
+   },
+   "thalle": {
+    "fixed": 0.6925,
+    "missed_untouched": 0.2749,
+    "wrong_corr": 0.0081,
+    "missed_touched": 0.0244,
+    "n": 982
+   },
+   "typhoon-s": {
+    "fixed": 0.7006,
+    "missed_untouched": 0.2841,
+    "wrong_corr": 0.0051,
+    "missed_touched": 0.0102,
+    "n": 982
+   },
+   "typhoon25": {
+    "fixed": 0.7637,
+    "missed_untouched": 0.1609,
+    "wrong_corr": 0.0356,
+    "missed_touched": 0.0397,
+    "n": 982
+   }
+  }
+ },
+ "T2": {
+  "pooled": {
+   "fixed": 0.8508,
+   "wrong_corr": 0.0066,
+   "missed_untouched": 0.1273,
+   "missed_touched": 0.0154,
+   "n": 4416
+  },
+  "per_model": {
+   "deepseek-flash": {
+    "fixed": 0.9601,
+    "wrong_corr": 0.0109,
+    "missed_untouched": 0.029,
+    "n": 276
+   },
+   "deepseek-v4-pro": {
+    "fixed": 0.9746,
+    "missed_untouched": 0.0217,
+    "missed_touched": 0.0036,
+    "n": 276
+   },
+   "gemini-3.5-flash": {
+    "fixed": 0.9891,
+    "missed_untouched": 0.0109,
+    "n": 276
+   },
+   "gemma-4-31b": {
+    "fixed": 0.9674,
+    "missed_touched": 0.0072,
+    "missed_untouched": 0.0254,
+    "n": 276
+   },
+   "glm-5.1": {
+    "fixed": 0.8152,
+    "missed_untouched": 0.1667,
+    "missed_touched": 0.0145,
+    "wrong_corr": 0.0036,
+    "n": 276
+   },
+   "gpt54-mini": {
+    "fixed": 0.9167,
+    "missed_touched": 0.0109,
+    "missed_untouched": 0.058,
+    "wrong_corr": 0.0145,
+    "n": 276
+   },
+   "gpt55-high": {
+    "fixed": 0.9746,
+    "missed_untouched": 0.0254,
+    "n": 276
+   },
+   "gpt55-med": {
+    "fixed": 0.971,
+    "missed_untouched": 0.0254,
+    "missed_touched": 0.0036,
+    "n": 276
+   },
+   "minimax-m2.7": {
+    "fixed": 0.6522,
+    "missed_untouched": 0.3297,
+    "missed_touched": 0.0109,
+    "wrong_corr": 0.0072,
+    "n": 276
+   },
+   "openthaigpt": {
+    "fixed": 0.5942,
+    "missed_untouched": 0.3768,
+    "missed_touched": 0.0254,
+    "wrong_corr": 0.0036,
+    "n": 276
+   },
+   "opus-4.7": {
+    "fixed": 0.9855,
+    "missed_untouched": 0.0145,
+    "n": 276
+   },
+   "qwen3.6-35b-a3b": {
+    "fixed": 0.7536,
+    "missed_touched": 0.0471,
+    "missed_untouched": 0.1775,
+    "wrong_corr": 0.0217,
+    "n": 276
+   },
+   "sonnet-4.6": {
+    "fixed": 0.9457,
+    "missed_touched": 0.0036,
+    "missed_untouched": 0.0471,
+    "wrong_corr": 0.0036,
+    "n": 276
+   },
+   "thalle": {
+    "fixed": 0.692,
+    "missed_untouched": 0.2101,
+    "missed_touched": 0.0906,
+    "wrong_corr": 0.0072,
+    "n": 276
+   },
+   "typhoon-s": {
+    "fixed": 0.6413,
+    "missed_untouched": 0.3478,
+    "wrong_corr": 0.0036,
+    "missed_touched": 0.0072,
+    "n": 276
+   },
+   "typhoon25": {
+    "fixed": 0.779,
+    "missed_untouched": 0.1703,
+    "wrong_corr": 0.029,
+    "missed_touched": 0.0217,
+    "n": 276
+   }
+  }
+ },
+ "T3": {
+  "pooled": {
+   "fixed": 0.8282,
+   "missed_untouched": 0.1487,
+   "missed_touched": 0.0183,
+   "wrong_corr": 0.0048,
+   "n": 3120
+  },
+  "per_model": {
+   "deepseek-flash": {
+    "fixed": 0.9641,
+    "missed_untouched": 0.0256,
+    "missed_touched": 0.0103,
+    "n": 195
+   },
+   "deepseek-v4-pro": {
+    "fixed": 0.9128,
+    "missed_untouched": 0.0718,
+    "missed_touched": 0.0154,
+    "n": 195
+   },
+   "gemini-3.5-flash": {
+    "fixed": 0.9846,
+    "missed_touched": 0.0103,
+    "wrong_corr": 0.0051,
+    "n": 195
+   },
+   "gemma-4-31b": {
+    "fixed": 0.9692,
+    "missed_untouched": 0.0256,
+    "wrong_corr": 0.0051,
+    "n": 195
+   },
+   "glm-5.1": {
+    "fixed": 0.841,
+    "missed_untouched": 0.1077,
+    "missed_touched": 0.041,
+    "wrong_corr": 0.0103,
+    "n": 195
+   },
+   "gpt54-mini": {
+    "missed_untouched": 0.1231,
+    "fixed": 0.8513,
+    "wrong_corr": 0.0103,
+    "missed_touched": 0.0154,
+    "n": 195
+   },
+   "gpt55-high": {
+    "fixed": 0.9487,
+    "missed_untouched": 0.041,
+    "missed_touched": 0.0103,
+    "n": 195
+   },
+   "gpt55-med": {
+    "fixed": 0.9436,
+    "missed_untouched": 0.0462,
+    "missed_touched": 0.0103,
+    "n": 195
+   },
+   "minimax-m2.7": {
+    "fixed": 0.4462,
+    "missed_untouched": 0.5333,
+    "missed_touched": 0.0205,
+    "n": 195
+   },
+   "openthaigpt": {
+    "missed_untouched": 0.3026,
+    "fixed": 0.6821,
+    "wrong_corr": 0.0103,
+    "missed_touched": 0.0051,
+    "n": 195
+   },
+   "opus-4.7": {
+    "fixed": 0.9897,
+    "missed_untouched": 0.0103,
+    "n": 195
+   },
+   "qwen3.6-35b-a3b": {
+    "fixed": 0.7436,
+    "missed_untouched": 0.2154,
+    "missed_touched": 0.0308,
+    "wrong_corr": 0.0103,
+    "n": 195
+   },
+   "sonnet-4.6": {
+    "fixed": 0.959,
+    "missed_untouched": 0.041,
+    "n": 195
+   },
+   "thalle": {
+    "fixed": 0.6718,
+    "missed_untouched": 0.2359,
+    "missed_touched": 0.0872,
+    "wrong_corr": 0.0051,
+    "n": 195
+   },
+   "typhoon-s": {
+    "missed_untouched": 0.3333,
+    "fixed": 0.6462,
+    "wrong_corr": 0.0051,
+    "missed_touched": 0.0154,
+    "n": 195
+   },
+   "typhoon25": {
+    "fixed": 0.6974,
+    "missed_touched": 0.0205,
+    "missed_untouched": 0.2667,
+    "wrong_corr": 0.0154,
+    "n": 195
+   }
+  }
+ }
+}

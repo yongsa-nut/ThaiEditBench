@@ -1,0 +1,862 @@
+{
+ "T1": {
+  "n_items": 795,
+  "gold_edits": 982,
+  "best": "gpt55-high",
+  "models": {
+   "deepseek-flash": {
+    "corr_f1": 0.9474,
+    "ci": [
+     0.9352,
+     0.9589
+    ],
+    "det_f1": 0.9524,
+    "p_vs_best": 0.0002,
+    "tied_with_best": false,
+    "coverage": 795,
+    "decomp": null
+   },
+   "deepseek-v4-pro": {
+    "corr_f1": 0.9263,
+    "ci": [
+     0.9125,
+     0.9394
+    ],
+    "det_f1": 0.9283,
+    "p_vs_best": 0.0,
+    "tied_with_best": false,
+    "coverage": 795,
+    "decomp": null
+   },
+   "gemini-3.5-flash": {
+    "corr_f1": 0.9652,
+    "ci": [
+     0.9547,
+     0.9746
+    ],
+    "det_f1": 0.9692,
+    "p_vs_best": 0.0248,
+    "tied_with_best": false,
+    "coverage": 795,
+    "decomp": null
+   },
+   "gemma-4-31b": {
+    "corr_f1": 0.9504,
+    "ci": [
+     0.9383,
+     0.9616
+    ],
+    "det_f1": 0.9545,
+    "p_vs_best": 0.0004,
+    "tied_with_best": false,
+    "coverage": 795,
+    "decomp": null
+   },
+   "glm-5.1": {
+    "corr_f1": 0.8459,
+    "ci": [
+     0.8232,
+     0.8672
+    ],
+    "det_f1": 0.8513,
+    "p_vs_best": 0.0,
+    "tied_with_best": false,
+    "coverage": 795,
+    "decomp": null
+   },
+   "gpt54-mini": {
+    "corr_f1": 0.9489,
+    "ci": [
+     0.9365,
+     0.9604
+    ],
+    "det_f1": 0.9591,
+    "p_vs_best": 0.0002,
+    "tied_with_best": false,
+    "coverage": 795,
+    "decomp": null
+   },
+   "gpt55-high": {
+    "corr_f1": 0.9726,
+    "ci": [
+     0.964,
+     0.9802
+    ],
+    "det_f1": 0.9726,
+    "p_vs_best": null,
+    "tied_with_best": true,
+    "coverage": 795,
+    "decomp": null
+   },
+   "gpt55-med": {
+    "corr_f1": 0.9692,
+    "ci": [
+     0.9604,
+     0.9774
+    ],
+    "det_f1": 0.9692,
+    "p_vs_best": 0.1536,
+    "tied_with_best": true,
+    "coverage": 795,
+    "decomp": null
+   },
+   "minimax-m2.7": {
+    "corr_f1": 0.7398,
+    "ci": [
+     0.7142,
+     0.7655
+    ],
+    "det_f1": 0.7467,
+    "p_vs_best": 0.0,
+    "tied_with_best": false,
+    "coverage": 795,
+    "decomp": null
+   },
+   "openthaigpt": {
+    "corr_f1": 0.7414,
+    "ci": [
+     0.7007,
+     0.7768
+    ],
+    "det_f1": 0.7545,
+    "p_vs_best": 0.0,
+    "tied_with_best": false,
+    "coverage": 795,
+    "decomp": null
+   },
+   "opus-4.7": {
+    "corr_f1": 0.9681,
+    "ci": [
+     0.9581,
+     0.9775
+    ],
+    "det_f1": 0.9711,
+    "p_vs_best": 0.4026,
+    "tied_with_best": true,
+    "coverage": 795,
+    "decomp": null
+   },
+   "qwen3.6-35b-a3b": {
+    "corr_f1": 0.7051,
+    "ci": [
+     0.6735,
+     0.7364
+    ],
+    "det_f1": 0.7209,
+    "p_vs_best": 0.0,
+    "tied_with_best": false,
+    "coverage": 795,
+    "decomp": null
+   },
+   "sonnet-4.6": {
+    "corr_f1": 0.9469,
+    "ci": [
+     0.9335,
+     0.9594
+    ],
+    "det_f1": 0.9519,
+    "p_vs_best": 0.0002,
+    "tied_with_best": false,
+    "coverage": 795,
+    "decomp": null
+   },
+   "thalle": {
+    "corr_f1": 0.7489,
+    "ci": [
+     0.7147,
+     0.7802
+    ],
+    "det_f1": 0.7577,
+    "p_vs_best": 0.0,
+    "tied_with_best": false,
+    "coverage": 795,
+    "decomp": null
+   },
+   "typhoon-s": {
+    "corr_f1": 0.7823,
+    "ci": [
+     0.7593,
+     0.8047
+    ],
+    "det_f1": 0.7879,
+    "p_vs_best": 0.0,
+    "tied_with_best": false,
+    "coverage": 795,
+    "decomp": null
+   },
+   "typhoon25": {
+    "corr_f1": 0.7418,
+    "ci": [
+     0.7161,
+     0.7672
+    ],
+    "det_f1": 0.7765,
+    "p_vs_best": 0.0,
+    "tied_with_best": false,
+    "coverage": 795,
+    "decomp": null
+   }
+  }
+ },
+ "T2": {
+  "n_items": 223,
+  "gold_edits": 276,
+  "best": "gpt55-high",
+  "models": {
+   "deepseek-flash": {
+    "corr_f1": 0.9447,
+    "ci": [
+     0.9183,
+     0.9676
+    ],
+    "det_f1": 0.9554,
+    "p_vs_best": 0.0502,
+    "tied_with_best": true,
+    "coverage": 223,
+    "decomp": null
+   },
+   "deepseek-v4-pro": {
+    "corr_f1": 0.926,
+    "ci": [
+     0.9016,
+     0.9492
+    ],
+    "det_f1": 0.926,
+    "p_vs_best": 0.0008,
+    "tied_with_best": false,
+    "coverage": 223,
+    "decomp": null
+   },
+   "gemini-3.5-flash": {
+    "corr_f1": 0.9596,
+    "ci": [
+     0.9416,
+     0.9761
+    ],
+    "det_f1": 0.9596,
+    "p_vs_best": 0.2066,
+    "tied_with_best": true,
+    "coverage": 223,
+    "decomp": null
+   },
+   "gemma-4-31b": {
+    "corr_f1": 0.9536,
+    "ci": [
+     0.9311,
+     0.974
+    ],
+    "det_f1": 0.9536,
+    "p_vs_best": 0.1388,
+    "tied_with_best": true,
+    "coverage": 223,
+    "decomp": null
+   },
+   "glm-5.1": {
+    "corr_f1": 0.8123,
+    "ci": [
+     0.7671,
+     0.8545
+    ],
+    "det_f1": 0.8159,
+    "p_vs_best": 0.0,
+    "tied_with_best": false,
+    "coverage": 223,
+    "decomp": null
+   },
+   "gpt54-mini": {
+    "corr_f1": 0.9167,
+    "ci": [
+     0.8881,
+     0.9435
+    ],
+    "det_f1": 0.9312,
+    "p_vs_best": 0.0,
+    "tied_with_best": false,
+    "coverage": 223,
+    "decomp": null
+   },
+   "gpt55-high": {
+    "corr_f1": 0.9694,
+    "ci": [
+     0.9517,
+     0.9842
+    ],
+    "det_f1": 0.9694,
+    "p_vs_best": null,
+    "tied_with_best": true,
+    "coverage": 223,
+    "decomp": null
+   },
+   "gpt55-med": {
+    "corr_f1": 0.9554,
+    "ci": [
+     0.9343,
+     0.9741
+    ],
+    "det_f1": 0.9554,
+    "p_vs_best": 0.0044,
+    "tied_with_best": false,
+    "coverage": 223,
+    "decomp": null
+   },
+   "minimax-m2.7": {
+    "corr_f1": 0.72,
+    "ci": [
+     0.6708,
+     0.7672
+    ],
+    "det_f1": 0.728,
+    "p_vs_best": 0.0,
+    "tied_with_best": false,
+    "coverage": 223,
+    "decomp": null
+   },
+   "openthaigpt": {
+    "corr_f1": 0.4774,
+    "ci": [
+     0.3864,
+     0.5705
+    ],
+    "det_f1": 0.4803,
+    "p_vs_best": 0.0,
+    "tied_with_best": false,
+    "coverage": 223,
+    "decomp": null
+   },
+   "opus-4.7": {
+    "corr_f1": 0.9477,
+    "ci": [
+     0.9236,
+     0.9699
+    ],
+    "det_f1": 0.9477,
+    "p_vs_best": 0.1096,
+    "tied_with_best": true,
+    "coverage": 223,
+    "decomp": null
+   },
+   "qwen3.6-35b-a3b": {
+    "corr_f1": 0.3827,
+    "ci": [
+     0.3084,
+     0.4697
+    ],
+    "det_f1": 0.3937,
+    "p_vs_best": 0.0,
+    "tied_with_best": false,
+    "coverage": 223,
+    "decomp": null
+   },
+   "sonnet-4.6": {
+    "corr_f1": 0.9062,
+    "ci": [
+     0.8746,
+     0.9362
+    ],
+    "det_f1": 0.9097,
+    "p_vs_best": 0.0,
+    "tied_with_best": false,
+    "coverage": 223,
+    "decomp": null
+   },
+   "thalle": {
+    "corr_f1": 0.595,
+    "ci": [
+     0.5405,
+     0.649
+    ],
+    "det_f1": 0.6012,
+    "p_vs_best": 0.0,
+    "tied_with_best": false,
+    "coverage": 223,
+    "decomp": null
+   },
+   "typhoon-s": {
+    "corr_f1": 0.7024,
+    "ci": [
+     0.6518,
+     0.751
+    ],
+    "det_f1": 0.7063,
+    "p_vs_best": 0.0,
+    "tied_with_best": false,
+    "coverage": 223,
+    "decomp": null
+   },
+   "typhoon25": {
+    "corr_f1": 0.6314,
+    "ci": [
+     0.5803,
+     0.6836
+    ],
+    "det_f1": 0.6549,
+    "p_vs_best": 0.0,
+    "tied_with_best": false,
+    "coverage": 223,
+    "decomp": null
+   }
+  }
+ },
+ "T3": {
+  "n_items": 124,
+  "gold_edits": 195,
+  "best": "gemma-4-31b",
+  "models": {
+   "deepseek-flash": {
+    "corr_f1": 0.8282,
+    "ci": [
+     0.775,
+     0.8796
+    ],
+    "det_f1": 0.8282,
+    "p_vs_best": 0.0096,
+    "tied_with_best": false,
+    "coverage": 124,
+    "decomp": null
+   },
+   "deepseek-v4-pro": {
+    "corr_f1": 0.7463,
+    "ci": [
+     0.6841,
+     0.8062
+    ],
+    "det_f1": 0.7463,
+    "p_vs_best": 0.0,
+    "tied_with_best": false,
+    "coverage": 124,
+    "decomp": null
+   },
+   "gemini-3.5-flash": {
+    "corr_f1": 0.8188,
+    "ci": [
+     0.7595,
+     0.8739
+    ],
+    "det_f1": 0.823,
+    "p_vs_best": 0.0056,
+    "tied_with_best": false,
+    "coverage": 124,
+    "decomp": null
+   },
+   "gemma-4-31b": {
+    "corr_f1": 0.8894,
+    "ci": [
+     0.8463,
+     0.9279
+    ],
+    "det_f1": 0.8941,
+    "p_vs_best": null,
+    "tied_with_best": true,
+    "coverage": 124,
+    "decomp": null
+   },
+   "glm-5.1": {
+    "corr_f1": 0.6653,
+    "ci": [
+     0.5448,
+     0.7813
+    ],
+    "det_f1": 0.6734,
+    "p_vs_best": 0.0,
+    "tied_with_best": false,
+    "coverage": 124,
+    "decomp": null
+   },
+   "gpt54-mini": {
+    "corr_f1": 0.8535,
+    "ci": [
+     0.8104,
+     0.8934
+    ],
+    "det_f1": 0.8638,
+    "p_vs_best": 0.1748,
+    "tied_with_best": true,
+    "coverage": 124,
+    "decomp": null
+   },
+   "gpt55-high": {
+    "corr_f1": 0.8545,
+    "ci": [
+     0.8035,
+     0.9021
+    ],
+    "det_f1": 0.8545,
+    "p_vs_best": 0.152,
+    "tied_with_best": true,
+    "coverage": 124,
+    "decomp": null
+   },
+   "gpt55-med": {
+    "corr_f1": 0.8558,
+    "ci": [
+     0.8063,
+     0.9021
+    ],
+    "det_f1": 0.8558,
+    "p_vs_best": 0.1782,
+    "tied_with_best": true,
+    "coverage": 124,
+    "decomp": null
+   },
+   "minimax-m2.7": {
+    "corr_f1": 0.4703,
+    "ci": [
+     0.3919,
+     0.5519
+    ],
+    "det_f1": 0.4703,
+    "p_vs_best": 0.0,
+    "tied_with_best": false,
+    "coverage": 124,
+    "decomp": null
+   },
+   "openthaigpt": {
+    "corr_f1": 0.4539,
+    "ci": [
+     0.3795,
+     0.5338
+    ],
+    "det_f1": 0.4608,
+    "p_vs_best": 0.0,
+    "tied_with_best": false,
+    "coverage": 124,
+    "decomp": null
+   },
+   "opus-4.7": {
+    "corr_f1": 0.8484,
+    "ci": [
+     0.778,
+     0.9113
+    ],
+    "det_f1": 0.8484,
+    "p_vs_best": 0.2854,
+    "tied_with_best": true,
+    "coverage": 124,
+    "decomp": null
+   },
+   "qwen3.6-35b-a3b": {
+    "corr_f1": 0.3079,
+    "ci": [
+     0.2265,
+     0.4193
+    ],
+    "det_f1": 0.3121,
+    "p_vs_best": 0.0,
+    "tied_with_best": false,
+    "coverage": 124,
+    "decomp": null
+   },
+   "sonnet-4.6": {
+    "corr_f1": 0.8238,
+    "ci": [
+     0.7527,
+     0.8904
+    ],
+    "det_f1": 0.8238,
+    "p_vs_best": 0.0742,
+    "tied_with_best": true,
+    "coverage": 124,
+    "decomp": null
+   },
+   "thalle": {
+    "corr_f1": 0.5168,
+    "ci": [
+     0.4364,
+     0.5983
+    ],
+    "det_f1": 0.5207,
+    "p_vs_best": 0.0,
+    "tied_with_best": false,
+    "coverage": 124,
+    "decomp": null
+   },
+   "typhoon-s": {
+    "corr_f1": 0.6192,
+    "ci": [
+     0.5522,
+     0.6826
+    ],
+    "det_f1": 0.6241,
+    "p_vs_best": 0.0,
+    "tied_with_best": false,
+    "coverage": 124,
+    "decomp": null
+   },
+   "typhoon25": {
+    "corr_f1": 0.4666,
+    "ci": [
+     0.3986,
+     0.5383
+    ],
+    "det_f1": 0.4768,
+    "p_vs_best": 0.0,
+    "tied_with_best": false,
+    "coverage": 124,
+    "decomp": null
+   }
+  }
+ },
+ "WIKI": {
+  "n_items": 103,
+  "gold_edits": 104,
+  "best": "gemma-4-31b",
+  "models": {
+   "deepseek-flash": {
+    "corr_f1": 0.757,
+    "ci": [
+     0.6726,
+     0.8341
+    ],
+    "det_f1": 0.8037,
+    "p_vs_best": 0.0376,
+    "tied_with_best": false,
+    "coverage": 103,
+    "decomp": {
+     "fixed": 0.7788,
+     "missed": 0.1731,
+     "wrong_corr": 0.0481
+    }
+   },
+   "deepseek-v4-pro": {
+    "corr_f1": 0.7288,
+    "ci": [
+     0.6478,
+     0.8072
+    ],
+    "det_f1": 0.7627,
+    "p_vs_best": 0.0058,
+    "tied_with_best": false,
+    "coverage": 103,
+    "decomp": {
+     "fixed": 0.8269,
+     "missed": 0.1346,
+     "wrong_corr": 0.0385
+    }
+   },
+   "gemini-3.5-flash": {
+    "corr_f1": 0.7572,
+    "ci": [
+     0.6667,
+     0.8448
+    ],
+    "det_f1": 0.7901,
+    "p_vs_best": 0.1236,
+    "tied_with_best": true,
+    "coverage": 103,
+    "decomp": {
+     "fixed": 0.8846,
+     "missed": 0.0769,
+     "wrong_corr": 0.0385
+    }
+   },
+   "gemma-4-31b": {
+    "corr_f1": 0.8186,
+    "ci": [
+     0.7512,
+     0.8807
+    ],
+    "det_f1": 0.8744,
+    "p_vs_best": null,
+    "tied_with_best": true,
+    "coverage": 103,
+    "decomp": {
+     "fixed": 0.8462,
+     "missed": 0.0962,
+     "wrong_corr": 0.0577
+    }
+   },
+   "glm-5.1": {
+    "corr_f1": 0.6887,
+    "ci": [
+     0.6027,
+     0.7723
+    ],
+    "det_f1": 0.7358,
+    "p_vs_best": 0.0002,
+    "tied_with_best": false,
+    "coverage": 103,
+    "decomp": {
+     "fixed": 0.7019,
+     "missed": 0.25,
+     "wrong_corr": 0.0481
+    }
+   },
+   "gpt54-mini": {
+    "corr_f1": 0.8113,
+    "ci": [
+     0.7404,
+     0.8774
+    ],
+    "det_f1": 0.8679,
+    "p_vs_best": 0.8064,
+    "tied_with_best": true,
+    "coverage": 103,
+    "decomp": {
+     "fixed": 0.8269,
+     "missed": 0.1154,
+     "wrong_corr": 0.0577
+    }
+   },
+   "gpt55-high": {
+    "corr_f1": 0.8,
+    "ci": [
+     0.7359,
+     0.8596
+    ],
+    "det_f1": 0.8444,
+    "p_vs_best": 0.4058,
+    "tied_with_best": true,
+    "coverage": 103,
+    "decomp": {
+     "fixed": 0.8654,
+     "missed": 0.0865,
+     "wrong_corr": 0.0481
+    }
+   },
+   "gpt55-med": {
+    "corr_f1": 0.7911,
+    "ci": [
+     0.7257,
+     0.8531
+    ],
+    "det_f1": 0.8356,
+    "p_vs_best": 0.2544,
+    "tied_with_best": true,
+    "coverage": 103,
+    "decomp": {
+     "fixed": 0.8558,
+     "missed": 0.0962,
+     "wrong_corr": 0.0481
+    }
+   },
+   "minimax-m2.7": {
+    "corr_f1": 0.6631,
+    "ci": [
+     0.5806,
+     0.738
+    ],
+    "det_f1": 0.7059,
+    "p_vs_best": 0.0,
+    "tied_with_best": false,
+    "coverage": 103,
+    "decomp": {
+     "missed": 0.3654,
+     "fixed": 0.5962,
+     "wrong_corr": 0.0385
+    }
+   },
+   "openthaigpt": {
+    "corr_f1": 0.63,
+    "ci": [
+     0.5397,
+     0.7158
+    ],
+    "det_f1": 0.68,
+    "p_vs_best": 0.0,
+    "tied_with_best": false,
+    "coverage": 103,
+    "decomp": {
+     "missed": 0.3462,
+     "fixed": 0.6058,
+     "wrong_corr": 0.0481
+    }
+   },
+   "opus-4.7": {
+    "corr_f1": 0.7911,
+    "ci": [
+     0.7083,
+     0.8679
+    ],
+    "det_f1": 0.8267,
+    "p_vs_best": 0.5012,
+    "tied_with_best": true,
+    "coverage": 103,
+    "decomp": {
+     "fixed": 0.8558,
+     "missed": 0.1058,
+     "wrong_corr": 0.0385
+    }
+   },
+   "qwen3.6-35b-a3b": {
+    "corr_f1": 0.5441,
+    "ci": [
+     0.4632,
+     0.6245
+    ],
+    "det_f1": 0.5956,
+    "p_vs_best": 0.0,
+    "tied_with_best": false,
+    "coverage": 103,
+    "decomp": {
+     "fixed": 0.7115,
+     "missed": 0.2212,
+     "wrong_corr": 0.0673
+    }
+   },
+   "sonnet-4.6": {
+    "corr_f1": 0.7714,
+    "ci": [
+     0.6944,
+     0.8431
+    ],
+    "det_f1": 0.8286,
+    "p_vs_best": 0.1098,
+    "tied_with_best": true,
+    "coverage": 103,
+    "decomp": {
+     "fixed": 0.7788,
+     "missed": 0.1635,
+     "wrong_corr": 0.0577
+    }
+   },
+   "thalle": {
+    "corr_f1": 0.6701,
+    "ci": [
+     0.5851,
+     0.7463
+    ],
+    "det_f1": 0.7208,
+    "p_vs_best": 0.0,
+    "tied_with_best": false,
+    "coverage": 103,
+    "decomp": {
+     "missed": 0.3173,
+     "fixed": 0.6346,
+     "wrong_corr": 0.0481
+    }
+   },
+   "typhoon-s": {
+    "corr_f1": 0.6257,
+    "ci": [
+     0.5371,
+     0.7111
+    ],
+    "det_f1": 0.6704,
+    "p_vs_best": 0.0,
+    "tied_with_best": false,
+    "coverage": 103,
+    "decomp": {
+     "fixed": 0.5385,
+     "missed": 0.4231,
+     "wrong_corr": 0.0385
+    }
+   },
+   "typhoon25": {
+    "corr_f1": 0.6552,
+    "ci": [
+     0.5702,
+     0.7411
+    ],
+    "det_f1": 0.6983,
+    "p_vs_best": 0.0,
+    "tied_with_best": false,
+    "coverage": 103,
+    "decomp": {
+     "fixed": 0.7308,
+     "missed": 0.2212,
+     "wrong_corr": 0.0481
+    }
+   }
+  }
+ }
+}

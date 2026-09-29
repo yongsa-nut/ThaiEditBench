@@ -1,0 +1,550 @@
+{
+  "annotator": "ann2",
+  "item_source": "(embedded)",
+  "n_items": 60,
+  "n_labeled": 60,
+  "started": "2026-07-12T15:10:05.368Z",
+  "exported": "2026-07-12T15:49:13.897Z",
+  "labels": {
+    "syn-002039": {
+      "edits": [
+        {
+          "accept": true,
+          "class": 6
+        }
+      ],
+      "note": ""
+    },
+    "wik-000081": {
+      "edits": [
+        {
+          "accept": true,
+          "class": 1
+        }
+      ],
+      "note": ""
+    },
+    "syn-000068": {
+      "edits": [
+        {
+          "accept": true,
+          "class": 1
+        }
+      ],
+      "note": ""
+    },
+    "wik-000022": {
+      "edits": [
+        {
+          "accept": true,
+          "class": 6
+        }
+      ],
+      "note": ""
+    },
+    "wik-000077": {
+      "edits": [
+        {
+          "accept": true,
+          "class": 1
+        }
+      ],
+      "note": ""
+    },
+    "syn-001976": {
+      "edits": [
+        {
+          "accept": true,
+          "class": 2
+        }
+      ],
+      "note": ""
+    },
+    "syn-001531": {
+      "edits": [
+        {
+          "accept": true,
+          "class": 2
+        }
+      ],
+      "note": ""
+    },
+    "syn-002058": {
+      "edits": [
+        {
+          "accept": true,
+          "class": 6
+        }
+      ],
+      "note": ""
+    },
+    "syn-002214": {
+      "edits": [
+        {
+          "accept": true,
+          "class": 2
+        }
+      ],
+      "note": ""
+    },
+    "wik-000091": {
+      "edits": [
+        {
+          "accept": true,
+          "class": 1
+        }
+      ],
+      "note": ""
+    },
+    "syn-001168": {
+      "edits": [
+        {
+          "accept": true,
+          "class": 4
+        }
+      ],
+      "note": ""
+    },
+    "syn-002135": {
+      "edits": [
+        {
+          "accept": true,
+          "class": 1
+        }
+      ],
+      "note": ""
+    },
+    "syn-000920": {
+      "edits": [
+        {
+          "accept": true,
+          "class": 3
+        }
+      ],
+      "note": ""
+    },
+    "syn-001062": {
+      "edits": [
+        {
+          "accept": true,
+          "class": 3
+        }
+      ],
+      "note": ""
+    },
+    "syn-002217": {
+      "edits": [
+        {
+          "accept": true,
+          "class": 6
+        }
+      ],
+      "note": ""
+    },
+    "syn-001911": {
+      "edits": [
+        {
+          "accept": true,
+          "class": 6
+        }
+      ],
+      "note": ""
+    },
+    "syn-002183": {
+      "edits": [
+        {
+          "accept": true,
+          "class": 6
+        }
+      ],
+      "note": ""
+    },
+    "wik-000001": {
+      "edits": [
+        {
+          "accept": true,
+          "class": 2
+        }
+      ],
+      "note": ""
+    },
+    "syn-000555": {
+      "edits": [
+        {
+          "accept": true,
+          "class": 2
+        }
+      ],
+      "note": ""
+    },
+    "wik-000037": {
+      "edits": [
+        {
+          "accept": true,
+          "class": 4
+        }
+      ],
+      "note": ""
+    },
+    "wik-000028": {
+      "edits": [
+        {
+          "accept": true,
+          "class": 2
+        }
+      ],
+      "note": ""
+    },
+    "wik-000055": {
+      "edits": [
+        {
+          "accept": true,
+          "class": 2
+        }
+      ],
+      "note": ""
+    },
+    "syn-001817": {
+      "edits": [
+        {
+          "accept": true,
+          "class": 2
+        }
+      ],
+      "note": ""
+    },
+    "syn-002087": {
+      "edits": [
+        {
+          "accept": true,
+          "class": 2
+        }
+      ],
+      "note": ""
+    },
+    "syn-001629": {
+      "edits": [
+        {
+          "accept": true,
+          "class": 2
+        }
+      ],
+      "note": ""
+    },
+    "syn-001952": {
+      "edits": [
+        {
+          "accept": true,
+          "class": 2
+        }
+      ],
+      "note": ""
+    },
+    "wik-000038": {
+      "edits": [
+        {
+          "accept": true,
+          "class": 2
+        }
+      ],
+      "note": ""
+    },
+    "wik-000002": {
+      "edits": [
+        {
+          "accept": true,
+          "class": 3
+        }
+      ],
+      "note": ""
+    },
+    "wik-000004": {
+      "edits": [
+        {
+          "accept": true,
+          "class": 1
+        }
+      ],
+      "note": ""
+    },
+    "syn-001858": {
+      "edits": [
+        {
+          "accept": true,
+          "class": 5
+        }
+      ],
+      "note": ""
+    },
+    "wik-000051": {
+      "edits": [
+        {
+          "accept": true,
+          "class": 4
+        }
+      ],
+      "note": ""
+    },
+    "syn-001578": {
+      "edits": [
+        {
+          "accept": true,
+          "class": 2
+        }
+      ],
+      "note": ""
+    },
+    "wik-000003": {
+      "edits": [
+        {
+          "accept": true,
+          "class": 2
+        }
+      ],
+      "note": ""
+    },
+    "wik-000011": {
+      "edits": [
+        {
+          "accept": true,
+          "class": 2
+        }
+      ],
+      "note": ""
+    },
+    "wik-000047": {
+      "edits": [
+        {
+          "accept": true,
+          "class": 4
+        }
+      ],
+      "note": ""
+    },
+    "wik-000066": {
+      "edits": [
+        {
+          "accept": true,
+          "class": 4
+        }
+      ],
+      "note": ""
+    },
+    "wik-000085": {
+      "edits": [
+        {
+          "accept": true,
+          "class": 4
+        }
+      ],
+      "note": ""
+    },
+    "wik-000087": {
+      "edits": [
+        {
+          "accept": true,
+          "class": 1
+        }
+      ],
+      "note": ""
+    },
+    "wik-000072": {
+      "edits": [
+        {
+          "accept": true,
+          "class": 1
+        }
+      ],
+      "note": ""
+    },
+    "wik-000101": {
+      "edits": [
+        {
+          "accept": true,
+          "class": 3
+        }
+      ],
+      "note": ""
+    },
+    "wik-000095": {
+      "edits": [
+        {
+          "accept": true,
+          "class": 4
+        }
+      ],
+      "note": ""
+    },
+    "wik-000017": {
+      "edits": [
+        {
+          "accept": true,
+          "class": 3
+        }
+      ],
+      "note": ""
+    },
+    "wik-000053": {
+      "edits": [
+        {
+          "accept": true,
+          "class": 6
+        }
+      ],
+      "note": ""
+    },
+    "wik-000097": {
+      "edits": [
+        {
+          "accept": true,
+          "class": 5
+        }
+      ],
+      "note": ""
+    },
+    "wik-000090": {
+      "edits": [
+        {
+          "accept": true,
+          "class": 1
+        }
+      ],
+      "note": ""
+    },
+    "wik-000098": {
+      "edits": [
+        {
+          "accept": true,
+          "class": 1
+        }
+      ],
+      "note": ""
+    },
+    "wik-000083": {
+      "edits": [
+        {
+          "accept": true,
+          "class": 3
+        }
+      ],
+      "note": ""
+    },
+    "wik-000010": {
+      "edits": [
+        {
+          "accept": true,
+          "class": 3
+        }
+      ],
+      "note": ""
+    },
+    "wik-000096": {
+      "edits": [
+        {
+          "accept": true,
+          "class": 6
+        }
+      ],
+      "note": ""
+    },
+    "wik-000025": {
+      "edits": [
+        {
+          "accept": true,
+          "class": 2
+        }
+      ],
+      "note": ""
+    },
+    "wik-000034": {
+      "edits": [
+        {
+          "accept": true,
+          "class": 3
+        }
+      ],
+      "note": ""
+    },
+    "wik-000009": {
+      "edits": [
+        {
+          "accept": true,
+          "class": 1
+        }
+      ],
+      "note": ""
+    },
+    "wik-000000": {
+      "edits": [
+        {
+          "accept": true,
+          "class": 2
+        }
+      ],
+      "note": ""
+    },
+    "wik-000074": {
+      "edits": [
+        {
+          "accept": true,
+          "class": 3
+        }
+      ],
+      "note": ""
+    },
+    "wik-000062": {
+      "edits": [
+        {
+          "accept": true,
+          "class": 2
+        }
+      ],
+      "note": ""
+    },
+    "wik-000023": {
+      "edits": [
+        {
+          "accept": true,
+          "class": 1
+        }
+      ],
+      "note": ""
+    },
+    "wik-000012": {
+      "edits": [
+        {
+          "accept": true,
+          "class": 6
+        }
+      ],
+      "note": ""
+    },
+    "wik-000014": {
+      "edits": [
+        {
+          "accept": true,
+          "class": 3
+        }
+      ],
+      "note": ""
+    },
+    "wik-000042": {
+      "edits": [
+        {
+          "accept": true,
+          "class": 6
+        }
+      ],
+      "note": ""
+    },
+    "wik-000063": {
+      "edits": [
+        {
+          "accept": true,
+          "class": 5
+        }
+      ],
+      "note": ""
+    }
+  }
+}

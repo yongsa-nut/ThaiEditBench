@@ -13,19 +13,36 @@ GEC or Chinese spelling check. ThaiEditBench provides:
    to long, mostly-clean context;
 3. **contamination-robust construction** — errors are *injected* into novel clean
    text and *mined* from Thai-Wikipedia cleanup-bot history, screened by a
-   memorization probe. Because errors are introduced by construction, gold
-   corrections are exact and need no human annotation.
+   memorization probe. Gold corrections are exact by construction, and a blind
+   two-annotator study measures how reliably the mechanism labels can be applied
+   (Krippendorff's α = 0.75).
 
 Grading is at **Thai Character Cluster (TCC)** level with ERRANT-style span
 matching (detection / correction F1, plus per-mechanism span-F0.5, word-level
 GLEU, and a clean-sentence *fidelity* signal). The accompanying paper evaluates
-16 models and reports three findings: (1) correction is a *detection* problem,
-not a knowledge problem; (2) Thai-native models are not best; and (3) a
-length-induced **over-editing collapse** appears only at paragraph/page length,
-invisible at the sentence level.
+16 models and reports three findings: (1) under the benchmark's conditions,
+models that locate an error almost always fix it correctly, so what separates
+them is *detection*; (2) the evaluated Thai-specialized models do not lead the
+strongest general models; and (3) long, mostly-correct context exposes
+**over-edit accumulation** and clean-text fidelity failures that sentence-level
+evaluation hides. On real errors mined from Wikipedia edit history, the model
+ranking transfers (Spearman ρ = 0.92 with the sentence tier).
 
-> This repository is an anonymized release prepared for review. Author and
-> affiliation information is intentionally omitted.
+**Paper:** Nutchanon Yongsatianchot, Piyalitt Ittichaiwong, and Kanyakorn
+Veerakanjana. *ThaiEditBench: A Mechanism-Typed, Length-Stratified Benchmark for
+Thai Orthographic Error Correction.* AACL-IJCNLP 2026. PDF and LaTeX sources:
+[`paper/`](paper/).
+
+```bibtex
+@inproceedings{yongsatianchot-etal-2026-thaieditbench,
+  title     = {{ThaiEditBench}: A Mechanism-Typed, Length-Stratified Benchmark for
+               {Thai} Orthographic Error Correction},
+  author    = {Yongsatianchot, Nutchanon and Ittichaiwong, Piyalitt and
+               Veerakanjana, Kanyakorn},
+  booktitle = {Proceedings of AACL-IJCNLP 2026},
+  year      = {2026}
+}
+```
 
 ## Repository layout
 
@@ -51,11 +68,15 @@ invisible at the sentence level.
 ├── results/             16-model run outputs — T1 (sentence) tier
 ├── results_t2/          16-model run outputs — T2 (paragraph) tier
 ├── results_t3/          16-model run outputs — T3 (page) tier
+├── results_wiki/        16-model run outputs — natural errors mined from Wikipedia
+├── results_prompt_en/   prompt ablation: English instruction (T1, two models)
+├── results_prompt_fewshot/  prompt ablation: Thai instruction + 2 examples (T1, two models)
+├── analysis/            ties, CIs, natural-error audit, span check, paired tests  → see below
 ├── viz/                 leaderboard, error-visualizer, gold-audit tooling
-├── annotation/          inter-annotator agreement toolchain (Krippendorff α calibration)
+├── annotation/          blind label study: sheets, both raters' labels, Krippendorff α scorer
 ├── construction/        dataset-construction provenance scripts (phases 1–3)   → see construction/README.md
 ├── docs/                schema, taxonomy, corpus catalog, harness details
-└── paper/               the paper (markdown + ACL LaTeX build + figure)
+└── paper/               the paper: PDF, LuaLaTeX sources, figure
 ```
 
 ## Install
@@ -89,6 +110,20 @@ PYTHONUTF8=1 python score_runs.py --split t3 --n 124 --results results_t3       
 PYTHONUTF8=1 python error_analysis.py                                               # failure decomposition
 ```
 
+**Natural errors, ties, and checks behind the paper's tables** (no network, no keys):
+
+```bash
+PYTHONUTF8=1 python score_runs.py --split wiki --n 103 --results results_wiki --report results_wiki/report.md   # natural set, all items
+PYTHONUTF8=1 python analysis/natural_eval.py      # consensus audit (103 -> 79) + natural results (Sec. 5.5, App. F)
+PYTHONUTF8=1 python analysis/leaderboard_ties.py  # CIs and paired ties with the column best (Table 1, App. D)
+PYTHONUTF8=1 python analysis/paired_bootstrap.py  # pairwise comparisons quoted in Sec. 5.1
+PYTHONUTF8=1 python analysis/span_check.py        # exact-span check on the outcome decomposition (Sec. 5.2)
+PYTHONUTF8=1 python annotation/score_annotation.py --labels annotation/labels_ann1.json \
+    annotation/labels_ann2.json --alpha-set annotation/alpha_set_blind.jsonl   # label study (Sec. 3.7, App. E)
+```
+
+Precomputed outputs are in `analysis/out/`.
+
 **Rebuild the leaderboard and the degradation figure:**
 
 ```bash
@@ -115,7 +150,8 @@ Run `python run_editing.py --help` for the full model registry and flags
 | train | `data/items_train.jsonl` | 249 | synthetic |
 | dev | `data/items_dev.jsonl` | 606 | synthetic |
 | **test (public, T1)** | `data/items_test_public.jsonl` | 795 | sentence tier |
-| **test (private)** | `data/items_test_private.jsonl` | 868 | synthetic + 40 mined; lowest memorization |
+| held-out test | `data/items_test_private.jsonl` | 868 | synthetic + 40 mined; lowest memorization; not evaluated in the paper |
+| **natural errors** | `data/items_wiki.jsonl` | 103 | real errors mined from Wikipedia; 79 after the consensus audit |
 | **T2 paragraph** | `data/items_t2.jsonl` | 223 | multi-sentence |
 | **T3 page** | `data/items_t3.jsonl` | 124 | page-length |
 
@@ -127,9 +163,8 @@ not redistributed — see that README).
 
 ## The paper
 
-[`paper/paper-thaieditbench-acl.md`](paper/paper-thaieditbench-acl.md) is the
-source of truth for the writeup; [`paper/acl-paper/`](paper/acl-paper/) is a
-LuaLaTeX/ACL build (compile on Overleaf — see its README).
+The camera-ready PDF is [`paper/acl_paper.pdf`](paper/acl_paper.pdf); the LuaLaTeX
+sources are in [`paper/`](paper/) (see its README to compile).
 
 ## License
 

@@ -84,3 +84,28 @@ Applying `gold.json` back into `data/items_test_private.jsonl` (a separate apply
 the user runs after adjudication — sets `verified:true`, updates `class` for mined
 items). Subtask 1 calibration (separate tool in `prosody/calibration/`). The
 production SEA-HELM 8-run × 30-bootstrap model matrix.
+
+
+## The blind label study reported in the paper
+
+The paper's label study (Section 3.7, Appendix E) uses a blind, class-only design: two native
+Thai speakers labeled 60 items (the 40 curated mined items plus synthetic items bringing each
+class to ten). For each marked span they answered whether it is a genuine error and which of the
+six classes it belongs to. No machine label was shown.
+
+| file | what |
+|---|---|
+| `build_blind.py` | builds the blind sheets from the α-set |
+| `alpha_set_blind.jsonl` | the 60 items |
+| `dist_blind/annotate_ann{1,2}.html` | the two sheets |
+| `labels_ann1.json`, `labels_ann2.json` | the two raters' labels |
+| `gold.json` | consensus output of `score_annotation.py` |
+| `labels_ann{1,2}_verify120.json` | an earlier non-blind pass over 120 items with the machine labels pre-filled; reported only as a verification pass, not as agreement |
+
+Score it from the repo root:
+
+```bash
+PYTHONUTF8=1 python annotation/score_annotation.py --labels annotation/labels_ann1.json annotation/labels_ann2.json --alpha-set annotation/alpha_set_blind.jsonl
+```
+
+Result: Krippendorff's α = 0.752 (nominal, n = 60); both raters accepted all 60 spans as genuine errors.
