@@ -41,8 +41,8 @@ CLASS_NAME = {0: "(unmapped)", 1: "tone", 2: "consonant", 3: "การันต
 # (label, results subdir, split, expected n) — mirrors build_leaderboard.TIERS.
 # Re-run picks up whatever exists; T3 folds in automatically once it has data.
 TIERS = [("T1", "results", "test_public", 795),
-         ("T2", "results_t2", "t2", 223),
-         ("T3", "results_t3", "t3", 124)]
+         ("T2", "results_t2", "t2", 224),
+         ("T3", "results_t3", "t3", 122)]
 
 
 def span_text(wrong: str, start: int, end: int) -> str:

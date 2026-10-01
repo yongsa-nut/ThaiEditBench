@@ -11,6 +11,7 @@
       },
       "gold_edits": 982,
       "over_edits": 63,
+      "clean_tcc": 46921,
       "per_class": {
         "4": {
           "fixed": 179,
@@ -138,8 +139,7 @@
           175,
           181
         ]
-      },
-      "clean_tcc": 44865
+      }
     },
     "deepseek-v4-pro": {
       "graded": 795,
@@ -152,6 +152,7 @@
       },
       "gold_edits": 982,
       "over_edits": 102,
+      "clean_tcc": 46921,
       "per_class": {
         "4": {
           "fixed": 175,
@@ -277,8 +278,7 @@
           173,
           181
         ]
-      },
-      "clean_tcc": 44865
+      }
     },
     "gemini-3.5-flash": {
       "graded": 795,
@@ -291,6 +291,7 @@
       },
       "gold_edits": 982,
       "over_edits": 56,
+      "clean_tcc": 46921,
       "per_class": {
         "4": {
           "fixed": 181
@@ -415,8 +416,7 @@
           180,
           181
         ]
-      },
-      "clean_tcc": 44865
+      }
     },
     "gemma-4-31b": {
       "graded": 795,
@@ -429,6 +429,7 @@
       },
       "gold_edits": 982,
       "over_edits": 51,
+      "clean_tcc": 46921,
       "per_class": {
         "4": {
           "fixed": 175,
@@ -555,8 +556,7 @@
           170,
           181
         ]
-      },
-      "clean_tcc": 44865
+      }
     },
     "glm-5.1": {
       "graded": 795,
@@ -569,6 +569,7 @@
       },
       "gold_edits": 982,
       "over_edits": 80,
+      "clean_tcc": 46921,
       "per_class": {
         "4": {
           "fixed": 149,
@@ -695,8 +696,7 @@
           137,
           181
         ]
-      },
-      "clean_tcc": 44865
+      }
     },
     "gpt54-mini": {
       "graded": 795,
@@ -709,6 +709,7 @@
       },
       "gold_edits": 982,
       "over_edits": 36,
+      "clean_tcc": 46921,
       "per_class": {
         "4": {
           "fixed": 177,
@@ -838,8 +839,7 @@
           169,
           181
         ]
-      },
-      "clean_tcc": 44865
+      }
     },
     "gpt55-high": {
       "graded": 795,
@@ -851,6 +851,7 @@
       },
       "gold_edits": 982,
       "over_edits": 48,
+      "clean_tcc": 46921,
       "per_class": {
         "4": {
           "fixed": 180,
@@ -972,8 +973,7 @@
           181,
           181
         ]
-      },
-      "clean_tcc": 44865
+      }
     },
     "gpt55-med": {
       "graded": 795,
@@ -985,6 +985,7 @@
       },
       "gold_edits": 982,
       "over_edits": 55,
+      "clean_tcc": 46921,
       "per_class": {
         "4": {
           "fixed": 179,
@@ -1107,8 +1108,7 @@
           181,
           181
         ]
-      },
-      "clean_tcc": 44865
+      }
     },
     "minimax-m2.7": {
       "graded": 795,
@@ -1121,6 +1121,7 @@
       },
       "gold_edits": 982,
       "over_edits": 109,
+      "clean_tcc": 46921,
       "per_class": {
         "4": {
           "fixed": 116,
@@ -1248,8 +1249,7 @@
           105,
           181
         ]
-      },
-      "clean_tcc": 44865
+      }
     },
     "openthaigpt": {
       "graded": 795,
@@ -1262,6 +1262,7 @@
       },
       "gold_edits": 982,
       "over_edits": 157,
+      "clean_tcc": 46921,
       "per_class": {
         "4": {
           "fixed": 109,
@@ -1391,8 +1392,7 @@
           90,
           181
         ]
-      },
-      "clean_tcc": 44865
+      }
     },
     "opus-4.7": {
       "graded": 795,
@@ -1405,6 +1405,7 @@
       },
       "gold_edits": 982,
       "over_edits": 51,
+      "clean_tcc": 46921,
       "per_class": {
         "4": {
           "fixed": 181
@@ -1528,8 +1529,7 @@
           180,
           181
         ]
-      },
-      "clean_tcc": 44865
+      }
     },
     "qwen3.6-35b-a3b": {
       "graded": 795,
@@ -1542,6 +1542,7 @@
       },
       "gold_edits": 982,
       "over_edits": 473,
+      "clean_tcc": 46921,
       "per_class": {
         "4": {
           "missed": 31,
@@ -1669,8 +1670,7 @@
           154,
           181
         ]
-      },
-      "clean_tcc": 44865
+      }
     },
     "sonnet-4.6": {
       "graded": 795,
@@ -1683,6 +1683,7 @@
       },
       "gold_edits": 982,
       "over_edits": 64,
+      "clean_tcc": 46921,
       "per_class": {
         "4": {
           "fixed": 176,
@@ -1810,8 +1811,7 @@
           176,
           181
         ]
-      },
-      "clean_tcc": 44865
+      }
     },
     "thalle": {
       "graded": 795,
@@ -1824,6 +1824,7 @@
       },
       "gold_edits": 982,
       "over_edits": 146,
+      "clean_tcc": 46921,
       "per_class": {
         "4": {
           "fixed": 108,
@@ -1953,8 +1954,7 @@
           75,
           181
         ]
-      },
-      "clean_tcc": 44865
+      }
     },
     "typhoon-s": {
       "graded": 795,
@@ -1967,6 +1967,7 @@
       },
       "gold_edits": 982,
       "over_edits": 84,
+      "clean_tcc": 46921,
       "per_class": {
         "4": {
           "fixed": 126,
@@ -2094,8 +2095,7 @@
           98,
           181
         ]
-      },
-      "clean_tcc": 44865
+      }
     },
     "typhoon25": {
       "graded": 795,
@@ -2108,6 +2108,7 @@
       },
       "gold_edits": 982,
       "over_edits": 255,
+      "clean_tcc": 46921,
       "per_class": {
         "4": {
           "fixed": 122,
@@ -2238,22 +2239,22 @@
           120,
           181
         ]
-      },
-      "clean_tcc": 44865
+      }
     }
   },
   "T2": {
     "deepseek-flash": {
-      "graded": 223,
+      "graded": 224,
       "coverage": 1.0,
       "n_errors": 0,
       "outcomes": {
-        "fixed": 265,
+        "fixed": 267,
         "wrong_corr": 3,
         "missed": 8
       },
-      "gold_edits": 276,
+      "gold_edits": 278,
       "over_edits": 17,
+      "clean_tcc": 56763,
       "per_class": {
         "4": {
           "fixed": 59,
@@ -2272,11 +2273,11 @@
           "wrong_corr": 1
         },
         "6": {
-          "fixed": 28,
+          "fixed": 29,
           "missed": 1
         },
         "2": {
-          "fixed": 35,
+          "fixed": 36,
           "missed": 1
         }
       },
@@ -2348,22 +2349,22 @@
           99
         ],
         "encyclopedic": [
-          69,
-          75
+          71,
+          77
         ]
-      },
-      "clean_tcc": 55911
+      }
     },
     "deepseek-v4-pro": {
-      "graded": 223,
+      "graded": 224,
       "coverage": 1.0,
       "n_errors": 0,
       "outcomes": {
-        "fixed": 269,
+        "fixed": 271,
         "missed": 7
       },
-      "gold_edits": 276,
+      "gold_edits": 278,
       "over_edits": 36,
+      "clean_tcc": 56763,
       "per_class": {
         "4": {
           "fixed": 59,
@@ -2382,11 +2383,11 @@
           "missed": 1
         },
         "6": {
-          "fixed": 28,
+          "fixed": 29,
           "missed": 1
         },
         "2": {
-          "fixed": 36
+          "fixed": 37
         }
       },
       "over_cat": [
@@ -2481,22 +2482,22 @@
           99
         ],
         "encyclopedic": [
-          70,
-          75
+          72,
+          77
         ]
-      },
-      "clean_tcc": 55911
+      }
     },
     "gemini-3.5-flash": {
-      "graded": 223,
+      "graded": 224,
       "coverage": 1.0,
       "n_errors": 0,
       "outcomes": {
-        "fixed": 273,
+        "fixed": 275,
         "missed": 3
       },
-      "gold_edits": 276,
+      "gold_edits": 278,
       "over_edits": 20,
+      "clean_tcc": 56763,
       "per_class": {
         "4": {
           "fixed": 60
@@ -2512,11 +2513,11 @@
           "fixed": 54
         },
         "6": {
-          "fixed": 28,
+          "fixed": 29,
           "missed": 1
         },
         "2": {
-          "fixed": 36
+          "fixed": 37
         }
       },
       "over_cat": [
@@ -2599,22 +2600,22 @@
           99
         ],
         "encyclopedic": [
-          73,
-          75
+          75,
+          77
         ]
-      },
-      "clean_tcc": 55911
+      }
     },
     "gemma-4-31b": {
-      "graded": 223,
+      "graded": 224,
       "coverage": 1.0,
       "n_errors": 0,
       "outcomes": {
-        "fixed": 267,
+        "fixed": 269,
         "missed": 9
       },
-      "gold_edits": 276,
+      "gold_edits": 278,
       "over_edits": 17,
+      "clean_tcc": 56763,
       "per_class": {
         "4": {
           "fixed": 58,
@@ -2632,11 +2633,11 @@
           "fixed": 54
         },
         "6": {
-          "fixed": 28,
+          "fixed": 29,
           "missed": 1
         },
         "2": {
-          "fixed": 36
+          "fixed": 37
         }
       },
       "over_cat": [
@@ -2703,23 +2704,23 @@
           99
         ],
         "encyclopedic": [
-          70,
-          75
+          72,
+          77
         ]
-      },
-      "clean_tcc": 55911
+      }
     },
     "glm-5.1": {
-      "graded": 223,
+      "graded": 224,
       "coverage": 1.0,
       "n_errors": 0,
       "outcomes": {
-        "fixed": 225,
-        "missed": 50,
+        "fixed": 226,
+        "missed": 51,
         "wrong_corr": 1
       },
-      "gold_edits": 276,
+      "gold_edits": 278,
       "over_edits": 52,
+      "clean_tcc": 56763,
       "per_class": {
         "4": {
           "fixed": 51,
@@ -2740,10 +2741,10 @@
         },
         "6": {
           "fixed": 20,
-          "missed": 9
+          "missed": 10
         },
         "2": {
-          "fixed": 29,
+          "fixed": 30,
           "missed": 7
         }
       },
@@ -2839,23 +2840,23 @@
           99
         ],
         "encyclopedic": [
-          58,
-          75
+          59,
+          77
         ]
-      },
-      "clean_tcc": 55911
+      }
     },
     "gpt54-mini": {
-      "graded": 223,
+      "graded": 224,
       "coverage": 1.0,
       "n_errors": 0,
       "outcomes": {
-        "fixed": 253,
-        "missed": 19,
+        "fixed": 254,
+        "missed": 20,
         "wrong_corr": 4
       },
-      "gold_edits": 276,
+      "gold_edits": 278,
       "over_edits": 19,
+      "clean_tcc": 56763,
       "per_class": {
         "4": {
           "fixed": 56,
@@ -2877,11 +2878,11 @@
         },
         "6": {
           "fixed": 27,
-          "wrong_corr": 1,
-          "missed": 1
+          "missed": 2,
+          "wrong_corr": 1
         },
         "2": {
-          "fixed": 36
+          "fixed": 37
         }
       },
       "over_cat": [
@@ -2960,22 +2961,22 @@
           99
         ],
         "encyclopedic": [
-          67,
-          75
+          68,
+          77
         ]
-      },
-      "clean_tcc": 55911
+      }
     },
     "gpt55-high": {
-      "graded": 223,
+      "graded": 224,
       "coverage": 1.0,
       "n_errors": 0,
       "outcomes": {
-        "fixed": 269,
-        "missed": 7
+        "fixed": 270,
+        "missed": 8
       },
-      "gold_edits": 276,
+      "gold_edits": 278,
       "over_edits": 10,
+      "clean_tcc": 56763,
       "per_class": {
         "4": {
           "fixed": 59,
@@ -2994,10 +2995,11 @@
           "missed": 1
         },
         "6": {
-          "fixed": 29
+          "fixed": 29,
+          "missed": 1
         },
         "2": {
-          "fixed": 35,
+          "fixed": 36,
           "missed": 1
         }
       },
@@ -3049,22 +3051,22 @@
           99
         ],
         "encyclopedic": [
-          72,
-          75
+          73,
+          77
         ]
-      },
-      "clean_tcc": 55911
+      }
     },
     "gpt55-med": {
-      "graded": 223,
+      "graded": 224,
       "coverage": 1.0,
       "n_errors": 0,
       "outcomes": {
-        "fixed": 268,
-        "missed": 8
+        "fixed": 269,
+        "missed": 9
       },
-      "gold_edits": 276,
+      "gold_edits": 278,
       "over_edits": 17,
+      "clean_tcc": 56763,
       "per_class": {
         "4": {
           "fixed": 59,
@@ -3084,10 +3086,10 @@
         },
         "6": {
           "fixed": 28,
-          "missed": 1
+          "missed": 2
         },
         "2": {
-          "fixed": 36
+          "fixed": 37
         }
       },
       "over_cat": [
@@ -3166,23 +3168,23 @@
           99
         ],
         "encyclopedic": [
-          71,
-          75
+          72,
+          77
         ]
-      },
-      "clean_tcc": 55911
+      }
     },
     "minimax-m2.7": {
-      "graded": 223,
+      "graded": 224,
       "coverage": 1.0,
       "n_errors": 0,
       "outcomes": {
-        "fixed": 180,
-        "missed": 94,
+        "fixed": 181,
+        "missed": 95,
         "wrong_corr": 2
       },
-      "gold_edits": 276,
+      "gold_edits": 278,
       "over_edits": 42,
+      "clean_tcc": 56763,
       "per_class": {
         "4": {
           "fixed": 42,
@@ -3203,11 +3205,11 @@
           "fixed": 28
         },
         "6": {
-          "missed": 16,
+          "missed": 17,
           "fixed": 13
         },
         "2": {
-          "fixed": 30,
+          "fixed": 31,
           "missed": 6
         }
       },
@@ -3299,23 +3301,23 @@
           99
         ],
         "encyclopedic": [
-          39,
-          75
+          40,
+          77
         ]
-      },
-      "clean_tcc": 55911
+      }
     },
     "openthaigpt": {
-      "graded": 223,
+      "graded": 224,
       "coverage": 1.0,
       "n_errors": 0,
       "outcomes": {
         "fixed": 164,
-        "missed": 111,
+        "missed": 113,
         "wrong_corr": 1
       },
-      "gold_edits": 276,
+      "gold_edits": 278,
       "over_edits": 246,
+      "clean_tcc": 56763,
       "per_class": {
         "4": {
           "fixed": 37,
@@ -3336,10 +3338,10 @@
         },
         "6": {
           "fixed": 17,
-          "missed": 12
+          "missed": 13
         },
         "2": {
-          "missed": 17,
+          "missed": 18,
           "fixed": 19
         }
       },
@@ -3436,21 +3438,21 @@
         ],
         "encyclopedic": [
           38,
-          75
+          77
         ]
-      },
-      "clean_tcc": 55911
+      }
     },
     "opus-4.7": {
-      "graded": 223,
+      "graded": 224,
       "coverage": 1.0,
       "n_errors": 0,
       "outcomes": {
-        "fixed": 272,
+        "fixed": 274,
         "missed": 4
       },
-      "gold_edits": 276,
+      "gold_edits": 278,
       "over_edits": 26,
+      "clean_tcc": 56763,
       "per_class": {
         "4": {
           "fixed": 60
@@ -3466,11 +3468,11 @@
           "fixed": 54
         },
         "6": {
-          "fixed": 28,
+          "fixed": 29,
           "missed": 1
         },
         "2": {
-          "fixed": 36
+          "fixed": 37
         }
       },
       "over_cat": [
@@ -3513,23 +3515,23 @@
           99
         ],
         "encyclopedic": [
-          72,
-          75
+          74,
+          77
         ]
-      },
-      "clean_tcc": 55911
+      }
     },
     "qwen3.6-35b-a3b": {
-      "graded": 223,
+      "graded": 224,
       "coverage": 1.0,
       "n_errors": 0,
       "outcomes": {
-        "fixed": 208,
+        "fixed": 210,
         "missed": 62,
         "wrong_corr": 6
       },
-      "gold_edits": 276,
-      "over_edits": 597,
+      "gold_edits": 278,
+      "over_edits": 600,
+      "clean_tcc": 56763,
       "per_class": {
         "4": {
           "fixed": 45,
@@ -3552,13 +3554,13 @@
           "wrong_corr": 2
         },
         "6": {
-          "fixed": 23,
+          "fixed": 24,
           "missed": 5,
           "wrong_corr": 1
         },
         "2": {
           "missed": 7,
-          "fixed": 29
+          "fixed": 30
         }
       },
       "over_cat": [
@@ -3653,23 +3655,23 @@
           99
         ],
         "encyclopedic": [
-          51,
-          75
+          53,
+          77
         ]
-      },
-      "clean_tcc": 55911
+      }
     },
     "sonnet-4.6": {
-      "graded": 223,
+      "graded": 224,
       "coverage": 1.0,
       "n_errors": 0,
       "outcomes": {
-        "fixed": 261,
-        "missed": 14,
+        "fixed": 262,
+        "missed": 15,
         "wrong_corr": 1
       },
-      "gold_edits": 276,
+      "gold_edits": 278,
       "over_edits": 38,
+      "clean_tcc": 56763,
       "per_class": {
         "4": {
           "fixed": 59,
@@ -3688,11 +3690,11 @@
         },
         "6": {
           "fixed": 26,
-          "missed": 2,
+          "missed": 3,
           "wrong_corr": 1
         },
         "2": {
-          "fixed": 36
+          "fixed": 37
         }
       },
       "over_cat": [
@@ -3763,23 +3765,23 @@
           99
         ],
         "encyclopedic": [
-          68,
-          75
+          69,
+          77
         ]
-      },
-      "clean_tcc": 55911
+      }
     },
     "thalle": {
-      "graded": 223,
+      "graded": 224,
       "coverage": 1.0,
       "n_errors": 0,
       "outcomes": {
-        "fixed": 191,
-        "missed": 83,
+        "fixed": 192,
+        "missed": 84,
         "wrong_corr": 2
       },
-      "gold_edits": 276,
-      "over_edits": 173,
+      "gold_edits": 278,
+      "over_edits": 174,
+      "clean_tcc": 56763,
       "per_class": {
         "4": {
           "fixed": 44,
@@ -3800,11 +3802,11 @@
         },
         "6": {
           "fixed": 12,
-          "missed": 16,
+          "missed": 17,
           "wrong_corr": 1
         },
         "2": {
-          "fixed": 28,
+          "fixed": 29,
           "missed": 8
         }
       },
@@ -3900,23 +3902,23 @@
           99
         ],
         "encyclopedic": [
-          47,
-          75
+          48,
+          77
         ]
-      },
-      "clean_tcc": 55911
+      }
     },
     "typhoon-s": {
-      "graded": 223,
+      "graded": 224,
       "coverage": 1.0,
       "n_errors": 0,
       "outcomes": {
-        "fixed": 177,
-        "missed": 98,
+        "fixed": 178,
+        "missed": 99,
         "wrong_corr": 1
       },
-      "gold_edits": 276,
+      "gold_edits": 278,
       "over_edits": 50,
+      "clean_tcc": 56763,
       "per_class": {
         "4": {
           "fixed": 40,
@@ -3936,11 +3938,11 @@
           "wrong_corr": 1
         },
         "6": {
-          "fixed": 19,
+          "fixed": 20,
           "missed": 10
         },
         "2": {
-          "missed": 13,
+          "missed": 14,
           "fixed": 23
         }
       },
@@ -4036,23 +4038,23 @@
           99
         ],
         "encyclopedic": [
-          38,
-          75
+          39,
+          77
         ]
-      },
-      "clean_tcc": 55911
+      }
     },
     "typhoon25": {
-      "graded": 223,
+      "graded": 224,
       "coverage": 1.0,
       "n_errors": 0,
       "outcomes": {
-        "fixed": 215,
-        "missed": 53,
+        "fixed": 216,
+        "missed": 54,
         "wrong_corr": 8
       },
-      "gold_edits": 276,
+      "gold_edits": 278,
       "over_edits": 182,
+      "clean_tcc": 56763,
       "per_class": {
         "4": {
           "fixed": 47,
@@ -4075,11 +4077,11 @@
         },
         "6": {
           "fixed": 18,
-          "missed": 10,
+          "missed": 11,
           "wrong_corr": 1
         },
         "2": {
-          "fixed": 30,
+          "fixed": 31,
           "missed": 6
         }
       },
@@ -4175,39 +4177,42 @@
           99
         ],
         "encyclopedic": [
-          47,
-          75
+          48,
+          77
         ]
-      },
-      "clean_tcc": 55911
+      }
     }
   },
   "T3": {
     "deepseek-flash": {
-      "graded": 124,
+      "graded": 122,
       "coverage": 1.0,
       "n_errors": 0,
       "outcomes": {
-        "fixed": 188,
-        "missed": 7
+        "fixed": 186,
+        "missed": 8,
+        "wrong_corr": 1
       },
       "gold_edits": 195,
-      "over_edits": 71,
+      "over_edits": 61,
+      "clean_tcc": 91016,
       "per_class": {
         "4": {
-          "fixed": 39
+          "fixed": 37,
+          "missed": 1
         },
         "5": {
-          "fixed": 52,
+          "fixed": 53,
           "missed": 1
         },
         "1": {
-          "fixed": 31,
+          "fixed": 29,
           "missed": 3
         },
         "2": {
-          "fixed": 23,
-          "missed": 1
+          "fixed": 24,
+          "missed": 1,
+          "wrong_corr": 1
         },
         "3": {
           "fixed": 24,
@@ -4218,10 +4223,6 @@
         }
       },
       "over_cat": [
-        [
-          "ต→ท",
-          5
-        ],
         [
           " → ",
           5
@@ -4259,10 +4260,6 @@
           2
         ],
         [
-          "∅→.ศ.",
-          2
-        ],
-        [
           "ชั่น→ชัน",
           2
         ],
@@ -4297,50 +4294,58 @@
         [
           "เบิ้ล→เบิล",
           1
+        ],
+        [
+          "ซั่น→ซัน",
+          1
+        ],
+        [
+          "เฟ่ต์→เฟต์",
+          1
         ]
       ],
       "by_register": {
         "gov": [
-          65,
-          66
+          66,
+          68
         ],
         "news": [
-          72,
-          74
+          66,
+          68
         ],
         "encyclopedic": [
-          51,
-          55
+          54,
+          59
         ]
-      },
-      "clean_tcc": 92149
+      }
     },
     "deepseek-v4-pro": {
-      "graded": 124,
+      "graded": 122,
       "coverage": 1.0,
       "n_errors": 0,
       "outcomes": {
-        "fixed": 178,
-        "missed": 17
+        "fixed": 176,
+        "missed": 19
       },
       "gold_edits": 195,
-      "over_edits": 104,
+      "over_edits": 96,
+      "clean_tcc": 91016,
       "per_class": {
         "4": {
-          "fixed": 37,
-          "missed": 2
+          "fixed": 35,
+          "missed": 3
         },
         "5": {
-          "fixed": 48,
+          "fixed": 49,
           "missed": 5
         },
         "1": {
-          "fixed": 30,
+          "fixed": 28,
           "missed": 4
         },
         "2": {
-          "missed": 2,
-          "fixed": 22
+          "missed": 3,
+          "fixed": 23
         },
         "3": {
           "fixed": 24,
@@ -4409,14 +4414,6 @@
           2
         ],
         [
-          "ไหร่→ไร",
-          2
-        ],
-        [
-          "ข→กระ",
-          2
-        ],
-        [
           "ฮิ→ฮี",
           2
         ],
@@ -4431,53 +4428,61 @@
         [
           "กริ→เกร",
           1
+        ],
+        [
+          "∅→มา",
+          1
+        ],
+        [
+          "โฉด→โง่",
+          1
         ]
       ],
       "by_register": {
         "gov": [
-          64,
-          66
+          65,
+          68
         ],
         "news": [
-          67,
-          74
+          62,
+          68
         ],
         "encyclopedic": [
-          47,
-          55
+          49,
+          59
         ]
-      },
-      "clean_tcc": 92149
+      }
     },
     "gemini-3.5-flash": {
-      "graded": 124,
+      "graded": 122,
       "coverage": 1.0,
       "n_errors": 0,
       "outcomes": {
-        "fixed": 192,
-        "missed": 2,
+        "fixed": 191,
+        "missed": 3,
         "wrong_corr": 1
       },
       "gold_edits": 195,
-      "over_edits": 81,
+      "over_edits": 76,
+      "clean_tcc": 91016,
       "per_class": {
         "4": {
-          "fixed": 39
+          "fixed": 38
         },
         "5": {
-          "fixed": 53
+          "fixed": 54
         },
         "1": {
-          "fixed": 33,
+          "fixed": 31,
           "missed": 1
         },
         "2": {
-          "fixed": 23,
+          "fixed": 25,
           "wrong_corr": 1
         },
         "3": {
-          "fixed": 25,
-          "missed": 1
+          "fixed": 24,
+          "missed": 2
         },
         "6": {
           "fixed": 19
@@ -4489,15 +4494,15 @@
           7
         ],
         [
-          "ไหร่→ไร",
-          4
-        ],
-        [
           "เอม→เอ็ม",
           4
         ],
         [
           "รี่→รี",
+          3
+        ],
+        [
+          "ไหร่→ไร",
           3
         ],
         [
@@ -4541,10 +4546,6 @@
           2
         ],
         [
-          "ข→กระ",
-          2
-        ],
-        [
           "ค→ก",
           2
         ],
@@ -4563,26 +4564,29 @@
         [
           "ตี้→ตี",
           1
+        ],
+        [
+          "เบิ้ล→เบิล",
+          1
         ]
       ],
       "by_register": {
         "gov": [
-          66,
-          66
+          68,
+          68
         ],
         "news": [
-          74,
-          74
+          68,
+          68
         ],
         "encyclopedic": [
-          52,
-          55
+          55,
+          59
         ]
-      },
-      "clean_tcc": 92149
+      }
     },
     "gemma-4-31b": {
-      "graded": 124,
+      "graded": 122,
       "coverage": 1.0,
       "n_errors": 0,
       "outcomes": {
@@ -4591,23 +4595,24 @@
         "wrong_corr": 1
       },
       "gold_edits": 195,
-      "over_edits": 40,
+      "over_edits": 36,
+      "clean_tcc": 91016,
       "per_class": {
         "4": {
-          "fixed": 38,
-          "missed": 1
+          "fixed": 36,
+          "missed": 2
         },
         "5": {
-          "fixed": 52,
-          "missed": 1
+          "fixed": 54
         },
         "1": {
-          "fixed": 31,
-          "missed": 2,
+          "fixed": 30,
+          "missed": 1,
           "wrong_corr": 1
         },
         "2": {
-          "fixed": 24
+          "fixed": 25,
+          "missed": 1
         },
         "3": {
           "fixed": 25,
@@ -4628,10 +4633,6 @@
         ],
         [
           "นส์→น",
-          2
-        ],
-        [
-          "ข→กระ",
           2
         ],
         [
@@ -4697,56 +4698,60 @@
         [
           "โต→โต้",
           1
+        ],
+        [
+          "\"→∅",
+          1
         ]
       ],
       "by_register": {
         "gov": [
-          66,
-          66
+          67,
+          68
         ],
         "news": [
-          70,
-          74
+          67,
+          68
         ],
         "encyclopedic": [
-          53,
-          55
+          55,
+          59
         ]
-      },
-      "clean_tcc": 92149
+      }
     },
     "glm-5.1": {
-      "graded": 124,
+      "graded": 122,
       "coverage": 1.0,
       "n_errors": 0,
       "outcomes": {
-        "fixed": 164,
-        "missed": 29,
+        "fixed": 161,
+        "missed": 32,
         "wrong_corr": 2
       },
       "gold_edits": 195,
       "over_edits": 132,
+      "clean_tcc": 91016,
       "per_class": {
         "4": {
-          "fixed": 37,
-          "missed": 2
+          "fixed": 35,
+          "missed": 3
         },
         "5": {
           "fixed": 45,
-          "missed": 8
+          "missed": 9
         },
         "1": {
-          "fixed": 24,
+          "fixed": 22,
           "missed": 8,
           "wrong_corr": 2
         },
         "2": {
-          "fixed": 21,
+          "fixed": 23,
           "missed": 3
         },
         "3": {
-          "fixed": 22,
-          "missed": 4
+          "fixed": 21,
+          "missed": 5
         },
         "6": {
           "fixed": 15,
@@ -4799,6 +4804,10 @@
           2
         ],
         [
+          "∅→ง",
+          2
+        ],
+        [
           "ค→ก",
           2
         ],
@@ -4829,30 +4838,25 @@
         [
           "“กิตติศัพท์ของพระองค์ก็เลื่องลือไปทั่วประเทศซีเรีย→including0.1. The9.1.111,7",
           1
-        ],
-        [
-          "เขาจึงพาคนป่วยเป็นโรคต่างๆ→the0.3237,121.239.025,2,0,1,0,10,1, etc1.0",
-          1
         ]
       ],
       "by_register": {
         "gov": [
-          58,
-          66
+          57,
+          68
         ],
         "news": [
-          60,
-          74
+          55,
+          68
         ],
         "encyclopedic": [
-          46,
-          55
+          49,
+          59
         ]
-      },
-      "clean_tcc": 92149
+      }
     },
     "gpt54-mini": {
-      "graded": 124,
+      "graded": 122,
       "coverage": 1.0,
       "n_errors": 0,
       "outcomes": {
@@ -4861,29 +4865,30 @@
         "wrong_corr": 2
       },
       "gold_edits": 195,
-      "over_edits": 26,
+      "over_edits": 21,
+      "clean_tcc": 91016,
       "per_class": {
         "4": {
-          "missed": 6,
-          "fixed": 33
+          "missed": 7,
+          "fixed": 31
         },
         "5": {
-          "missed": 8,
-          "fixed": 45
+          "missed": 7,
+          "fixed": 47
         },
         "1": {
           "missed": 7,
-          "fixed": 26,
+          "fixed": 24,
           "wrong_corr": 1
         },
         "2": {
           "wrong_corr": 1,
-          "fixed": 21,
-          "missed": 2
+          "fixed": 22,
+          "missed": 3
         },
         "3": {
-          "fixed": 23,
-          "missed": 3
+          "fixed": 24,
+          "missed": 2
         },
         "6": {
           "fixed": 18,
@@ -4894,10 +4899,6 @@
         [
           " → ",
           3
-        ],
-        [
-          "∅→.ศ.",
-          2
         ],
         [
           "ชั่น→ชัน",
@@ -4944,15 +4945,7 @@
           1
         ],
         [
-          "น→นุ",
-          1
-        ],
-        [
           "“→∅",
-          1
-        ],
-        [
-          "เรย→จึง",
           1
         ],
         [
@@ -4968,50 +4961,55 @@
           1
         ],
         [
-          " →∅",
+          "รึ→หรือ",
+          1
+        ],
+        [
+          "ไส→ไซ",
           1
         ]
       ],
       "by_register": {
         "gov": [
-          62,
-          66
+          63,
+          68
         ],
         "news": [
-          60,
-          74
+          56,
+          68
         ],
         "encyclopedic": [
-          44,
-          55
+          47,
+          59
         ]
-      },
-      "clean_tcc": 92149
+      }
     },
     "gpt55-high": {
-      "graded": 124,
+      "graded": 122,
       "coverage": 1.0,
       "n_errors": 0,
       "outcomes": {
-        "fixed": 185,
-        "missed": 10
+        "fixed": 184,
+        "missed": 11
       },
       "gold_edits": 195,
-      "over_edits": 53,
+      "over_edits": 48,
+      "clean_tcc": 91016,
       "per_class": {
         "4": {
-          "fixed": 39
+          "fixed": 37,
+          "missed": 1
         },
         "5": {
-          "fixed": 51,
+          "fixed": 52,
           "missed": 2
         },
         "1": {
-          "fixed": 31,
+          "fixed": 29,
           "missed": 3
         },
         "2": {
-          "fixed": 22,
+          "fixed": 24,
           "missed": 2
         },
         "3": {
@@ -5033,19 +5031,15 @@
           4
         ],
         [
-          "ไหร่→ไร",
-          4
-        ],
-        [
           "เอม→เอ็ม",
           4
         ],
         [
-          "กะ→ก",
-          2
+          "ไหร่→ไร",
+          3
         ],
         [
-          "พ→ปี",
+          "กะ→ก",
           2
         ],
         [
@@ -5103,26 +5097,29 @@
         [
           "ไซส์→ไซซ์",
           1
+        ],
+        [
+          "อะ→อา",
+          1
         ]
       ],
       "by_register": {
         "gov": [
-          66,
-          66
+          67,
+          68
         ],
         "news": [
-          73,
-          74
+          67,
+          68
         ],
         "encyclopedic": [
-          46,
-          55
+          50,
+          59
         ]
-      },
-      "clean_tcc": 92149
+      }
     },
     "gpt55-med": {
-      "graded": 124,
+      "graded": 122,
       "coverage": 1.0,
       "n_errors": 0,
       "outcomes": {
@@ -5130,25 +5127,27 @@
         "missed": 11
       },
       "gold_edits": 195,
-      "over_edits": 51,
+      "over_edits": 46,
+      "clean_tcc": 91016,
       "per_class": {
         "4": {
-          "fixed": 39
+          "fixed": 37,
+          "missed": 1
         },
         "5": {
-          "fixed": 53
+          "fixed": 54
         },
         "1": {
-          "fixed": 31,
+          "fixed": 29,
           "missed": 3
         },
         "2": {
           "missed": 3,
-          "fixed": 21
+          "fixed": 23
         },
         "3": {
-          "fixed": 23,
-          "missed": 3
+          "fixed": 24,
+          "missed": 2
         },
         "6": {
           "fixed": 17,
@@ -5169,11 +5168,11 @@
           3
         ],
         [
-          "ไหร่→ไร",
-          3
+          "รี่→รี",
+          2
         ],
         [
-          "รี่→รี",
+          "ไหร่→ไร",
           2
         ],
         [
@@ -5233,56 +5232,56 @@
           1
         ],
         [
-          "ผ→พ",
+          "\"→∅",
           1
         ]
       ],
       "by_register": {
         "gov": [
-          66,
-          66
+          67,
+          68
         ],
         "news": [
-          71,
-          74
+          66,
+          68
         ],
         "encyclopedic": [
-          47,
-          55
+          51,
+          59
         ]
-      },
-      "clean_tcc": 92149
+      }
     },
     "minimax-m2.7": {
-      "graded": 124,
+      "graded": 122,
       "coverage": 1.0,
       "n_errors": 0,
       "outcomes": {
-        "fixed": 87,
-        "missed": 108
+        "fixed": 85,
+        "missed": 110
       },
       "gold_edits": 195,
-      "over_edits": 88,
+      "over_edits": 81,
+      "clean_tcc": 91016,
       "per_class": {
         "4": {
-          "fixed": 16,
-          "missed": 23
+          "fixed": 14,
+          "missed": 24
         },
         "5": {
           "missed": 28,
-          "fixed": 25
+          "fixed": 26
         },
         "1": {
           "missed": 16,
-          "fixed": 18
+          "fixed": 16
         },
         "2": {
           "fixed": 13,
-          "missed": 11
+          "missed": 13
         },
         "3": {
-          "missed": 18,
-          "fixed": 8
+          "missed": 17,
+          "fixed": 9
         },
         "6": {
           "missed": 12,
@@ -5373,48 +5372,49 @@
       ],
       "by_register": {
         "gov": [
-          31,
-          66
+          30,
+          68
         ],
         "news": [
-          33,
-          74
+          30,
+          68
         ],
         "encyclopedic": [
-          23,
-          55
+          25,
+          59
         ]
-      },
-      "clean_tcc": 92149
+      }
     },
     "openthaigpt": {
-      "graded": 124,
+      "graded": 122,
       "coverage": 1.0,
       "n_errors": 0,
       "outcomes": {
         "missed": 60,
-        "fixed": 133,
-        "wrong_corr": 2
+        "fixed": 132,
+        "wrong_corr": 3
       },
       "gold_edits": 195,
-      "over_edits": 256,
+      "over_edits": 240,
+      "clean_tcc": 91016,
       "per_class": {
         "4": {
-          "missed": 10,
-          "fixed": 29
+          "missed": 11,
+          "fixed": 27
         },
         "5": {
-          "fixed": 35,
-          "missed": 18
+          "fixed": 36,
+          "missed": 17,
+          "wrong_corr": 1
         },
         "1": {
-          "fixed": 20,
-          "missed": 12,
+          "fixed": 19,
+          "missed": 11,
           "wrong_corr": 2
         },
         "2": {
-          "fixed": 21,
-          "missed": 3
+          "fixed": 22,
+          "missed": 4
         },
         "3": {
           "missed": 11,
@@ -5428,7 +5428,7 @@
       "over_cat": [
         [
           "∅→ ",
-          99
+          87
         ],
         [
           " →∅",
@@ -5436,7 +5436,7 @@
         ],
         [
           ",→ ",
-          25
+          22
         ],
         [
           "∅→)",
@@ -5471,10 +5471,6 @@
           2
         ],
         [
-          "∅→.ศ.",
-          2
-        ],
-        [
           ".→∅",
           2
         ],
@@ -5505,48 +5501,52 @@
         [
           "   →∅",
           1
+        ],
+        [
+          "ได้→∅",
+          1
         ]
       ],
       "by_register": {
         "gov": [
-          50,
-          66
+          51,
+          68
         ],
         "news": [
-          51,
-          74
+          48,
+          68
         ],
         "encyclopedic": [
-          32,
-          55
+          33,
+          59
         ]
-      },
-      "clean_tcc": 92149
+      }
     },
     "opus-4.7": {
-      "graded": 124,
+      "graded": 122,
       "coverage": 1.0,
       "n_errors": 0,
       "outcomes": {
-        "fixed": 193,
-        "missed": 2
+        "fixed": 192,
+        "missed": 3
       },
       "gold_edits": 195,
-      "over_edits": 67,
+      "over_edits": 63,
+      "clean_tcc": 91016,
       "per_class": {
         "4": {
-          "fixed": 39
+          "fixed": 38
         },
         "5": {
-          "fixed": 52,
+          "fixed": 53,
           "missed": 1
         },
         "1": {
-          "fixed": 34
+          "fixed": 32
         },
         "2": {
-          "fixed": 23,
-          "missed": 1
+          "fixed": 24,
+          "missed": 2
         },
         "3": {
           "fixed": 26
@@ -5571,10 +5571,6 @@
         [
           "เอม→เอ็ม",
           3
-        ],
-        [
-          "ข→กระ",
-          2
         ],
         [
           "‘→'",
@@ -5629,63 +5625,67 @@
           1
         ],
         [
-          "ผ→พ",
+          "\"→∅",
           1
         ],
         [
-          "\"→∅",
+          "“→∅",
+          1
+        ],
+        [
+          "ย่าม→ย่ำ",
           1
         ]
       ],
       "by_register": {
         "gov": [
-          66,
-          66
+          68,
+          68
         ],
         "news": [
-          73,
-          74
+          67,
+          68
         ],
         "encyclopedic": [
-          54,
-          55
+          57,
+          59
         ]
-      },
-      "clean_tcc": 92149
+      }
     },
     "qwen3.6-35b-a3b": {
-      "graded": 124,
+      "graded": 122,
       "coverage": 1.0,
       "n_errors": 0,
       "outcomes": {
-        "fixed": 145,
-        "missed": 48,
+        "fixed": 143,
+        "missed": 50,
         "wrong_corr": 2
       },
       "gold_edits": 195,
-      "over_edits": 600,
+      "over_edits": 584,
+      "clean_tcc": 91016,
       "per_class": {
         "4": {
-          "fixed": 30,
-          "missed": 9
+          "fixed": 28,
+          "missed": 10
         },
         "5": {
-          "missed": 15,
-          "fixed": 38
+          "missed": 14,
+          "fixed": 40
         },
         "1": {
           "missed": 10,
-          "fixed": 23,
+          "fixed": 21,
           "wrong_corr": 1
         },
         "2": {
-          "missed": 8,
-          "fixed": 15,
+          "missed": 9,
+          "fixed": 16,
           "wrong_corr": 1
         },
         "3": {
-          "missed": 4,
-          "fixed": 22
+          "missed": 5,
+          "fixed": 21
         },
         "6": {
           "fixed": 17,
@@ -5699,22 +5699,18 @@
         ],
         [
           " →∅",
-          13
-        ],
-        [
-          "ได้→∅",
-          10
+          12
         ],
         [
           " → ",
           9
         ],
         [
-          "​→∅",
-          7
+          "ได้→∅",
+          8
         ],
         [
-          "∅→ได้",
+          "​→∅",
           7
         ],
         [
@@ -5727,10 +5723,6 @@
         ],
         [
           "จะ→∅",
-          6
-        ],
-        [
-          "เป็น→∅",
           5
         ],
         [
@@ -5738,15 +5730,15 @@
           4
         ],
         [
-          "มา→∅",
+          "เป็น→∅",
           4
         ],
         [
-          "∅→การ",
+          "นธ์→นธรัฐ ",
           3
         ],
         [
-          "นธ์→นธรัฐ ",
+          "มา→∅",
           3
         ],
         [
@@ -5755,6 +5747,10 @@
         ],
         [
           "เอม→เอ็ม",
+          3
+        ],
+        [
+          "กัน→∅",
           3
         ],
         [
@@ -5770,6 +5766,10 @@
           3
         ],
         [
+          "∅→ได้",
+          3
+        ],
+        [
           "∅→อ",
           2
         ]
@@ -5777,43 +5777,43 @@
       "by_register": {
         "gov": [
           59,
-          66
+          68
         ],
         "news": [
-          51,
-          74
+          47,
+          68
         ],
         "encyclopedic": [
-          35,
-          55
+          37,
+          59
         ]
-      },
-      "clean_tcc": 92149
+      }
     },
     "sonnet-4.6": {
-      "graded": 124,
+      "graded": 122,
       "coverage": 1.0,
       "n_errors": 0,
       "outcomes": {
-        "fixed": 187,
-        "missed": 8
+        "fixed": 186,
+        "missed": 9
       },
       "gold_edits": 195,
-      "over_edits": 72,
+      "over_edits": 70,
+      "clean_tcc": 91016,
       "per_class": {
         "4": {
-          "fixed": 38,
-          "missed": 1
+          "fixed": 36,
+          "missed": 2
         },
         "5": {
-          "fixed": 50,
+          "fixed": 51,
           "missed": 3
         },
         "1": {
-          "fixed": 34
+          "fixed": 32
         },
         "2": {
-          "fixed": 23,
+          "fixed": 25,
           "missed": 1
         },
         "3": {
@@ -5836,10 +5836,6 @@
         [
           " → ",
           14
-        ],
-        [
-          "ข→กระ",
-          2
         ],
         [
           "ค→ก",
@@ -5890,10 +5886,6 @@
           1
         ],
         [
-          "นว→นา",
-          1
-        ],
-        [
           "∅→ก",
           1
         ],
@@ -5902,54 +5894,62 @@
           1
         ],
         [
+          "∅→ง",
+          1
+        ],
+        [
           "ชั่น→ชัน",
+          1
+        ],
+        [
+          "ไส→ไซ",
           1
         ]
       ],
       "by_register": {
         "gov": [
-          65,
-          66
+          66,
+          68
         ],
         "news": [
-          69,
-          74
+          64,
+          68
         ],
         "encyclopedic": [
-          53,
-          55
+          56,
+          59
         ]
-      },
-      "clean_tcc": 92149
+      }
     },
     "thalle": {
-      "graded": 124,
+      "graded": 122,
       "coverage": 1.0,
       "n_errors": 1,
       "outcomes": {
-        "fixed": 131,
-        "missed": 63,
+        "fixed": 128,
+        "missed": 66,
         "wrong_corr": 1
       },
       "gold_edits": 195,
-      "over_edits": 180,
+      "over_edits": 181,
+      "clean_tcc": 91016,
       "per_class": {
         "4": {
-          "fixed": 25,
-          "missed": 14
+          "fixed": 23,
+          "missed": 15
         },
         "5": {
           "fixed": 39,
-          "missed": 14
+          "missed": 15
         },
         "1": {
-          "fixed": 30,
+          "fixed": 28,
           "missed": 3,
           "wrong_corr": 1
         },
         "2": {
-          "missed": 12,
-          "fixed": 12
+          "missed": 13,
+          "fixed": 13
         },
         "3": {
           "fixed": 17,
@@ -5970,16 +5970,16 @@
           5
         ],
         [
-          "∅→ ",
-          4
-        ],
-        [
           "ย→∅",
           4
         ],
         [
           "f→-F",
           4
+        ],
+        [
+          "∅→ ",
+          3
         ],
         [
           "∅→ที่",
@@ -5991,10 +5991,6 @@
         ],
         [
           "∅→.นพ",
-          2
-        ],
-        [
-          "∅→.ศ.",
           2
         ],
         [
@@ -6040,52 +6036,56 @@
         [
           "มีมติเห็นชอบ ผ่อนผันให้คนต่างด้าว 3 สัญชาติ อยู่ในราชอาณาจักรและทำงานอย่างถูกต้องตามกฎหมายเป็นกรณีพิเศษ ภายใต้สถานการณ์การแพร่ระบาดของโรคติดเชื้อไวรัสโคโรนา 2019 ระลอกใหม่ →∅",
           1
+        ],
+        [
+          "นวนมาก ประยุทธ์ จันทร์โอชา นายกรัฐมนตรี แสดงความห่วงกังวลเกี่ยวกับแรงงานต่างด้าวที่ไม่ได้ทำงานอย่างถูกต้อง และมีการหลบหนีเนื่องจากเกรงกลัวความผิด จึงควรมีการกำหนดมาตรการตรวจสอบ คัดกรองโรคติดเชื้อไวรัสโคโรนา 2019 ในกลุ่มแรงงานต่างด้าว เพื่อยับยั้งการแพร่ระบาดของโรค ทั้งนี้ได้มอบหมายให้กระทรวงแรงงาน โดยกรมการจัดหางาน และหน่วยงานที่เกี่ยวข้อง การผ่อนผันให้คนต่างด้าว 3 สัญชาติ (กัมพูชา ลาว และเมียนมา) อยู่ในราชอาณาจักรและทำงานอย่างถูกต้องตามกฎหมายเป็นกรณีพิเศษ ต้องดำเนินการตามแนวทางที่ประกาศทั้ง 2 ฉบับกำหนด และจัดทำทะเบียนประวัติคนซึ่งไม่มีสัญชาติไทย โดยต้องยื่นเอกสารหลักฐานและรูปถ่ายคนต่างด้าว ตามที่กรมการจัดหางานกำหนด ระหว่างวันที่ 15 มกราคม พ.ศ. โดยต้องดำเนินการภายในวันที่ 16 เมษายน พ.ศ. จะต้องไปจัดทำทะเบียนประวัติคนซึ่งไม่มีสัญชาติไทยที่มีใบอนุญาตทำงานอยู่ด้านหลังของบัตรสีชมพู ตามวิธีการและขั้นตอนที่กระทรวงมหาดไทยกำห→∅",
+          1
         ]
       ],
       "by_register": {
         "gov": [
-          47,
-          66
+          46,
+          68
         ],
         "news": [
-          52,
-          74
+          49,
+          68
         ],
         "encyclopedic": [
-          32,
-          55
+          33,
+          59
         ]
-      },
-      "clean_tcc": 92149
+      }
     },
     "typhoon-s": {
-      "graded": 124,
+      "graded": 122,
       "coverage": 1.0,
       "n_errors": 0,
       "outcomes": {
-        "missed": 68,
-        "fixed": 126,
+        "missed": 69,
+        "fixed": 125,
         "wrong_corr": 1
       },
       "gold_edits": 195,
-      "over_edits": 85,
+      "over_edits": 84,
+      "clean_tcc": 91016,
       "per_class": {
         "4": {
           "missed": 11,
-          "fixed": 28
+          "fixed": 27
         },
         "5": {
           "missed": 17,
-          "fixed": 36
+          "fixed": 37
         },
         "1": {
           "missed": 15,
-          "fixed": 18,
+          "fixed": 16,
           "wrong_corr": 1
         },
         "2": {
-          "fixed": 17,
-          "missed": 7
+          "fixed": 18,
+          "missed": 8
         },
         "3": {
           "missed": 12,
@@ -6107,7 +6107,7 @@
         ],
         [
           "∅→)",
-          8
+          9
         ],
         [
           "​→∅",
@@ -6170,59 +6170,59 @@
           1
         ],
         [
-          "ผ→พ",
+          "รา→ทา",
           1
         ],
         [
-          "รา→ทา",
+          "\"→∅",
           1
         ]
       ],
       "by_register": {
         "gov": [
-          53,
-          66
+          55,
+          68
         ],
         "news": [
-          46,
-          74
+          42,
+          68
         ],
         "encyclopedic": [
-          27,
-          55
+          28,
+          59
         ]
-      },
-      "clean_tcc": 92149
+      }
     },
     "typhoon25": {
-      "graded": 124,
+      "graded": 122,
       "coverage": 1.0,
       "n_errors": 0,
       "outcomes": {
-        "fixed": 136,
-        "missed": 56,
+        "fixed": 135,
+        "missed": 57,
         "wrong_corr": 3
       },
       "gold_edits": 195,
-      "over_edits": 249,
+      "over_edits": 234,
+      "clean_tcc": 91016,
       "per_class": {
         "4": {
-          "fixed": 27,
+          "fixed": 26,
           "missed": 11,
           "wrong_corr": 1
         },
         "5": {
           "missed": 14,
-          "fixed": 37,
+          "fixed": 38,
           "wrong_corr": 2
         },
         "1": {
-          "fixed": 25,
-          "missed": 9
+          "fixed": 24,
+          "missed": 8
         },
         "2": {
           "fixed": 18,
-          "missed": 6
+          "missed": 8
         },
         "3": {
           "missed": 8,
@@ -6236,7 +6236,7 @@
       "over_cat": [
         [
           "∅→ ",
-          121
+          112
         ],
         [
           " →∅",
@@ -6247,12 +6247,12 @@
           12
         ],
         [
-          ",→ ",
-          10
-        ],
-        [
           "∅→)",
           9
+        ],
+        [
+          ",→ ",
+          8
         ],
         [
           "​→∅",
@@ -6271,10 +6271,6 @@
           2
         ],
         [
-          "∅→ข้อความ: ",
-          2
-        ],
-        [
           "กะ→กา",
           2
         ],
@@ -6283,7 +6279,7 @@
           2
         ],
         [
-          "∅→.ศ.",
+          "∅→*",
           2
         ],
         [
@@ -6307,6 +6303,10 @@
           1
         ],
         [
+          "∅→ข้อความ: ",
+          1
+        ],
+        [
           "∅→อ่อน",
           1
         ],
@@ -6317,19 +6317,18 @@
       ],
       "by_register": {
         "gov": [
-          57,
-          66
+          58,
+          68
         ],
         "news": [
-          46,
-          74
+          43,
+          68
         ],
         "encyclopedic": [
-          33,
-          55
+          34,
+          59
         ]
-      },
-      "clean_tcc": 92149
+      }
     }
   }
 }

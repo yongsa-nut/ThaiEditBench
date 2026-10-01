@@ -122,141 +122,143 @@
  },
  "T2": {
   "pooled": {
-   "fixed": 0.8508,
-   "wrong_corr": 0.0066,
-   "missed_untouched": 0.1273,
-   "missed_touched": 0.0154,
-   "n": 4416
+   "fixed": 0.8494,
+   "wrong_corr": 0.0065,
+   "missed_untouched": 0.1286,
+   "missed_touched": 0.0155,
+   "n": 4448
   },
   "per_model": {
    "deepseek-flash": {
-    "fixed": 0.9601,
-    "wrong_corr": 0.0109,
-    "missed_untouched": 0.029,
-    "n": 276
+    "fixed": 0.9604,
+    "wrong_corr": 0.0108,
+    "missed_untouched": 0.0288,
+    "n": 278
    },
    "deepseek-v4-pro": {
-    "fixed": 0.9746,
-    "missed_untouched": 0.0217,
+    "fixed": 0.9748,
+    "missed_untouched": 0.0216,
     "missed_touched": 0.0036,
-    "n": 276
+    "n": 278
    },
    "gemini-3.5-flash": {
-    "fixed": 0.9891,
-    "missed_untouched": 0.0109,
-    "n": 276
+    "fixed": 0.9892,
+    "missed_untouched": 0.0108,
+    "n": 278
    },
    "gemma-4-31b": {
-    "fixed": 0.9674,
+    "fixed": 0.9676,
     "missed_touched": 0.0072,
-    "missed_untouched": 0.0254,
-    "n": 276
+    "missed_untouched": 0.0252,
+    "n": 278
    },
    "glm-5.1": {
-    "fixed": 0.8152,
-    "missed_untouched": 0.1667,
-    "missed_touched": 0.0145,
+    "fixed": 0.8129,
+    "missed_untouched": 0.1691,
+    "missed_touched": 0.0144,
     "wrong_corr": 0.0036,
-    "n": 276
+    "n": 278
    },
    "gpt54-mini": {
-    "fixed": 0.9167,
-    "missed_touched": 0.0109,
-    "missed_untouched": 0.058,
-    "wrong_corr": 0.0145,
-    "n": 276
+    "fixed": 0.9137,
+    "missed_touched": 0.0108,
+    "missed_untouched": 0.0612,
+    "wrong_corr": 0.0144,
+    "n": 278
    },
    "gpt55-high": {
-    "fixed": 0.9746,
-    "missed_untouched": 0.0254,
-    "n": 276
+    "fixed": 0.9712,
+    "missed_untouched": 0.0288,
+    "n": 278
    },
    "gpt55-med": {
-    "fixed": 0.971,
-    "missed_untouched": 0.0254,
+    "fixed": 0.9676,
+    "missed_untouched": 0.0288,
     "missed_touched": 0.0036,
-    "n": 276
+    "n": 278
    },
    "minimax-m2.7": {
-    "fixed": 0.6522,
-    "missed_untouched": 0.3297,
-    "missed_touched": 0.0109,
+    "fixed": 0.6511,
+    "missed_untouched": 0.3309,
+    "missed_touched": 0.0108,
     "wrong_corr": 0.0072,
-    "n": 276
+    "n": 278
    },
    "openthaigpt": {
-    "fixed": 0.5942,
-    "missed_untouched": 0.3768,
-    "missed_touched": 0.0254,
+    "fixed": 0.5899,
+    "missed_untouched": 0.3813,
+    "missed_touched": 0.0252,
     "wrong_corr": 0.0036,
-    "n": 276
+    "n": 278
    },
    "opus-4.7": {
-    "fixed": 0.9855,
-    "missed_untouched": 0.0145,
-    "n": 276
+    "fixed": 0.9856,
+    "missed_untouched": 0.0144,
+    "n": 278
    },
    "qwen3.6-35b-a3b": {
-    "fixed": 0.7536,
-    "missed_touched": 0.0471,
-    "missed_untouched": 0.1775,
-    "wrong_corr": 0.0217,
-    "n": 276
+    "fixed": 0.7554,
+    "missed_touched": 0.0468,
+    "missed_untouched": 0.1763,
+    "wrong_corr": 0.0216,
+    "n": 278
    },
    "sonnet-4.6": {
-    "fixed": 0.9457,
+    "fixed": 0.9424,
     "missed_touched": 0.0036,
-    "missed_untouched": 0.0471,
+    "missed_untouched": 0.0504,
     "wrong_corr": 0.0036,
-    "n": 276
+    "n": 278
    },
    "thalle": {
-    "fixed": 0.692,
-    "missed_untouched": 0.2101,
-    "missed_touched": 0.0906,
+    "fixed": 0.6906,
+    "missed_untouched": 0.2086,
+    "missed_touched": 0.0935,
     "wrong_corr": 0.0072,
-    "n": 276
+    "n": 278
    },
    "typhoon-s": {
-    "fixed": 0.6413,
-    "missed_untouched": 0.3478,
+    "fixed": 0.6403,
+    "missed_untouched": 0.3489,
     "wrong_corr": 0.0036,
     "missed_touched": 0.0072,
-    "n": 276
+    "n": 278
    },
    "typhoon25": {
-    "fixed": 0.779,
-    "missed_untouched": 0.1703,
-    "wrong_corr": 0.029,
-    "missed_touched": 0.0217,
-    "n": 276
+    "fixed": 0.777,
+    "missed_untouched": 0.1727,
+    "wrong_corr": 0.0288,
+    "missed_touched": 0.0216,
+    "n": 278
    }
   }
  },
  "T3": {
   "pooled": {
-   "fixed": 0.8282,
-   "missed_untouched": 0.1487,
-   "missed_touched": 0.0183,
-   "wrong_corr": 0.0048,
+   "fixed": 0.8215,
+   "missed_untouched": 0.1554,
+   "missed_touched": 0.0176,
+   "wrong_corr": 0.0054,
    "n": 3120
   },
   "per_model": {
    "deepseek-flash": {
-    "fixed": 0.9641,
-    "missed_untouched": 0.0256,
+    "fixed": 0.9538,
+    "missed_untouched": 0.0308,
     "missed_touched": 0.0103,
+    "wrong_corr": 0.0051,
     "n": 195
    },
    "deepseek-v4-pro": {
-    "fixed": 0.9128,
-    "missed_untouched": 0.0718,
+    "fixed": 0.9026,
+    "missed_untouched": 0.0821,
     "missed_touched": 0.0154,
     "n": 195
    },
    "gemini-3.5-flash": {
-    "fixed": 0.9846,
+    "fixed": 0.9795,
     "missed_touched": 0.0103,
+    "missed_untouched": 0.0051,
     "wrong_corr": 0.0051,
     "n": 195
    },
@@ -267,79 +269,79 @@
     "n": 195
    },
    "glm-5.1": {
-    "fixed": 0.841,
-    "missed_untouched": 0.1077,
+    "fixed": 0.8256,
+    "missed_untouched": 0.1231,
     "missed_touched": 0.041,
     "wrong_corr": 0.0103,
     "n": 195
    },
    "gpt54-mini": {
-    "missed_untouched": 0.1231,
+    "missed_untouched": 0.1282,
     "fixed": 0.8513,
     "wrong_corr": 0.0103,
-    "missed_touched": 0.0154,
-    "n": 195
-   },
-   "gpt55-high": {
-    "fixed": 0.9487,
-    "missed_untouched": 0.041,
     "missed_touched": 0.0103,
     "n": 195
    },
-   "gpt55-med": {
+   "gpt55-high": {
     "fixed": 0.9436,
     "missed_untouched": 0.0462,
     "missed_touched": 0.0103,
     "n": 195
    },
+   "gpt55-med": {
+    "fixed": 0.9436,
+    "missed_untouched": 0.0513,
+    "missed_touched": 0.0051,
+    "n": 195
+   },
    "minimax-m2.7": {
-    "fixed": 0.4462,
-    "missed_untouched": 0.5333,
-    "missed_touched": 0.0205,
+    "fixed": 0.4359,
+    "missed_untouched": 0.5487,
+    "missed_touched": 0.0154,
     "n": 195
    },
    "openthaigpt": {
     "missed_untouched": 0.3026,
-    "fixed": 0.6821,
-    "wrong_corr": 0.0103,
+    "fixed": 0.6769,
+    "wrong_corr": 0.0154,
     "missed_touched": 0.0051,
     "n": 195
    },
    "opus-4.7": {
-    "fixed": 0.9897,
-    "missed_untouched": 0.0103,
+    "fixed": 0.9846,
+    "missed_untouched": 0.0154,
     "n": 195
    },
    "qwen3.6-35b-a3b": {
-    "fixed": 0.7436,
-    "missed_untouched": 0.2154,
-    "missed_touched": 0.0308,
+    "fixed": 0.7333,
+    "missed_untouched": 0.2308,
+    "missed_touched": 0.0256,
     "wrong_corr": 0.0103,
     "n": 195
    },
    "sonnet-4.6": {
-    "fixed": 0.959,
-    "missed_untouched": 0.041,
+    "fixed": 0.9538,
+    "missed_untouched": 0.0462,
     "n": 195
    },
    "thalle": {
-    "fixed": 0.6718,
-    "missed_untouched": 0.2359,
-    "missed_touched": 0.0872,
+    "fixed": 0.6564,
+    "missed_untouched": 0.2308,
+    "missed_touched": 0.1077,
     "wrong_corr": 0.0051,
     "n": 195
    },
    "typhoon-s": {
-    "missed_untouched": 0.3333,
-    "fixed": 0.6462,
+    "missed_untouched": 0.3436,
+    "fixed": 0.641,
     "wrong_corr": 0.0051,
-    "missed_touched": 0.0154,
+    "missed_touched": 0.0103,
     "n": 195
    },
    "typhoon25": {
-    "fixed": 0.6974,
-    "missed_touched": 0.0205,
-    "missed_untouched": 0.2667,
+    "fixed": 0.6923,
+    "missed_touched": 0.0154,
+    "missed_untouched": 0.2769,
     "wrong_corr": 0.0154,
     "n": 195
    }

@@ -22,7 +22,9 @@
 \babelfont{rm}{TeX Gyre Termes}            % Times-like for Latin
 % Auto-switch to a Thai font whenever Thai-script characters appear, so inline
 % Thai needs no wrapping.  The Thai font is BUNDLED in fonts/ (Noto Serif Thai).
-\babelprovide[import, onchar=ids fonts]{thai}
+% intraspace=0 0 0: allow line breaks between Thai words but never stretch them into
+% visible gaps when a line is justified.
+\babelprovide[import, onchar=ids fonts, intraspace=0 0 0]{thai}
 \babelfont[thai]{rm}[Path=fonts/, Extension=.ttf,
   UprightFont=NotoSerifThai-Regular, BoldFont=NotoSerifThai-Bold]{NotoSerifThai}
 % ----------------------------------------------------------------------------
@@ -41,90 +43,92 @@
 \maketitle
 
 \begin{abstract}
-Thai is written without word boundaries and layers tone marks, silent consonants, and heavy
-loanword transliteration onto a Brahmic script. This produces orthographic error mechanisms
-unlike those targeted by English grammatical error correction (GEC) or Chinese spelling check
-(CSC). We present \textbf{ThaiEditBench}, a character-level Thai orthographic error-correction
-benchmark with three components: (i) a \textbf{six-class mechanism taxonomy} plus an etymology
-tag; (ii) \textbf{three length tiers} (sentence, paragraph, and page) that isolate robustness to
-long, mostly-clean context; and (iii) \textbf{contamination-robust construction}, in which
-naturally attested misspellings are \emph{injected} into novel clean text screened by a
-memorization probe. Gold corrections are exact by construction, and a blind two-annotator study
-shows that the taxonomy can be applied reliably (Krippendorff's $\alpha = 0.75$). Grading is at
-the character-cluster level with span-based matching adapted from ERRANT. Evaluating
-\textbf{16 models}, we find that (1) under the benchmark's conditions, models that locate an
-error almost always fix it correctly, so what separates them is \emph{detection}; (2) the
-evaluated Thai-specialized models do not lead the strongest general models; and (3) long,
-mostly-correct context exposes \textbf{over-edit accumulation} and clean-text fidelity failures
-that sentence-level evaluation hides. On real errors mined from Wikipedia edit history, scores
-are somewhat lower but the model ranking transfers (Spearman $\rho = 0.92$).
+Thai is written without spaces between words, and its spelling depends on tone marks, silent
+consonants, and the transliteration of many loanwords. Each of these is a common source of
+misspellings. We present \textbf{ThaiEditBench}, a benchmark for correcting Thai spelling errors
+at the character level. It has three components: (i) a \textbf{six-class taxonomy} that types
+each error by the part of the spelling that goes wrong, plus an etymology tag; (ii) \textbf{three
+length tiers} (sentence, paragraph, and page) that test whether a model stays accurate over long,
+mostly correct text; and (iii) a \textbf{contamination-robust construction}, in which naturally
+attested misspellings are \emph{injected} into clean text, so the corrupted passages do not
+appear verbatim in the source corpora.
+Because the errors are injected, the gold corrections are exact, and a blind two-annotator study
+measures how reliably the taxonomy can be applied. Grading is at the level of Thai character
+clusters, with span-based matching adapted from ERRANT. We evaluate \textbf{16 models} and find
+that (1) under the benchmark's conditions, a model that locates an error almost always fixes it
+correctly, so what separates models is \emph{detection}; (2) the evaluated Thai-adapted models do
+not lead the strongest general models; and (3) in long, mostly correct passages, weaker models
+accumulate over-edits that pull their scores far below their sentence-level results. On real errors
+mined from Wikipedia edit history, scores are somewhat lower, but the model ranking largely
+holds.
 \end{abstract}
 
 \section{Introduction}
 
-Thai orthography is error-prone in script-specific ways: tone-mark selection and placement,
-silent-consonant marks, homophonous consonants, vowel-form confusions, consonant-cluster
-metathesis, and inconsistent loanword transliteration. These are \textbf{character-level}
-errors that turn on \textbf{specific mechanisms}, and Thai's lack of whitespace word
-boundaries makes them hard to localize and score with token-based tools. Yet the resources to
-study them are missing. Grammatical-error-correction benchmarks are English-centric
-\citep{bryant-etal-2017-automatic,bryant-etal-2019-bea,napoles-etal-2017-jfleg}, and the
-closest character-level analogue is Chinese spelling check
-\citep{tseng-etal-2015-introduction,liu-etal-2011-visually}. For Thai, existing
-error-annotated resources are social-media, informal, or learner-domain
-\citep{lertpiya-etal-2020-thai,nakwijit-purver-2022-misspelling}, and there is no
-formal-register, mechanism-typed, contamination-controlled orthographic benchmark.
-Document-level and context-aware GEC study correction over long context
-\citep{yuan-bryant-2021-document}, but no benchmark isolates length and error-sparsity
-robustness for Thai orthographic correction.
+Thai spelling goes wrong in ways that are specific to its script. Writers choose the wrong tone
+mark, add or drop the mark that silences a consonant, confuse consonants or vowel forms that
+sound alike, reorder the letters of a consonant cluster, and transliterate loanwords
+inconsistently. For instance, สังเกต (`to observe') is often written สังเกตุ, with an extra vowel
+mark. These are \textbf{character-level} errors, and because Thai has no spaces between words,
+they are hard to locate and score with word-based tools. However, the resources to study them are
+missing. Grammatical error correction (GEC) benchmarks are largely English
+\citep{bryant-etal-2017-automatic,bryant-etal-2019-bea,napoles-etal-2017-jfleg}, and the closest
+character-level task is Chinese spelling check (CSC)
+\citep{tseng-etal-2015-introduction,liu-etal-2011-visually}. Thai error-annotated resources
+cover social-media, informal, or learner text
+\citep{lertpiya-etal-2020-thai,nakwijit-purver-2022-misspelling}. Document-level GEC studies
+correction over long context \citep{yuan-bryant-2021-document}, but no benchmark tests how Thai
+spelling correction holds up over long passages that contain few errors.
 
-\noindent\textbf{Contributions.}
-(1)~\textbf{ThaiEditBench}, a character-level Thai orthographic correction benchmark with a
-six-class mechanism taxonomy plus an etymology tag and \textbf{three length tiers} (sentence,
-paragraph, page). It is \textbf{contamination-robust by construction}: naturally attested
-misspellings are injected into novel clean text screened by a memorization probe, so gold
-corrections are exact. A blind annotation study measures how reliably the taxonomy can be applied
-(Krippendorff's $\alpha = 0.75$).
-(2)~An \textbf{ERRANT-style orthographic edit-typer for Thai} that aligns edits at TCC level
-and labels each with one of the six mechanism classes, enabling \textbf{per-mechanism
-span-F0.5} (cf.\ ChERRANT's dual-granularity scoring \citep{zhang-etal-2022-mucgec}). We use it
-as a scoring and diagnosis instrument, not as a general Thai grammatical error classifier.
-(3)~A \textbf{16-model evaluation}: models that find an error almost always fix it, so detection
-separates them; the evaluated Thai-specialized systems do not lead; weaker models accumulate
-over-edits under long context; and the ranking transfers to naturally occurring errors
-(Spearman $\rho = 0.92$).
-We release code, data, grader, edit-typer, and the variant map at
+This work addresses this gap with a formal-register benchmark that types each error by how it
+arises and that limits contamination. We score at the level of the Thai Character Cluster (TCC)
+\citep{theeramunkong-etal-2000-character}, a group of characters, such as a consonant with its
+vowel and tone marks, that Thai writing rules do not allow to be split. Our work contributes the
+following.
+(1)~\textbf{ThaiEditBench}, a character-level benchmark for Thai spelling correction. It types
+each error with one of six \emph{mechanism} classes, the part of the spelling that goes wrong,
+plus an etymology tag, and it has \textbf{three length tiers} (sentence, paragraph, and page). It
+is \textbf{contamination-robust by construction}: we inject naturally attested misspellings into
+clean text, so the corrupted passages are new and the gold corrections are exact. A blind
+annotation study measures how reliably the taxonomy can be applied (Krippendorff's
+$\alpha = 0.75$).
+(2)~An \textbf{ERRANT-style edit-typer for Thai}. It splits the difference between an input and a
+correction into TCC-level edits and assigns each edit one of the six classes where one applies. This lets us report
+\textbf{span-F0.5} separately for each error type, as ChERRANT does for Chinese
+\citep{zhang-etal-2022-mucgec}. We use it to score and diagnose systems on this benchmark, not as
+a general Thai grammatical error classifier.
+(3)~A \textbf{16-model evaluation}. Models that find an error almost always fix it, so detection
+separates them. The evaluated Thai-adapted systems do not lead, weaker models accumulate
+over-edits in long text, and the ranking largely holds on naturally occurring errors
+(Spearman $\rho = 0.88$).
+We release the code, data, grader, edit-typer, and variant map at
 \url{https://github.com/yongsa-nut/ThaiEditBench}.
 
 \section{Related Work}
 
 \noindent\textbf{GEC and CSC.} English grammatical error correction is evaluated with
-span-based metrics. The M\textsuperscript{2} scorer matches a system's edits against gold edit
-spans \citep{dahlmeier-ng-2012-better}, ERRANT (the ERRor ANnotation Toolkit) additionally
-infers an error type for each edit automatically and reports an F0.5 score
-\citep{bryant-etal-2017-automatic}, and GLEU measures
-fluency \citep{napoles-etal-2015-ground}. ERRANT-style span matching aligns the wrong and
-corrected text into a minimal set of edit spans, then credits a system for each gold span it
-recovers with the correct replacement; we adapt this scheme to Thai TCC units
+span-based metrics. These metrics represent a correction as a set of edits, each a span of the
+input and its replacement, and credit a system for each gold edit it reproduces with the same
+replacement. The M\textsuperscript{2} scorer matches a system's edits against gold edits
+\citep{dahlmeier-ng-2012-better}. ERRANT (the ERRor ANnotation Toolkit) extracts the edits
+automatically by aligning the input with each correction, assigns each edit an error type, and
+reports span-F0.5, an F-score over matched edits that weights precision twice as much as recall
+\citep{bryant-etal-2017-automatic}. GLEU instead measures fluency
+\citep{napoles-etal-2015-ground}. We adapt ERRANT-style matching to TCC units
 (Section~\ref{sec:typer}). Character-level Chinese spelling check is the closest task, scoring
 position-based detection and correction F1 without word boundaries
 \citep{tseng-etal-2015-introduction,wu-etal-2013-chinese,yu-etal-2014-overview}, with
 confusion-set construction \citep{liu-etal-2011-visually} and the MuCGEC/ChERRANT
 dual-granularity scorer \citep{zhang-etal-2022-mucgec}. ERRANT has been ported to Arabic
 \citep{belkebir-habash-2021-automatic} and Korean \citep{yoon-etal-2023-towards}, but not Thai.
-Wikipedia-revision mining of typo pairs is established for English
-\citep{grundkiewicz-junczysdowmunt-2014-wiked} and Japanese
-\citep{tanaka-etal-2020-building}.
 
 \noindent\textbf{Thai NLP.} We build on PyThaiNLP for tokenization and dictionary tooling
-\citep{phatthiyaphaibun-etal-2023-pythainlp} and on the Thai Character Cluster as the minimal
-orthographic unit \citep{theeramunkong-etal-2000-character}. Prior Thai spelling correction
-targets social text \citep{lertpiya-etal-2020-thai,lertpiya-etal-2023-progressively}, and
-related work studies the semantics of Thai misspellings
-\citep{nakwijit-purver-2022-misspelling}. The VISTEC-TP-TH-2021 Twitter corpus includes
-misspelling detection and correction as well as word-segmentation annotation, but it is
-informal Twitter text rather than a formal-register, mechanism-typed orthographic benchmark
-\citep{limkonchotiwat-etal-2021-handling}.
+\citep{phatthiyaphaibun-etal-2023-pythainlp} and on TCC segmentation
+\citep{theeramunkong-etal-2000-character}. Prior Thai spelling correction
+targets social text \citep{lertpiya-etal-2020-thai,lertpiya-etal-2023-progressively},
+including the VISTEC-TP-TH-2021 Twitter corpus with misspelling and word-segmentation
+annotation \citep{limkonchotiwat-etal-2021-handling}, and \citet{nakwijit-purver-2022-misspelling}
+study misspelling semantics.
 
 \section{The ThaiEditBench Benchmark}
 
@@ -132,16 +136,16 @@ informal Twitter text rather than a formal-register, mechanism-typed orthographi
 Given a Thai passage containing character-level orthographic errors, return the passage with
 those errors corrected and \textbf{nothing else changed}: no rewriting, re-spacing, numeral,
 or punctuation edits. We score under a strict \textbf{minimal-edit contract}, where any change
-to a non-erroneous span is an \emph{over-edit} and is penalized.
+to a correct span is an \emph{over-edit} and is penalized.
 
 \subsection{Mechanism taxonomy}
 We define six orthographic mechanism classes, each carrying an \textbf{etymology tag}: (1) tone
 mark, (2) consonant-pair, (3) silent-consonant, (4) vowel, (5) cluster or metathesis, and
-(6) loanword transliteration. Worked examples per class are in Appendix~\ref{app:taxonomy}. Canonical forms
-are verified against the Royal Institute Dictionary (ORST). Class~6 is governed by a
+(6) loanword transliteration. Worked examples per class are in Appendix~\ref{app:taxonomy}. We
+check canonical forms against the Royal Institute Dictionary \citep{royalinstitute-2013-dictionary}
+(Appendix~\ref{app:construction}). Class~6 is governed by a
 \textbf{loanword-absorption rule}: only \emph{contemporary} foreign loans are class~6, while
-long-integrated borrowings (Tamil, Khmer, Persian, and Sanskrit--Pali doublets) are treated as
-native.
+long-integrated borrowings (Tamil, Khmer, Persian, and Sanskrit--Pali doublets) count as native.
 
 \subsection{Construction}
 \begin{itemize}\itemsep2pt
@@ -150,172 +154,174 @@ pairs across the six classes. Every wrong form is a \textbf{naturally attested m
 harvested from the Thai Wiktionary appendix of commonly misspelled words and from fixes made by
 a Thai Wikipedia spelling-cleanup bot; a rule-based classifier assigns each pair a mechanism
 class (96.5\% agreement with 90 hand-labeled pairs; Appendix~\ref{app:construction}). Only the
-placement is synthetic: pairs are injected into \emph{novel clean text} by
-\textbf{whole-token-run matching} (not substring), which protects short valid forms, and each
-injected error records its Thai Character Cluster (TCC) span, class, and etymology. Applying
+placement is synthetic: we inject pairs into \emph{new clean text} by matching
+\textbf{whole tokens}, which protects short valid forms, and record each error's TCC span,
+class, and etymology. Applying
 the gold edits restores the clean original for 100\% of items, so the gold is exact.
 \item \textbf{(b) Cleanup-bot mining.} Real errors in their original sentences are mined from
-the same bot's edit history, keeping only fixes whose corrected word is listed in the ORST
-dictionary and whose wrong and correct forms align cleanly, following the
+the same bot's edit history, keeping only fixes whose corrected word is in the Royal Institute
+Dictionary or PyThaiNLP word list and whose wrong and correct forms align cleanly, following the
 revision-mining tradition
 \citep{tanaka-etal-2020-building,grundkiewicz-junczysdowmunt-2014-wiked}, with the bot's fix as
 gold. These items form a separate natural-error evaluation set (Section~\ref{sec:natural}).
 \end{itemize}
-\noindent\textbf{Registers.} The clean text spans news (articles from the ThaiSum corpus),
-encyclopedic (Thai Wikipedia), and government and legal (the Royal Gazette and Thai government
-press releases), all permissively redistributable.
+\noindent\textbf{Registers.} The clean text of the evaluated tiers spans news (ThaiSum),
+encyclopedic text (Thai Wikipedia), and Thai government press releases, all permissively
+redistributable.
 
 \subsection{Contamination control}
-The benchmark reduces contamination risk by evaluating systems on \textbf{corrupted passages
-that do not appear verbatim in the source corpora}. A residual risk remains: a model that
-memorized a clean source passage could reconstruct it directly instead of detecting and
-correcting the injected errors. We therefore run a \textbf{verbatim-continuation memorization
-probe} on the source passages and place the lowest-memorization material in a separate held-out
-test split.
+Systems are evaluated on \textbf{corrupted passages that do not appear verbatim in the source
+corpora}. A residual risk remains: a model that
+memorized a clean source passage could reproduce it instead of finding and fixing the injected
+errors. We therefore probe memorization directly. Given the first half of 30 sentences per
+source, Typhoon~2.5 (30B) continues them verbatim for only 0.3\% to 1.7\% of the true second half
+on average, and never for half of it. We fill a separate held-out test split first from the
+least-memorized sources (details in Appendix~\ref{app:construction}).
 
 \subsection{Length tiers}
 \label{sec:tiers}
 The same pipeline produces three tiers that vary passage length and error sparsity.
-\textbf{T1} (sentence) has 795 items of $\sim$100 characters each; \textbf{T2} (paragraph) has
-223 items of $\sim$424 characters; and \textbf{T3} (page) has 124 items of $\sim$1{,}242
-characters, with 974, 276, and 193 gold edits respectively. Injection is stratified by class
+\textbf{T1} (sentence) has 795 items with a mean length of 101 characters (95\% of items fall
+between 43 and 174); \textbf{T2} (paragraph) has 224 items with a mean of 425 (270 to 577); and
+\textbf{T3} (page) has 122 items with a mean of 1{,}242 (963 to 1{,}530). They contain 974, 278,
+and 193 gold edits respectively. Injection is stratified by class
 quota rather than uniform: the class mix follows the skew of the attested pairs (the per-class
 share of T1 gold edits correlates with that of the attested pairs at Pearson $r = 0.80$) and is
 partially flattened so that every class has at least 115 gold edits at T1
 (Appendix~\ref{app:construction}). The error budget is \textbf{dense at the sentence level},
 with roughly one error per 100 characters, and deliberately \textbf{sparse at paragraph and page
 length}, where most sentences are clean distractors. T2 and T3 therefore measure
-\textbf{precision under long correct context} (over-editing), not just recall, an axis the CSC
-and GEC literature does not test.
+\textbf{precision under long correct context} (over-editing).
 
 \subsection{Quality control}
 \label{sec:qc}
-Because errors are introduced by construction, the gold corrections are exact. We add two
-automatic guards.
+Construction makes the correction of each injected error exact, but it cannot rule out two other
+problems: typos already present in the source text, and words with two accepted spellings. We add
+one check for each.
 \begin{itemize}\itemsep2pt
-\item \textbf{Cross-model consensus audit.} When at least $k{=}3$ of the 16 systems produce
-the \emph{same} normalized output that differs from gold, we flag the item. We drop it only
-when that output fixes a residual typo in the \emph{source} text itself, and keep
-\emph{shared misses} (the consensus equals the corrupted input) and \emph{systematic over-edits}
-on punctuation or register. This deterministic audit removed 24 of 819 (T1), 27 of 250 (T2),
-and 26 of 150 (T3) items (Appendix~\ref{app:qc}).
-\item \textbf{Variant reconciliation.} Spellings with two accepted forms are reconciled to the
-gold form before scoring, token-aware and compound-safe. The map has four equivalence groups
-(eight word forms): an orthographic doublet, two loanword transliterations, and an
-informal-to-formal pronoun pair. It is gold-directional, so it can accept an attested variant
-but cannot turn a wrong answer into a right one, and it changes 2.35\% of model outputs.
+\item \textbf{Cross-model consensus audit.} A typo left in the source text stays in the gold, so
+a model that fixes it is wrongly scored as over-editing. We flag an item when at least $k{=}3$
+systems, and at least as many as reproduce the gold, return the \emph{same} output that differs
+from the gold. We keep a flagged item when that output is the unchanged input or makes only some
+of the gold corrections (a \emph{shared miss}), or differs only in punctuation or spacing (a
+\emph{shared over-edit}). In T2 and T3 we drop every other flagged item as a likely misspelling
+left in the \emph{source}, which also drops a few items where the systems substitute an accepted
+variant, a formal word, or a standard loanword spelling; T1's flagged items were judged individually. The audit removed 24 of 819 (T1), 26 of 250 (T2), and 28 of 150
+(T3) items; Appendix~\ref{app:qc} describes how flagged items were checked.
+\item \textbf{Variant reconciliation.} Before scoring, we map words with two accepted spellings
+(four groups, eight word forms; Appendix~\ref{app:qc}) to the gold's form. No injected wrong
+form belongs to the map, so the map cannot turn a missed error into a fix; it changes 2.35\% of
+non-empty model outputs.
 \end{itemize}
-Orthographic correction is essentially \textbf{single-reference}, since there is one correct
-spelling, so we do not adopt multi-reference GEC machinery.
 
 \subsection{Human validation of the labels}
 \label{sec:annotation}
 The mechanism classes are assigned automatically. To measure how reliably the taxonomy can be
-applied, two native Thai speakers independently labeled 60 items, blind to any machine label:
-the 40 items of a curated high-confidence subset of the mined items, plus synthetic items that
-bring each class to ten. For each marked
-span they judged whether it is a genuine error and assigned a class. Both raters judged all 60
-spans to be genuine errors, and their class agreement reaches Krippendorff's $\alpha = 0.752$
-\citep{krippendorff-2011-computing}. Where the
-raters agree (48 items), their class matches the automatic label on 35. Of the 25 items on
-which any two of the three labels differ, 21 fall at two documented conventions: the
-loanword-absorption rule (17) and the restriction of class~2 to homophone groups containing an
-Indic-origin letter (4). Appendix~\ref{app:annotation} gives the per-class results.
+applied, two native Thai speakers independently labeled 60 items (40 curated mined items and 20
+synthetic ones), blind to the automatic label. Both judged all 60 marked spans to be genuine
+errors, and their class agreement is Krippendorff's $\alpha = 0.752$
+\citep{krippendorff-2011-computing}. Where the raters agree (48 items), their class matches the
+automatic label on 35; most disagreements fall at the loanword-absorption and class-2 conventions
+(Appendix~\ref{app:annotation}).
 
 \section{Evaluation Protocol}
 
 \subsection{Metrics}
-We grade at the TCC level \citep{theeramunkong-etal-2000-character} with ERRANT-style span
-matching \citep{bryant-etal-2017-automatic}. The \textbf{primary metric is correction F1}:
-minimal TCC edits are derived by aligning the wrong text against \emph{both} the gold and the
-system output under the \textbf{same} Levenshtein alignment, so an output identical to the
-reference scores exactly 1.0 (SIGHAN-CSC-comparable \citep{tseng-etal-2015-introduction}), and
-we report it with a 95\% \textbf{item-bootstrap confidence interval} (Appendix~\ref{app:results}). \textbf{Detection F1}
-credits the correct error site and ignores the replacement. \textbf{Clean-sentence fidelity}
-is the fraction of error-free sentences left untouched, the exact and construction-grounded
-precision signal for T2 and T3. The edit-typer (Section~\ref{sec:typer}) also gives an ERRANT-style \textbf{span-F0.5},
-overall and per mechanism. Differences between systems are tested with a
+We grade at the TCC level with ERRANT-style span matching \citep{bryant-etal-2017-automatic}.
+The \textbf{primary metric is correction F1}. We derive minimal TCC edits by aligning the wrong
+text with \emph{both} the gold and the system output under the \textbf{same} Levenshtein
+alignment, so an output identical to the gold scores exactly 1.0, as in SIGHAN CSC scoring
+\citep{tseng-etal-2015-introduction}. \textbf{Detection F1} credits the correct error site and
+ignores the replacement. \textbf{Clean-sentence fidelity} is the fraction of error-free sentences
+left unchanged, a precision signal for T2 and T3. The edit-typer (Section~\ref{sec:typer}) also
+gives \textbf{span-F0.5}, overall and per mechanism. We report 95\% item-bootstrap confidence
+intervals (Appendix~\ref{app:results}) and test differences between systems with a
 \textbf{paired item-level bootstrap} \citep{koehn-2004-statistical} over 10{,}000 resamples.
-Word-level GLEU is released with the data as a supplementary metric only, because Thai word
-segmentation is unreliable for this task.
 
 \subsection{ERRANT-style edit-typer}
 \label{sec:typer}
 We adapt the ERRANT/ChERRANT design
-\citep{bryant-etal-2017-automatic,zhang-etal-2022-mucgec} to Thai orthography. For a (wrong,
-correct) pair: extract edit spans at \textbf{TCC level} (the same alignment the grader uses),
-expand each to its enclosing word (PyThaiNLP \texttt{newmm}
-\citep{phatthiyaphaibun-etal-2023-pythainlp}), and label it with one of the six mechanism
-classes (plus an edit-operation tag); class~6 is etymology-gated by a loan lexicon. Typing
-both the gold and the system edits enables \textbf{per-mechanism span-F0.5} on any (wrong,
-correct) pair, without construction labels. On the constructed items, the typer recovers 98.9\%
-of the gold edit spans and agrees with the construction class on 98.1\% of them. Its inventory
-is orthographic-mechanism-specific and reuses the construction-time classifier, so we treat it
-as a \textbf{scoring instrument}, not a general Thai grammatical error classifier.
+\citep{bryant-etal-2017-automatic,zhang-etal-2022-mucgec} to Thai orthography. Given a (wrong,
+correct) pair, the typer works in three steps. First, it extracts edits at the \textbf{TCC level},
+with the same alignment the grader uses. Second, an edit often covers only part of a word, such
+as a single tone mark, so the typer widens each edit to the whole word that contains it, found
+with the dictionary-based word segmenter of PyThaiNLP (\texttt{newmm};
+\citealp{phatthiyaphaibun-etal-2023-pythainlp}). Third, a rule-based classifier compares the
+wrong and correct forms of that word character by character and assigns the class from what
+changed; for example, a changed tone mark gives class~1. If the corrected word is in a loan
+lexicon, the edit is class~6 (Appendix~\ref{app:taxonomy} gives the full rules). The same
+classifier labels the confusion set, and the typer also tags the edit operation (substitution,
+insertion, deletion, transposition, or mixed). Because it types both the gold and the system edits, it gives
+\textbf{span-F0.5 per mechanism} on any (wrong, correct) pair, without construction labels. On
+the dev split, it recovers 98.9\% of the gold edit spans and agrees with the
+construction class on 98.1\% of them. Because the typer reuses the construction-time classifier,
+we treat it as a \textbf{scoring instrument} for this benchmark, not a general Thai grammatical
+error classifier.
 
 \subsection{Models and inference}
 We evaluate 16 models, each in a single fixed configuration, at temperature 0 where supported,
 with one fixed Thai instruction prompt. The \textbf{frontier proprietary} models are GPT-5.5
 (medium and high reasoning), Gemini~3.5~Flash, Claude Opus~4.7 (non-thinking), Claude
 Sonnet~4.6 (non-thinking), and GPT-5.4-mini. The \textbf{open-weight} models are Gemma-4-31B,
-DeepSeek~V4 Pro and Flash, GLM-5.1, MiniMax-M2.7, and Qwen3.6-35B-A3B. The \textbf{Thai-native}
-models are Typhoon~2.5 (30B) and three ThaiLLM 8B-instruct models served through the national
-ThaiLLM gateway, namely OpenThaiGPT (v7.2), Typhoon-S, and THaLLE
-\citep{pipatanakul-etal-2024-typhoon2,pipatanakul-etal-2026-typhoons}. A prompt-sensitivity
-ablation is in Appendix~\ref{app:prompt}.
+DeepSeek~V4 Pro and Flash, GLM-5.1, MiniMax-M2.7, and Qwen3.6-35B-A3B. The \textbf{Thai-adapted}
+models, which adapt general base models to Thai, are Typhoon~2.5 (30B) and three ThaiLLM
+8B-instruct models served through the national ThaiLLM gateway, namely OpenThaiGPT (v7.2),
+Typhoon-S, and THaLLE \citep{pipatanakul-etal-2024-typhoon2,pipatanakul-etal-2026-typhoons}.
+Appendix~\ref{app:prompt} gives the prompts and a prompt-sensitivity ablation.
 
 \section{Results and Analysis}
 
 \subsection{Leaderboard}
 \label{sec:leaderboard}
 Table~\ref{tab:main} reports correction F1 on the three tiers and on the natural-error set
-(post-audit $n = 795 / 223 / 124 / 79$); the full table is in Appendix~\ref{app:results}.
+(post-audit $n = 795 / 224 / 122 / 87$); the full table is in Appendix~\ref{app:results}.
 The frontier clusters at 0.95 to 0.97 on T1, and the confidence intervals separate three strata:
 the frontier
-and the strongest open-weight models, then GLM-5.1, then the Thai-native models, MiniMax, and
+and the strongest open-weight models, then GLM-5.1, then the Thai-adapted models, MiniMax, and
 Qwen. Within the frontier, T1 differences are mostly not significant: GPT-5.5 (high) is tied
-with GPT-5.5 (med) and Claude Opus~4.7. The length-degradation slope (T1 to T3) is the
-sharpest discriminator (Section~\ref{sec:length}).
+with GPT-5.5 (med) and Claude Opus~4.7.
 
-General frontier models dominate, while Thai-specialized models trail. Typhoon~2.5 scores
-0.742 on T1 and 0.467 on T3, and the 8B national-gateway models score 0.74 to 0.78 on T1 but
-fall to 0.45 to 0.62 on T3. The strongest \textbf{open-weight} model is a general 31B model,
+General frontier models dominate, while the Thai-adapted models trail (0.74 to 0.78 on T1 and
+0.46 to 0.62 on T3). The strongest \textbf{open-weight} model is a general 31B model,
 Gemma-4. The frontier leads it on T1 ($\Delta = 0.022$ against GPT-5.5 high, $p < 0.001$), and
-on T3 it has the highest point estimate (0.889) but is statistically tied with the frontier
-(against GPT-5.5 med, $\Delta = +0.034$, 95\% CI $[-0.015, 0.081]$). Under this setup the
-evaluated Thai-specialized systems do not lead, and the gap widens with length (Gemma-4 against
-Typhoon~2.5 on T3: $\Delta = 0.423$, $p < 0.001$). This comparison is confounded by
-differences in model scale, serving stack, and inference configuration, so it is not evidence
-about Thai-specialized pretraining in general.
+on T3 it has the highest point estimate (0.898) but is statistically tied with the frontier
+(against GPT-5.5 med, $\Delta = +0.032$, 95\% CI $[-0.013, 0.077]$). Under this setup the
+evaluated Thai-adapted systems do not lead, and the gap widens with length (Gemma-4 against
+Typhoon~2.5 on T3: $\Delta = 0.422$, $p < 0.001$). This comparison is confounded by
+differences in base model, model scale, serving stack, and inference configuration, so it is
+not evidence about Thai adaptation in general.
 
 \begin{table}[t]
 \centering\small\setlength{\tabcolsep}{3.2pt}
 \begin{tabular}{@{}lccccc@{}}
 \toprule
-model & T1 & T2 & T3 & T3 fid & Nat. \\
+ & \multicolumn{4}{c}{correction F1} & fidelity \\
+\cmidrule(lr){2-5}\cmidrule(l){6-6}
+model & T1 & T2 & T3 & Nat. & T3 \\
 \midrule
-GPT-5.5 (high)            & \textbf{0.973} & \textbf{0.969} & \tie{0.855} & 0.974 & \textbf{0.943} \\
-GPT-5.5 (med)             & \tie{0.969} & 0.955 & \tie{0.856} & 0.971 & \tie{0.931} \\
-Claude Opus 4.7           & \tie{0.968} & \tie{0.948} & \tie{0.848} & 0.974 & \tie{0.892} \\
-Gemini 3.5 Flash          & 0.965 & \tie{0.960} & 0.819 & 0.960 & \tie{0.865} \\
-Gemma-4-31B               & 0.950 & \tie{0.954} & \textbf{0.889} & 0.981 & \tie{0.942} \\
-GPT-5.4-mini              & 0.949 & 0.917 & \tie{0.853} & \textbf{0.988} & \tie{0.917} \\
-Claude Sonnet 4.6         & 0.947 & 0.906 & \tie{0.824} & 0.972 & 0.882 \\
-DeepSeek V4 Flash         & 0.947 & \tie{0.945} & 0.828 & 0.966 & 0.841 \\
-DeepSeek V4 Pro           & 0.926 & 0.926 & 0.746 & 0.954 & 0.818 \\
-GLM-5.1                   & 0.846 & 0.812 & 0.665 & 0.954 & 0.759 \\
-Typhoon-S 8B$^\dagger$    & 0.782 & 0.702 & 0.619 & 0.965 & 0.687 \\
-THaLLE 8B$^\dagger$       & 0.749 & 0.595 & 0.517 & 0.829 & 0.727 \\
-Typhoon 2.5 30B$^\dagger$ & 0.742 & 0.631 & 0.467 & 0.896 & 0.740 \\
-OpenThaiGPT v7.2$^\dagger$  & 0.741 & 0.477 & 0.454 & 0.896 & 0.717 \\
-MiniMax-M2.7              & 0.740 & 0.720 & 0.470 & 0.968 & 0.702 \\
-Qwen3.6-35B-A3B           & 0.705 & 0.383 & 0.308 & 0.836 & 0.567 \\
+GPT-5.5 (high)            & \textbf{0.973} & \textbf{0.968} & \tie{0.862} & \tie{0.907} & 0.977 \\
+GPT-5.5 (med)             & \tie{0.969} & 0.954 & \tie{0.866} & \tie{0.901} & 0.977 \\
+Claude Opus 4.7           & \tie{0.968} & \tie{0.948} & \tie{0.853} & \tie{0.882} & 0.976 \\
+Gemini 3.5 Flash          & 0.965 & \tie{0.960} & 0.825 & \tie{0.850} & 0.963 \\
+Gemma-4-31B               & 0.950 & \tie{0.954} & \textbf{0.898} & \textbf{0.926} & 0.984 \\
+GPT-5.4-mini              & 0.949 & 0.915 & \tie{0.865} & \tie{0.919} & \textbf{0.990} \\
+Claude Sonnet 4.6         & 0.947 & 0.905 & 0.825 & \tie{0.877} & 0.974 \\
+DeepSeek V4 Flash         & 0.947 & \tie{0.945} & 0.840 & 0.851 & 0.971 \\
+DeepSeek V4 Pro           & 0.926 & 0.926 & 0.754 & 0.821 & 0.958 \\
+GLM-5.1                   & 0.846 & 0.811 & 0.657 & 0.775 & 0.954 \\
+Typhoon-S 8B$^\dagger$    & 0.782 & 0.702 & 0.617 & 0.703 & 0.964 \\
+THaLLE 8B$^\dagger$       & 0.749 & 0.594 & 0.507 & 0.742 & 0.814 \\
+Typhoon 2.5 30B$^\dagger$ & 0.742 & 0.632 & 0.476 & 0.741 & 0.899 \\
+OpenThaiGPT v7.2$^\dagger$& 0.741 & 0.476 & 0.463 & 0.725 & 0.901 \\
+MiniMax-M2.7              & 0.740 & 0.720 & 0.471 & 0.720 & 0.970 \\
+Qwen3.6-35B-A3B           & 0.705 & 0.384 & 0.310 & 0.588 & 0.838 \\
 \bottomrule
 \end{tabular}
-\caption{Correction F1 by tier and on the natural-error set (Nat.), with T3 clean-sentence
-fidelity. \textbf{Bold} $=$ column best; \underline{underlined} $=$ not separable from the best
-by a paired bootstrap test ($p \ge 0.05$). Paired tests account for item-level correlation, so
-a lower score can be tied with the best while a higher one is not. $\dagger$ $=$ Thai-native.}
+\caption{Correction F1 by tier and on the natural-error set (Nat.), and T3 clean-sentence
+fidelity (the fraction of error-free sentences left unchanged). \textbf{Bold} $=$ column best;
+\underline{underlined} $=$ correction F1 tied with the best (paired bootstrap, $p \ge 0.05$);
+because the test is paired, a lower score can be tied while a higher one is not. $\dagger$ $=$
+Thai-adapted.}
 \label{tab:main}
 \end{table}
 
@@ -323,91 +329,87 @@ a lower score can be tied with the best while a higher one is not. $\dagger$ $=$
 \label{sec:detection}
 We decompose every gold edit into \textbf{fixed}, \textbf{miscorrected} (the system edits
 exactly the gold span but with a different replacement), and \textbf{missed} (no system edit
-matches the gold span) (Table~\ref{tab:decomp}). Across all 16 models, the miscorrected
-share never exceeds 0.036 on T1, while missed edits account for nearly all failures. The
+matches the gold span). Pooled over all 16 models, 0.866 of T1 gold edits are fixed, only 0.008
+are miscorrected, and 0.126 are missed. The shares are 0.821, 0.005, and 0.173 at T3 and 0.815,
+0.006, and 0.178 on natural errors (Section~\ref{sec:natural}), and no single model's
+miscorrected share exceeds 0.036 on T1 (Table~\ref{tab:decomp}, Appendix~\ref{app:results}). The
 pattern holds within every mechanism class, including the hardest (loanword: miscorrected 0.003
-against missed 0.189), at both the dense T1 and the sparse T2 and T3, and on natural errors
-(Section~\ref{sec:natural}). Because a miscorrected edit requires an exact span match, a model
-that rewrites a wider region around an error is scored as missed; such touched-but-unmatched
-edits are only 1.3 to 1.8\% of gold edits per tier, so even counting them as wrong fixes leaves
-untouched errors five times more frequent.
-Under this benchmark's conditions (formal register, single-reference gold, and one or two errors
+against missed 0.189). A model that rewrites a wider region around an error is scored as
+missed, but such edits are only 1.3 to 1.8\% of gold edits per tier, so untouched errors still
+outnumber wrong fixes at least five to one (four to one without empty replies; Limitations).
+Under this benchmark's conditions (formal register, single-reference gold, and one to three errors
 per passage), models rarely fail by choosing the wrong spelling once they locate an error, so
-what the leaderboard separates is \textbf{detection}. Spelling knowledge still matters, because
-recognizing a misspelling presupposes knowing the correct form; the evaluated models largely
-have that knowledge and differ in applying it to find errors. Whether this holds for dense,
-interacting errors is open (Limitations).
-
-\begin{table}[t]
-\centering\small\setlength{\tabcolsep}{4pt}
-\begin{tabular}{@{}lrrr@{}}
-\toprule
-model & fixed & miscorrected & missed \\
-\midrule
-GPT-5.5 (high)   & 0.993 & 0.000 & 0.007 \\
-Gemma-4-31B      & 0.956 & 0.004 & 0.040 \\
-Qwen3.6-35B-A3B  & 0.817 & 0.018 & 0.165 \\
-Typhoon 2.5 30B  & 0.764 & 0.036 & 0.201 \\
-\midrule
-All 16, T1       & 0.866 & 0.008 & 0.126 \\
-All 16, T3       & 0.828 & 0.005 & 0.167 \\
-All 16, natural  & 0.804 & 0.007 & 0.189 \\
-\bottomrule
-\end{tabular}
-\caption{Gold-edit outcomes (T1 unless stated). The miscorrected share stays near zero
-throughout.}
-\label{tab:decomp}
-\end{table}
+what the leaderboard separates is \textbf{detection}. Spelling knowledge still matters, since
+recognizing a misspelling requires knowing the correct form; whether the finding holds for
+dense, interacting errors is open (Limitations).
 
 \subsection{Length robustness}
 \label{sec:length}
-Sentence-tier rank does \textbf{not} predict paragraph or page behaviour, and the
-\textbf{degradation slope from T1 to T3 is the sharpest discriminator}
-(Figure~\ref{fig:degradation}a). The frontier loses only 0.06 to 0.15 correction F1
-(GPT-5.5-med $0.969{\to}0.856$; Gemma-4 $0.950{\to}0.889$), while weak models fall off a cliff
-(Typhoon~2.5 $0.742{\to}0.467$; Qwen $0.705{\to}\mathbf{0.308}$, a drop of 0.40). We measure
-over-editing per 10{,}000 clean TCCs, which normalizes for exposure. This rate is roughly flat or falls
-across tiers (Qwen $105{\to}107{\to}65$; Typhoon~2.5 $57{\to}33{\to}27$;
-Figure~\ref{fig:degradation}b), so over-editing accumulates with length through exposure rather
-than through a rising false-positive rate. The discriminating signal is the \emph{level} of that
-rate, not its slope: weak models over-edit at 5 to 20 times the frontier's per-unit rate, which
-stays below $\sim$15 per 10{,}000 clean TCCs at every tier. Clean-sentence \textbf{fidelity}
-agrees: the frontier holds at or above 0.95, while the heaviest over-editors sit at 0.78 to 0.90.
-\textbf{Over-editing and missing are two faces of the same weak discrimination}: a model that
-cannot tell correct from incorrect both misses real errors and rewrites correct text. The
-exception is \textbf{Gemini 3.5 Flash}, which fixes 0.985 of gold edits at T3 yet drops to
-0.819 correction F1 on precision, the one frontier model limited by over-editing rather than by
-detection.
+Sentence-tier scores largely predict the page-tier ranking (Spearman $\rho = 0.93$), but the
+\textbf{drop from T1 to T3} differs widely between models (Figure~\ref{fig:degradation}a). The
+frontier loses only 0.08 to 0.14 correction F1 (GPT-5.5-med $0.969{\to}0.866$) and Gemma-4 only
+0.05 ($0.950{\to}0.898$), while Typhoon~2.5 and Qwen lose 0.27 and 0.40 ($0.742{\to}0.476$ and
+$0.705{\to}0.310$). Measured per 10{,}000 clean TCCs, the over-edit rate is lower at T3 than at
+T1 for all 16 models (Figure~\ref{fig:degradation}b), although it rises from T2 to T3 for 11 of
+them, so over-edits per passage grow mainly with the amount of correct text. What separates models is the
+\emph{level} of that rate: Typhoon~2.5, OpenThaiGPT, and Qwen over-edit at 3 to 35 times the
+rate of GPT-5.5 (med) at every tier (Appendix~\ref{app:results}). Clean-sentence
+\textbf{fidelity} agrees: the frontier holds at or above 0.95, while the heaviest over-editors sit
+at 0.77 to 0.90. These results suggest that \textbf{over-editing and missing reflect the same
+weak discrimination}. At T3, even the frontier models are
+limited more by over-editing than by detection: they fix 0.94 to 0.98 of gold edits, but their
+precision is 0.71 to 0.80 (GPT-5.4-mini, with recall 0.85 and precision 0.88, is the exception).
 
 \subsection{Per-mechanism difficulty}
-Table~\ref{tab:mech} (Appendix~\ref{app:results}) breaks the fixed rate down by class and tier.
-At T1, class~6 (loanword) is the hardest mechanism, with 0.81 of edits fixed against 0.86 to
-0.90 for the other classes, and the failure is again \textbf{missed}, not miscorrected. The
-class spread narrows with length, from 0.09 at T1 to 0.05 at T3, while the overall fixed rate
-falls from 0.87 to 0.83, so the length effect is largely mechanism-independent. Within class~6
-the ranking does \textbf{not} favour Thai-native models, suggesting that the difficulty lies in
-the mechanism, not in cross-lingual knowledge. Register agrees: loanword-dense encyclopedic
-text is hardest (recall 0.71 to 0.82, against 0.76 to 0.90 for news and government).
+The edit-typer types the system's edits as well as the gold's, so it separates recall from
+precision for each mechanism (Table~\ref{tab:typer}). Mean recall is lowest for loanwords at T1
+(0.81 against 0.86 to 0.90), and the construction labels agree (Table~\ref{tab:mech},
+Appendix~\ref{app:results}); the failure is again missed rather than miscorrected. This mean
+hides a split: the nine systems of the top stratum (Section~\ref{sec:leaderboard}) find 0.94 to
+1.00 of loanword errors, while the four Thai-adapted models and MiniMax find 0.32 to 0.70.
+Precision shows where models change text that needs no change, through \emph{unsupported} edits
+that match no gold edit. Class~5 (reordered, doubled, or inserted letters) has the lowest
+precision for 15 of the 16 models at T1, and at T3 class~5 or tone marks are lowest for 14 of
+them. Loanword precision is high by construction: the typer assigns class~6 only when the output
+word is in its loan lexicon, so a change that turns a correct loanword into another form is
+usually charged to another class.
+
+\begin{table}[t]
+\centering\small\setlength{\tabcolsep}{2.6pt}
+\begin{tabular}{@{}lcccccc@{}}
+\toprule
+ & \multicolumn{3}{c}{T1} & \multicolumn{3}{c}{T3} \\
+\cmidrule(lr){2-4}\cmidrule(l){5-7}
+class & R & P & F0.5 & R & P & F0.5 \\
+\midrule
+1 tone mark        & 0.898 & 0.902 & 0.900 & 0.801 & 0.687 & 0.692 \\
+2 consonant-pair   & 0.876 & 0.960 & 0.940 & 0.812 & 0.954 & 0.915 \\
+3 silent-consonant & 0.886 & 0.936 & 0.923 & 0.800 & 0.770 & 0.766 \\
+4 vowel            & 0.857 & 0.956 & 0.929 & 0.831 & 0.880 & 0.861 \\
+5 cluster          & 0.863 & 0.822 & 0.826 & 0.843 & 0.656 & 0.677 \\
+6 loanword         & 0.808 & 0.989 & 0.926 & 0.819 & 0.941 & 0.899 \\
+\bottomrule
+\end{tabular}
+\caption{Per-mechanism span recall (R), precision (P), and span-F0.5 from the edit-typer: the
+mean of the 16 models' per-class values, each model weighted equally. A system edit that matches
+no gold edit lowers the precision of the class the typer assigns to it; edits that fit no class,
+such as spacing or rewording (6\% to 84\% of a model's unsupported edits), enter no column.}
+\label{tab:typer}
+\end{table}
 
 \subsection{Natural errors}
 \label{sec:natural}
 We evaluate all 16 systems on the mined cleanup-bot items, each a real error in its original
-encyclopedic sentence. The consensus audit of Section~\ref{sec:qc} removes 24 of the 103 items:
-in 20, most systems also fix a second, unmarked error in the sentence, and in 4 the recorded
-bot fix is itself incomplete (Appendix~\ref{app:natural}). On the remaining 79
-items, mean correction F1 is 0.81 against 0.87 on T1, the system ranking transfers (Spearman
-$\rho = 0.92$ with T1; Table~\ref{tab:main}), and the decomposition reproduces
-(Table~\ref{tab:decomp}). Without the audit, mean F1 is 0.72 and the miscorrected share is 0.04 to
-0.07 for every system, almost entirely on those gold defects, while the ranking still transfers
-($\rho = 0.88$; Appendix~\ref{app:natural}).
+encyclopedic sentence. The consensus audit of Section~\ref{sec:qc} removes 16 of the 103 items,
+where the agreeing systems correct more than the recorded bot fix does (Appendix~\ref{app:natural}). On the remaining 87 items, mean correction
+F1 is 0.81 against 0.87 on T1, and the system ranking transfers (Spearman $\rho = 0.88$ with T1;
+Table~\ref{tab:main}). Without the audit, mean F1 is 0.72, mostly because of those 16 items, and
+$\rho$ is again 0.88.
 
 \section{Conclusion}
-ThaiEditBench is a mechanism-typed, length-stratified, contamination-robust benchmark for Thai
-orthographic correction, with an ERRANT-style edit-typer for per-mechanism scoring. Across 16
-models, found errors are almost always fixed, so the leaderboard separates models by
-\textbf{detection}; the evaluated \textbf{Thai-specialized systems do not lead}; weaker models
-show \textbf{over-edit accumulation} under long context; and the ranking transfers to natural
-errors.
+We presented ThaiEditBench, a mechanism-typed, length-stratified benchmark for Thai spelling
+correction. Across 16 models, \textbf{detection} rather than the choice of spelling separates
+systems, and weaker models accumulate over-edits in long text.
 
 \section*{Limitations}
 \textbf{Sparse error density (primary).} The long tiers (T2 and T3) are deliberately sparse,
@@ -425,10 +427,10 @@ answering a different, tool-augmented question; all systems are evaluated zero-s
 The class mix follows the distribution of attested misspelling types, not the frequency of
 errors in running text.
 
-\textbf{Scope of the natural-error check.} The audited natural set has 79 items from one
-cleanup bot in one register, with no item typed as class~6 and only five as class~5, so it
+\textbf{Scope of the natural-error check.} The audited natural set has 87 items from one
+cleanup bot in one register, with only 7 loanword and 5 class-5 edits, so it
 supports the ranking and the decomposition but not per-class conclusions; loanword behaviour is
-measured on injected errors only. The audit relies on cross-model consensus, and the bot's fix
+measured mainly on injected errors. The audit relies on cross-model consensus, and the bot's fix
 is taken as gold, so the natural gold is less certain than the construction gold of the tiers.
 A larger, naturally distributed test set, which the released mining pipeline supports, is the
 main way to strengthen this check.
@@ -444,11 +446,12 @@ and one fixed Thai prompt. Reasoning modes, token budgets, provider defaults, se
 and model scale are not controlled, so the leaderboard reflects configured-system behaviour
 rather than an intrinsic ranking of base-model capability. A prompt ablation on two systems
 shifts correction F1 by at most 0.07 without reordering them (Appendix~\ref{app:prompt}), but
-we do not sweep prompts across all systems.
-
-\textbf{Minimal-edit vs fluency boundary.} Occasionally a frontier ``over-edit'' is actually
-catching a residual error that the injected gold did not mark, which slightly understates the
-best models.
+we do not sweep prompts across all systems. A reply that exhausts its token budget is empty and
+scored as the unchanged input, so its errors count as missed. This affects 112 of 795 T1 items
+for GLM-5.1, 93 for MiniMax, and 58 for Qwen, and 51 of 122 T3 items for MiniMax; empty replies
+account for 17\% of missed edits at T1 and 29\% at T3. For these systems, a low score partly
+reflects failure to deliver an answer rather than failure to detect errors, and excluding empty
+replies, untouched errors outnumber wrong fixes four to one rather than five to one.
 
 \section*{Acknowledgments}
 We thank Pachaya Sailamul for help with the annotation study.
@@ -462,7 +465,7 @@ We thank Pachaya Sailamul for help with the annotation study.
 \label{app:taxonomy}
 Each class is defined by the orthographic \emph{mechanism} of the fault, not its surface
 character. Multiple worked examples per class:
-\begin{itemize}\itemsep1pt
+\begin{itemize}\raggedright\itemsep1pt
 \item \textbf{1 tone mark:} ค๊ะ$\to$คะ, น๊ะ$\to$นะ, จั๊กจั่น$\to$จักจั่น, กระทั้ง$\to$กระทั่ง
 \item \textbf{2 consonant-pair:} กฏหมาย$\to$กฎหมาย, กบฎ$\to$กบฏ, อากาส$\to$อากาศ
 \item \textbf{3 silent-consonant:} กลยุทธ$\to$กลยุทธ์, ขาดดุลย์$\to$ขาดดุล, เท่ห์$\to$เท่
@@ -471,15 +474,25 @@ character. Multiple worked examples per class:
 \item \textbf{6 loanword:} กราฟฟิค$\to$กราฟิก, กงศุล$\to$กงสุล, ลิ๊งค์$\to$ลิงก์
 \end{itemize}
 \textbf{Class~2 scope.} Class~2 covers swaps within a homophone group that contains an
-Indic-origin letter, for example ศ/ษ/ส, ท/ธ, and น/ณ. Swaps between letters outside these
+Indic-origin letter, for example ศ/ษ/ส, ท/ธ, and น/ณ, plus the final-stop pair บ/ป. Swaps between letters outside these
 groups, such as ฝ/ฟ, fall in class~5 together with other structural edits.
 
 \textbf{Loanword-absorption rule.} Only \emph{contemporary} foreign loans, chiefly modern
 English technical and commercial terms (กราฟิก, ดิจิทัล, ลิงก์), are class~6. Long-integrated
 borrowings are treated as \textbf{native} even though etymologically foreign: Portuguese
 (กะละแม), Burmese (กะปิ), Mon (กะพง), Khmer (กบฏ), and Tamil, Persian, and Sanskrit--Pali
-doublets. Borderline cases (e.g.\ กงสุล, \emph{consul}) are resolved by ORST listing $+$
+doublets. Borderline cases (e.g.\ กงสุล, \emph{consul}) are resolved by the Royal Institute Dictionary listing $+$
 Wiktionary borrowed-term categories, and the tag is recorded per item so the rule is auditable.
+
+\textbf{Automatic class assignment.} The rule-based classifier used to label the confusion set
+and inside the edit-typer (Section~\ref{sec:typer}) compares the wrong and correct forms of a
+word character by character. It checks, in order, for a swap within one of the homophone
+consonant groups above (class~2), an added or removed silent-consonant mark ์ or a change in
+the consonant it silences (class~3), reordered, doubled, or inserted letters (class~5), a
+changed tone mark (class~1), and a changed vowel sign (class~4), and it assigns the first class
+that applies. Any other consonant change falls in class~5. If the corrected word is in the loan
+lexicon, which holds the correct forms of the class-6 confusion pairs and a few proper nouns, the
+class is~6 whatever the character change.
 
 \section{Gold quality control and the consensus audit}
 \label{app:qc}
@@ -488,53 +501,86 @@ the gold edits recovers the clean original (verified 100\%), so the \emph{inject
 correction is exact. It does \textbf{not} guarantee that the \textbf{source passage was
 typo-free}: the permissive corpora contain a small rate of residual orthographic errors. When
 an item's source carries such a residual typo, the gold inherits it, so a model that fixes
-\emph{that} genuinely wrong span is unfairly scored as a miss or an over-edit. We remove these
-automatically.
+\emph{that} genuinely wrong span is unfairly scored as a miss or an over-edit. We find and remove
+such items with a cross-model consensus audit.
 
-\textbf{Cross-model consensus audit.} For every item we pool all 16 outputs
-(variant-reconciled) and look for a \emph{consensus} output, the same normalized string from
-at least $k{=}3$ systems, that differs from gold. The discrimination is three-way.
-(i)~If the consensus equals the corrupted input, this is a \emph{shared miss}, the gold is
-correct, and we \textbf{keep} the item.
-(ii)~If the consensus is a punctuation, whitespace, or register variant, this is a systematic
-\emph{over-edit}, the precision signal we want, and we \textbf{keep} it.
+\textbf{Cross-model consensus audit.} For every item we pool the system outputs
+(variant-reconciled) and look for a \emph{consensus} output: the same normalized string from
+at least $k{=}3$ systems, and from at least as many systems as reproduce the gold, that differs
+from the gold. Each flagged item falls into one of three cases.
+(i)~If the consensus equals the corrupted input, or makes some of the gold corrections and no
+other change, this is a \emph{shared miss}, the gold is correct, and we \textbf{keep} the item.
+(ii)~If the consensus differs only in punctuation or whitespace, or, in the judged T1 check, is a
+register or spelling variant, this is a systematic \emph{over-edit}, the precision signal we want, and we \textbf{keep} it.
 (iii)~If the consensus is a \emph{different} spelling fix at an unmarked span, this is a
 residual \emph{source} typo, and we \textbf{drop} it. Only case (iii) is a gold defect, and
 the explicit test of whether the consensus equals the input prevents conflating it with shared
-misses and over-pruning. The audit removed 24 (T1), 27 (T2), and 26 (T3) items, for example
+misses and over-pruning. The audit removed 24 (T1), 26 (T2), and 28 (T3) items, for example
 ทั้งสิน$\to$ทั้งสิ้น, ปฏิเศษ$\to$ปฏิเสธ, and โดบ$\to$โดย, all residual \emph{source} typos.
-\textbf{Post-audit invariant:} no item in any tier is missed by all 16 models. This is the
-signature that residual gold defects are gone while genuinely hard items remain. Every drop
-follows deterministically from the three-way rule above, and we release a self-contained HTML
-view of the audit (gold-versus-consensus diffs labeled drop, keep, or variant) for inspection.
+\textbf{How flagged items were checked.} For T2 and T3 the check is automatic and uses the
+outputs of all 16 systems: after variant reconciliation, which maps the informal pronoun
+เค้า to เขา, a flagged item is dropped unless the consensus equals the input, is a partial fix on
+the way to the gold, or differs from the gold only in punctuation or whitespace. The rule cannot
+tell a source typo from an accepted variant or register change outside the variant map, so it
+also drops a few such items, for example วิกฤติ$\to$วิกฤต, the standard loanword spelling
+เซ็ต$\to$เซต, and the informal words พวกเค้า and เท่าไหร่. The T1 audit pooled 9 of the 16 systems
+(GPT-5.5 med and high, GPT-5.4-mini, Gemini~3.5
+Flash, Claude Sonnet~4.6, DeepSeek~V4 Pro and Flash, GLM-5.1, and Typhoon~2.5), and its flagged
+items were judged individually rather than filtered by rule. The audit flagged 70 items. Six differed from the
+gold only in punctuation and were kept; we judged the other 64 against the three cases with LLM
+assistance, dropping 23 as residual source typos and keeping 41, among them 14 informal-to-formal
+rewordings such as มั้ย$\to$ไหม that the minimal-edit contract treats as over-edits. One further
+item was dropped because its source sentence itself lacks a syllable (ความใจ for ความเข้าใจ).
+Judged and rule-based checks differ at the margin: run on T1 with all 16 systems, the automatic
+rule would drop 21 further items. One T1 item and one T2 item contain an error that no model
+fixes; both inject แน่นหนา for หนาแน่น, two valid words, so only the context marks the error. We release the audit reports, which list the gold-versus-consensus difference for every
+flagged item.
 
-\textbf{Variant map.} The four equivalence groups are สิทธิ/สิทธิ์, ดิจิตอล/ดิจิทัล,
-ออร์แกนิค/ออร์แกนิก, and the informal pronoun เค้า/เขา. Words in which the final mark is
-mandatory, such as ลิขสิทธิ์, are protected from reconciliation.
+\textbf{Variant map.} The four equivalence groups are an orthographic doublet (สิทธิ/สิทธิ์), two
+loanword transliterations (ดิจิตอล/ดิจิทัล and ออร์แกนิค/ออร์แกนิก), and an informal-to-formal
+pronoun pair (เค้า/เขา). Words in which the final mark is mandatory, such as ลิขสิทธิ์, are
+protected from reconciliation. Beyond these groups, orthographic correction
+is essentially single-reference, since a word has one correct spelling, so we do not adopt
+multi-reference GEC scoring.
 
 \section{Construction details}
 \label{app:construction}
 \textbf{Confusion set.} Wrong$\to$correct pairs were harvested from the Thai Wiktionary appendix
 of commonly misspelled words and from the fix history of a Thai Wikipedia spelling-cleanup bot,
 then deduplicated and cleaned (fragments, multi-token and spacing-only pairs, and
-context-dependent real-word pairs removed), giving 1{,}044 canonical pairs. A rule-based
+context-dependent real-word pairs removed; one such pair, แน่นหนา/หนาแน่น, was not caught),
+giving 1{,}044 canonical pairs. A rule-based
 classifier assigns the mechanism class from the character difference; it agrees with 90
 hand-labeled bot-fix pairs on 96.5\%. Etymology is assigned from the Wiktionary borrowed-term
-categories under the absorption rule, which moves contemporary loans into class~6. Canonical
-forms are verified against the offline ORST word list distributed with PyThaiNLP (87.5\%; the
-misses are modern loanwords absent from that list), and each pair is also tagged with its edit operation.
+categories under the absorption rule, which moves contemporary loans into class~6. We check
+canonical forms against the Royal Institute Dictionary word list distributed with PyThaiNLP:
+87.5\% are listed, and the unlisted forms include modern loanwords and common words that the list
+omits, such as นะคะ. Each pair is also
+tagged with its edit operation.
 Table~\ref{tab:classcounts} gives the per-class sizes.
 
 \textbf{Injection and mining.} Injection uses \textbf{whole-token-run matching} so the 51 valid
 short forms ($\le 3$ characters) that coincide with a confusion target are never corrupted.
 Cleanup-bot mining reads the bot's contribution history on Thai Wikipedia and keeps a fix only
-when the corrected word is listed in ORST and the wrong and correct forms align without
-shifting neighbouring characters; the mined items are kept out of the three tiers. The
-curated subset used in the annotation study keeps at most two contexts per distinct error and
-drops fragments of two characters or fewer. A verbatim-continuation \textbf{memorization
-probe} (Typhoon~2.5 30B) finds little memorization for every source: the mean longest common
-prefix between the model's continuation and the true text is 0.003 to 0.017 of its length. The
-lowest-memorization text forms the held-out test split.
+when the corrected word is in the Royal Institute Dictionary word list or PyThaiNLP's general
+Thai word list and the wrong and correct forms align without shifting neighbouring characters; the mined items are kept out of the three
+tiers. The curated subset used in the annotation study keeps at most two contexts per distinct
+error and drops fragments of two characters or fewer.
+
+\textbf{Memorization probe.} For each of the four sources we sample 30 clean sentences of 90 to
+180 characters, give Typhoon~2.5 (30B) the first half at temperature 0 with the instruction
+เติมข้อความต่อไปนี้ให้สมบูรณ์โดยใช้ถ้อยคำเดิมที่ถูกต้องที่สุด ตอบเฉพาะส่วนที่เติมต่อ ห้ามอธิบาย
+(`Complete the following text with its exact original wording. Reply with the continuation only,
+without explanation.'), and allow up to 120 output tokens. The score is the longest common prefix
+between the continuation and the true second half, ignoring whitespace, divided by the length of
+the true second half. The mean score is 0.003 (news), 0.004 (government press releases), 0.012
+(Wikipedia), and 0.017 (Thai Constitution text, used only in the train split), and no sentence
+scores 0.5 or more. The probe uses a single model, so it does not measure memorization by the
+other systems directly. Items that share a clean sentence are then kept together as one group,
+and groups are assigned to splits class by class (by the class of the group's first item): within
+each class, groups are shuffled with a fixed seed and ordered by their source's mean score, and
+the lowest-scoring 34\% (mined groups first) form the held-out test split, followed by the public
+test (32\%), dev (24\%), and train splits.
 
 \begin{table}[t]
 \centering\small\setlength{\tabcolsep}{4pt}
@@ -542,13 +588,14 @@ lowest-memorization text forms the held-out test split.
 \toprule
 tier & unit & items & chars & err/it & news/gov/enc \\
 \midrule
-T1 sent.  & 1 sent.          & 795 & 100     & 1.23 & 275/368/152 \\
-T2 para.  & $\approx$5 sent.  & 223 & 424     & 1.24 & 80/79/64 \\
-T3 page   & $\approx$15 sent. & 124 & 1{,}242 & 1.56 & 42/43/39 \\
+T1 sent.  & 1 sent.          & 795 & 101     & 1.23 & 275/368/152 \\
+T2 para.  & $\approx$5 sent.  & 224 & 425     & 1.24 & 80/79/65 \\
+T3 page   & $\approx$15 sent. & 122 & 1{,}242 & 1.58 & 38/43/41 \\
 \bottomrule
 \end{tabular}
-\caption{Per-tier statistics (post-audit; Section~\ref{sec:qc}). The tiers are 100\%
-confusion-set injection; the cleanup-bot items form the separate natural-error set.}
+\caption{Per-tier statistics (post-audit; Section~\ref{sec:qc}): mean characters per item and
+gold edits per item. The tiers are 100\% confusion-set injection; the cleanup-bot items form the
+separate natural-error set.}
 \label{tab:tiers}
 \end{table}
 
@@ -558,25 +605,25 @@ confusion-set injection; the cleanup-bot items form the separate natural-error s
 \toprule
 class & pairs & T1 & T2 & T3 \\
 \midrule
-1 tone mark          & 43    & 163 & 42  & 34  \\
-2 consonant-pair     & 168   & 137 & 36  & 24  \\
+1 tone mark          & 43    & 163 & 42  & 32  \\
+2 consonant-pair     & 168   & 137 & 37  & 26  \\
 3 silent-consonant   & 177   & 166 & 54  & 26  \\
-4 vowel              & 189   & 182 & 60  & 39  \\
-5 cluster/metathesis & 338   & 211 & 55  & 53  \\
-6 loanword           & 129   & 115 & 29  & 17  \\
+4 vowel              & 189   & 182 & 60  & 38  \\
+5 cluster/metathesis & 338   & 211 & 55  & 54  \\
+6 loanword           & 129   & 115 & 30  & 17  \\
 \midrule
-total                & 1{,}044 & 974 & 276 & 193 \\
+total                & 1{,}044 & 974 & 278 & 193 \\
 \bottomrule
 \end{tabular}
-\caption{Confusion-set pairs and gold edits per class and tier. The class shares of T1 gold
+\caption{Confusion-set pairs and injected gold edits per class and tier; the grader scores the TCC-aligned edits, which number 982, 278, and 195 at T1--T3. The class shares of T1 gold
 edits correlate with those of the attested pairs at Pearson $r = 0.80$ (Spearman $0.82$);
 cluster/metathesis is the largest class in both.}
 \label{tab:classcounts}
 \end{table}
 
 \paragraph{Release and license.} The injected items are released as train (249), dev (606), and
-public-test (819 before the audit) splits, plus a held-out test split (868) that this paper does not
-evaluate; T1 is the audited public-test split. We release the benchmark for research use under CC BY-SA (data) and the MIT
+public-test (819 before the audit) splits, plus a held-out test split (868) drawn from the
+least-memorized sources; the results in this paper use the audited public-test split as T1. We release the benchmark for research use under CC BY-SA (data) and the MIT
 license (code), consistent with the permissive redistribution terms of the source corpora.
 
 \section{Full results}
@@ -585,29 +632,29 @@ license (code), consistent with the permissive redistribution terms of the sourc
 \centering\small
 \begin{tabular}{@{}lccccccc@{}}
 \toprule
-model & T1 det & T1 corr & T1 span-F0.5 & T2 corr & T2 fid & T3 corr & T3 fid \\
+model & T1 det & T1 corr & T1 span-F0.5 & T2 corr & T2 fidelity & T3 corr & T3 fidelity \\
 \midrule
-GPT-5.5 (high)        & \textbf{0.973} & \textbf{0.973} & \textbf{0.961} & \textbf{0.969} & \textbf{0.990} & 0.855 & 0.974 \\
-GPT-5.5 (med)         & 0.969 & 0.969 & 0.956 & 0.955 & 0.983 & 0.856 & 0.971 \\
-Claude Opus 4.7       & 0.971 & 0.968 & 0.956 & 0.948 & 0.986 & 0.848 & 0.974 \\
-Gemini 3.5 Flash      & 0.969 & 0.965 & 0.951 & 0.960 & 0.983 & 0.819 & 0.960 \\
-Gemma-4-31B           & 0.955 & 0.950 & 0.947 & 0.954 & 0.988 & \textbf{0.889} & 0.981 \\
-GPT-5.4-mini          & 0.959 & 0.949 & 0.951 & 0.917 & 0.986 & 0.853 & \textbf{0.988} \\
-Claude Sonnet 4.6     & 0.952 & 0.947 & 0.938 & 0.906 & 0.977 & 0.824 & 0.972 \\
-DeepSeek V4 Flash     & 0.952 & 0.947 & 0.939 & 0.945 & 0.986 & 0.828 & 0.966 \\
-DeepSeek V4 Pro       & 0.928 & 0.926 & 0.910 & 0.926 & 0.970 & 0.746 & 0.954 \\
-GLM-5.1               & 0.851 & 0.846 & 0.879 & 0.812 & 0.961 & 0.665 & 0.954 \\
-Typhoon-S 8B$^\dagger$         & 0.788 & 0.782 & 0.841 & 0.702 & 0.961 & 0.619 & 0.965 \\
-THaLLE 8B$^\dagger$            & 0.758 & 0.749 & 0.787 & 0.595 & 0.775 & 0.517 & 0.829 \\
-Typhoon 2.5 30B$^\dagger$      & 0.776 & 0.742 & 0.728 & 0.631 & 0.881 & 0.467 & 0.896 \\
-OpenThaiGPT v7.2$^\dagger$       & 0.754 & 0.741 & 0.776 & 0.477 & 0.887 & 0.454 & 0.896 \\
-MiniMax-M2.7          & 0.747 & 0.740 & 0.801 & 0.720 & 0.974 & 0.470 & 0.968 \\
-Qwen3.6-35B-A3B       & 0.721 & 0.705 & 0.652 & 0.383 & 0.776 & 0.308 & 0.836 \\
+GPT-5.5 (high)        & \textbf{0.973} & \textbf{0.973} & \textbf{0.961} & \textbf{0.968} & \textbf{0.990} & 0.862 & 0.977 \\
+GPT-5.5 (med)         & 0.969 & 0.969 & 0.956 & 0.954 & 0.983 & 0.866 & 0.977 \\
+Claude Opus 4.7       & 0.971 & 0.968 & 0.956 & 0.948 & 0.986 & 0.853 & 0.976 \\
+Gemini 3.5 Flash      & 0.969 & 0.965 & 0.951 & 0.960 & 0.983 & 0.825 & 0.963 \\
+Gemma-4-31B           & 0.954 & 0.950 & 0.947 & 0.954 & 0.988 & \textbf{0.898} & 0.984 \\
+GPT-5.4-mini          & 0.959 & 0.949 & 0.951 & 0.915 & 0.986 & 0.865 & \textbf{0.990} \\
+Claude Sonnet 4.6     & 0.952 & 0.947 & 0.938 & 0.905 & 0.977 & 0.825 & 0.974 \\
+DeepSeek V4 Flash     & 0.952 & 0.947 & 0.939 & 0.945 & 0.986 & 0.840 & 0.971 \\
+DeepSeek V4 Pro       & 0.928 & 0.926 & 0.910 & 0.926 & 0.970 & 0.754 & 0.958 \\
+GLM-5.1               & 0.851 & 0.846 & 0.879 & 0.811 & 0.961 & 0.657 & 0.954 \\
+Typhoon-S 8B$^\dagger$& 0.788 & 0.782 & 0.841 & 0.702 & 0.961 & 0.617 & 0.964 \\
+THaLLE 8B$^\dagger$   & 0.758 & 0.749 & 0.787 & 0.594 & 0.774 & 0.507 & 0.814 \\
+Typhoon 2.5 30B$^\dagger$& 0.776 & 0.742 & 0.728 & 0.632 & 0.881 & 0.476 & 0.899 \\
+OpenThaiGPT v7.2$^\dagger$& 0.755 & 0.741 & 0.776 & 0.476 & 0.887 & 0.463 & 0.901 \\
+MiniMax-M2.7          & 0.747 & 0.740 & 0.801 & 0.720 & 0.974 & 0.471 & 0.970 \\
+Qwen3.6-35B-A3B       & 0.721 & 0.705 & 0.652 & 0.384 & 0.776 & 0.310 & 0.838 \\
 \bottomrule
 \end{tabular}
 \caption{Full leaderboard: detection and correction F1, span-F0.5 from the edit-typer, and
 clean-sentence fidelity across the three length tiers. \textbf{Bold} $=$ column best;
-$\dagger$ $=$ Thai-native. Table~\ref{tab:main} marks which systems are statistically tied with
+$\dagger$ $=$ Thai-adapted. Table~\ref{tab:main} marks which systems are statistically tied with
 each column's best. Table~\ref{tab:ci} gives the confidence intervals. Per-class recall and
 per-type span-F0.5 are released with the data.}
 \label{tab:leaderboard}
@@ -618,8 +665,8 @@ per-type span-F0.5 are released with the data.}
 \caption{Length robustness. \emph{(a)}~Correction-F1 slope from T1 to T3. The frontier (blue)
 and the strongest open-weight model (Gemma-4, green) stay high while weak models slope off.
 \emph{(b)}~Over-edit rate per 10{,}000 clean TCCs on a log scale, where higher is worse. The
-rate is roughly flat across length, so the per-passage accumulation (the absolute counts in this appendix)
-reflects text exposure rather than a rising false-positive rate. Weak models over-edit at many
+rate is lower at T3 than at T1 for every model, so the per-passage accumulation (the absolute
+counts in this appendix) mainly reflects the amount of correct text. Weak models over-edit at many
 times the frontier's per-unit rate at every tier.}
 \label{fig:degradation}
 \end{figure*}
@@ -630,28 +677,49 @@ times the frontier's per-unit rate at every tier.}
 \toprule
 model & T1 & T2 & T3 \\
 \midrule
-GPT-5.5 (high)            & [0.964, 0.980] & [0.952, 0.984] & [0.803, 0.902] \\
-GPT-5.5 (med)             & [0.960, 0.977] & [0.934, 0.974] & [0.806, 0.902] \\
-Claude Opus 4.7           & [0.958, 0.978] & [0.924, 0.970] & [0.778, 0.911] \\
-Gemini 3.5 Flash          & [0.955, 0.975] & [0.942, 0.976] & [0.759, 0.874] \\
-Gemma-4-31B               & [0.938, 0.962] & [0.931, 0.974] & [0.846, 0.928] \\
-GPT-5.4-mini              & [0.936, 0.960] & [0.888, 0.944] & [0.810, 0.893] \\
-Claude Sonnet 4.6         & [0.933, 0.959] & [0.875, 0.936] & [0.753, 0.890] \\
-DeepSeek V4 Flash         & [0.935, 0.959] & [0.918, 0.968] & [0.775, 0.880] \\
-DeepSeek V4 Pro           & [0.912, 0.939] & [0.902, 0.949] & [0.684, 0.806] \\
-GLM-5.1                   & [0.823, 0.867] & [0.767, 0.855] & [0.545, 0.781] \\
-Typhoon-S 8B$^\dagger$    & [0.759, 0.805] & [0.652, 0.751] & [0.552, 0.683] \\
-THaLLE 8B$^\dagger$       & [0.715, 0.780] & [0.540, 0.649] & [0.436, 0.598] \\
-Typhoon 2.5 30B$^\dagger$ & [0.716, 0.767] & [0.580, 0.684] & [0.399, 0.538] \\
-OpenThaiGPT v7.2$^\dagger$& [0.701, 0.777] & [0.386, 0.571] & [0.380, 0.534] \\
-MiniMax-M2.7              & [0.714, 0.765] & [0.671, 0.767] & [0.392, 0.552] \\
-Qwen3.6-35B-A3B           & [0.673, 0.736] & [0.308, 0.470] & [0.227, 0.419] \\
+GPT-5.5 (high)            & [0.964, 0.980] & [0.950, 0.983] & [0.809, 0.910] \\
+GPT-5.5 (med)             & [0.960, 0.977] & [0.933, 0.973] & [0.819, 0.911] \\
+Claude Opus 4.7           & [0.958, 0.978] & [0.924, 0.970] & [0.783, 0.918] \\
+Gemini 3.5 Flash          & [0.955, 0.975] & [0.942, 0.977] & [0.764, 0.883] \\
+Gemma-4-31B               & [0.938, 0.962] & [0.931, 0.974] & [0.859, 0.934] \\
+GPT-5.4-mini              & [0.936, 0.960] & [0.887, 0.942] & [0.822, 0.902] \\
+Claude Sonnet 4.6         & [0.933, 0.959] & [0.873, 0.935] & [0.754, 0.891] \\
+DeepSeek V4 Flash         & [0.935, 0.959] & [0.919, 0.968] & [0.788, 0.889] \\
+DeepSeek V4 Pro           & [0.912, 0.939] & [0.902, 0.950] & [0.692, 0.813] \\
+GLM-5.1                   & [0.823, 0.867] & [0.767, 0.854] & [0.537, 0.773] \\
+Typhoon-S 8B$^\dagger$    & [0.759, 0.805] & [0.652, 0.750] & [0.549, 0.682] \\
+THaLLE 8B$^\dagger$       & [0.715, 0.780] & [0.540, 0.649] & [0.426, 0.589] \\
+Typhoon 2.5 30B$^\dagger$ & [0.716, 0.767] & [0.581, 0.684] & [0.406, 0.550] \\
+OpenThaiGPT v7.2$^\dagger$& [0.701, 0.777] & [0.385, 0.569] & [0.386, 0.544] \\
+MiniMax-M2.7              & [0.714, 0.765] & [0.672, 0.765] & [0.391, 0.550] \\
+Qwen3.6-35B-A3B           & [0.673, 0.736] & [0.312, 0.472] & [0.227, 0.421] \\
 \bottomrule
 \end{tabular}
 \caption{95\% item-bootstrap confidence intervals on correction F1 (10{,}000
-resamples). $\dagger$ $=$ Thai-native.}
+resamples). $\dagger$ $=$ Thai-adapted.}
 \label{tab:ci}
 \end{table*}
+
+\begin{table}[t]
+\centering\small\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+model & fixed & miscorrected & missed \\
+\midrule
+GPT-5.5 (high)   & 0.993 & 0.000 & 0.007 \\
+Gemma-4-31B      & 0.956 & 0.004 & 0.040 \\
+Qwen3.6-35B-A3B  & 0.817 & 0.018 & 0.165 \\
+Typhoon 2.5 30B  & 0.764 & 0.036 & 0.201 \\
+\midrule
+All 16, T1       & 0.866 & 0.008 & 0.126 \\
+All 16, T3       & 0.821 & 0.005 & 0.173 \\
+All 16, natural  & 0.815 & 0.006 & 0.178 \\
+\bottomrule
+\end{tabular}
+\caption{Gold-edit outcomes (T1 unless stated). The miscorrected share stays near zero
+throughout.}
+\label{tab:decomp}
+\end{table}
 
 \begin{table}[t]
 \centering\small\setlength{\tabcolsep}{4pt}
@@ -659,19 +727,20 @@ resamples). $\dagger$ $=$ Thai-native.}
 \toprule
 class & T1 & T2 & T3 \\
 \midrule
-1 tone mark          & 0.896 & 0.868 & 0.807 \\
-2 consonant-pair     & 0.876 & 0.885 & 0.831 \\
+1 tone mark          & 0.896 & 0.868 & 0.801 \\
+2 consonant-pair     & 0.876 & 0.885 & 0.812 \\
 3 silent-consonant   & 0.887 & 0.865 & 0.800 \\
-4 vowel              & 0.857 & 0.870 & 0.854 \\
-5 cluster/metathesis & 0.863 & 0.807 & 0.838 \\
-6 loanword           & 0.808 & 0.802 & 0.819 \\
+4 vowel              & 0.857 & 0.870 & 0.831 \\
+5 cluster/metathesis & 0.863 & 0.807 & 0.843 \\
+6 loanword           & 0.808 & 0.790 & 0.819 \\
 \midrule
-all classes          & 0.866 & 0.851 & 0.828 \\
-spread (max$-$min)   & 0.088 & 0.083 & 0.054 \\
+all classes          & 0.866 & 0.849 & 0.821 \\
+spread (max$-$min)   & 0.088 & 0.096 & 0.042 \\
 \bottomrule
 \end{tabular}
-\caption{Fraction of gold edits fixed, by mechanism class and tier, pooled over all 16 models.
-Gold-edit counts per cell are in Table~\ref{tab:classcounts}.}
+\caption{Fraction of gold edits fixed, by mechanism class and tier, pooled over all 16 models
+(construction labels). Table~\ref{tab:classcounts} gives the injected errors per class; the
+scored TCC edit spans per item can differ slightly after alignment.}
 \label{tab:mech}
 \end{table}
 
@@ -696,34 +765,35 @@ class & gold edits & fixed & miscorrected & missed \\
 \toprule
 model & T1 & T2 & T3 \\
 \midrule
-GPT-5.5 (med)    & 7  & 8   & 41  \\
-Gemma-4-31B      & 6  & 8   & 32  \\
-GLM-5.1          & 10 & 23  & 106 \\
-Typhoon 2.5 30B  & 32 & 82  & 201 \\
-OpenThaiGPT v7.2   & 20 & 110 & 206 \\
-Qwen3.6-35B-A3B  & 59 & 268 & 484 \\
+GPT-5.5 (med)    & 7  & 8   & 38  \\
+Gemma-4-31B      & 6  & 8   & 30  \\
+GLM-5.1          & 10 & 23  & 108 \\
+Typhoon 2.5 30B  & 32 & 81  & 192 \\
+OpenThaiGPT v7.2   & 20 & 110 & 197 \\
+Qwen3.6-35B-A3B  & 59 & 268 & 479 \\
 \bottomrule
 \end{tabular}
 \end{center}
 \textbf{Over-edit rate per 10{,}000 clean TCCs (length-normalized; the
-Figure~\ref{fig:degradation}b data).} The per-unit rate is roughly flat or falls across tiers,
-so the per-item growth above reflects text exposure, not a rising false-positive rate.
+Figure~\ref{fig:degradation}b data).} The per-unit rate is lower at T3 than at T1 for every
+model (though higher at T3 than at T2 for most), so the per-item growth above mainly reflects the
+amount of correct text.
 \begin{center}\small
 \begin{tabular}{@{}lrrr@{}}
 \toprule
 model & T1 & T2 & T3 \\
 \midrule
-GPT-5.5 (med)    & 12.3  & 3.0   & 5.5  \\
-Gemma-4-31B      & 11.4  & 3.0   & 4.3  \\
-GLM-5.1          & 17.8  & 9.3   & 14.3 \\
-Typhoon 2.5 30B  & 56.8  & 32.6  & 27.0 \\
-OpenThaiGPT v7.2   & 35.0  & 44.0  & 27.8 \\
-Qwen3.6-35B-A3B  & 105.4 & 106.8 & 65.1 \\
+GPT-5.5 (med)    & 11.7  & 3.0   & 5.1  \\
+Gemma-4-31B      & 10.9  & 3.0   & 4.0  \\
+GLM-5.1          & 17.0  & 9.2   & 14.5 \\
+Typhoon 2.5 30B  & 54.3  & 32.1  & 25.7 \\
+OpenThaiGPT v7.2   & 33.5  & 43.3  & 26.4 \\
+Qwen3.6-35B-A3B  & 100.8 & 105.7 & 64.2 \\
 \bottomrule
 \end{tabular}
 \end{center}
-\textbf{Register effect (pooled correction recall, T1/T2/T3).} encyclopedic 0.82/0.79/0.71;
-news 0.87/0.85/0.76; government 0.89/0.90/0.83. Per-model $\times$ class correction recall and
+\textbf{Register effect (pooled correction recall, T1/T2/T3).} encyclopedic 0.82/0.79/0.76;
+news 0.87/0.85/0.82; government 0.89/0.90/0.88. Per-model $\times$ class correction recall and
 span-F0.5 per type are released with the data.
 
 \section{Annotation study}
@@ -776,57 +846,103 @@ therefore sit at the class boundaries fixed by convention rather than at error p
 \label{app:natural}
 The natural set comes from the edit history of a Thai Wikipedia spelling-cleanup bot: 103 items, each a
 real error in its original encyclopedic sentence, with the bot's fix as gold. We apply the consensus
-audit of Section~\ref{sec:qc} with the same threshold ($k = 3$). It drops an item when the consensus
-output makes a spelling change the gold does not, and keeps it when the consensus equals the input,
-differs only in whitespace or punctuation, or is a partial fix on the way to the gold. It removes
-24 items: in 20 the consensus also fixes a second, unmarked error elsewhere in the sentence
-(for example เพึย$\to$เพีย), and in 4 the recorded fix is itself incomplete (ตำ่ recorded as ตำ, น้้า as น้า, and
-สรา้ง as สราง, where the intended words are ต่ำ, น้ำ, and สร้าง). The audited set has 79 items and 80 gold
-edits (automatic classes 1: 24, 2: 19, 3: 13, 4: 18, 5: 5). Table~\ref{tab:natural} gives per-model results on
-the audited set, with correction F1 and the miscorrected share on all 103 items for comparison. On the audited set the ranking correlates
-with the T1 ranking at Spearman $\rho = 0.92$ (Pearson $r = 0.93$); on all 103 items, at $\rho = 0.88$ ($r = 0.93$).
+audit of Section~\ref{sec:qc} with the same rule as the tiers: at least $k = 3$ systems, and at
+least as many as reproduce the gold, must agree on an output that differs from the gold. The audit
+drops an item when that output makes a spelling change the gold does not, and keeps it when the
+output equals the input, differs only in whitespace or punctuation, or is a partial fix on the way
+to the gold. It removes 16 items. In some, the consensus also fixes a second, unmarked error in the
+sentence (for example เพึย$\to$เพีย); in others, the recorded fix is itself incomplete and the
+consensus completes it (ตำ่ recorded as ตำ, น้้า as น้า, and สรา้ง as สราง, where the intended words
+are ต่ำ, น้ำ, and สร้าง). Dropping an
+item whenever three systems agree, however many reproduce the gold, would remove 24 items
+(79 kept; mean correction F1 0.81, $\rho = 0.92$), including one where the systems change a
+correctly spelled film title. The audited set has 87 items with 87 recorded fixes (88 aligned gold edits). Classified without
+the loanword rule, the fixes fall in classes 1: 27, 2: 21, 3: 14, 4: 20, and 5: 5; the edit-typer,
+which applies the rule, types 7 of the 88 gold edits as loanwords. Table~\ref{tab:natural} gives per-model results on the audited
+set, with correction F1 and the miscorrected share on all 103 items for comparison. On the audited
+set the ranking correlates with the T1 ranking at Spearman $\rho = 0.88$ (Pearson $r = 0.93$); on
+all 103 items, also at $\rho = 0.88$ ($r = 0.93$).
 
 \begin{table*}[t]
 \centering\small
 \begin{tabular}{@{}lcccccccc@{}}
 \toprule
- & \multicolumn{6}{c}{audited set ($n = 79$)} & \multicolumn{2}{c}{all items ($n = 103$)} \\
+ & \multicolumn{6}{c}{audited set ($n = 87$)} & \multicolumn{2}{c}{all items ($n = 103$)} \\
 \cmidrule(lr){2-7}\cmidrule(l){8-9}
 model & corr F1 & 95\% CI & det F1 & fixed & miscorrected & missed & corr F1 & miscorrected \\
 \midrule
-GPT-5.5 (high)              & \textbf{0.943} & [0.907, 0.975] & 0.943 & 0.938 & 0.000 & 0.062 & 0.800 & 0.048 \\
-Gemma-4-31B                 & \tie{0.942} & [0.893, 0.981] & 0.955 & 0.912 & 0.013 & 0.075 & 0.819 & 0.058 \\
-GPT-5.5 (med)               & \tie{0.931} & [0.886, 0.969] & 0.931 & 0.925 & 0.000 & 0.075 & 0.791 & 0.048 \\
-GPT-5.4-mini                & \tie{0.917} & [0.859, 0.969] & 0.930 & 0.900 & 0.013 & 0.087 & 0.811 & 0.058 \\
-Claude Opus 4.7             & \tie{0.892} & [0.785, 0.968] & 0.892 & 0.925 & 0.000 & 0.075 & 0.791 & 0.038 \\
-Claude Sonnet 4.6           & 0.882 & [0.810, 0.942] & 0.895 & 0.838 & 0.013 & 0.150 & 0.771 & 0.058 \\
-Gemini 3.5 Flash            & \tie{0.865} & [0.750, 0.969] & 0.865 & 0.963 & 0.000 & 0.037 & 0.757 & 0.038 \\
-DeepSeek V4 Flash           & 0.841 & [0.750, 0.921] & 0.841 & 0.825 & 0.000 & 0.175 & 0.757 & 0.048 \\
-DeepSeek V4 Pro             & 0.818 & [0.727, 0.909] & 0.818 & 0.900 & 0.000 & 0.100 & 0.729 & 0.038 \\
-GLM-5.1                     & 0.759 & [0.663, 0.853] & 0.759 & 0.750 & 0.000 & 0.250 & 0.689 & 0.048 \\
-Typhoon 2.5 30B$^\dagger$   & 0.740 & [0.649, 0.831] & 0.751 & 0.800 & 0.013 & 0.188 & 0.655 & 0.048 \\
-THaLLE 8B$^\dagger$         & 0.727 & [0.638, 0.811] & 0.727 & 0.650 & 0.000 & 0.350 & 0.670 & 0.048 \\
-OpenThaiGPT v7.2$^\dagger$    & 0.717 & [0.623, 0.806] & 0.717 & 0.650 & 0.000 & 0.350 & 0.630 & 0.048 \\
-MiniMax-M2.7                & 0.702 & [0.607, 0.785] & 0.702 & 0.588 & 0.000 & 0.412 & 0.663 & 0.038 \\
-Typhoon-S 8B$^\dagger$      & 0.687 & [0.587, 0.774] & 0.702 & 0.562 & 0.013 & 0.425 & 0.626 & 0.038 \\
-Qwen3.6-35B-A3B             & 0.567 & [0.468, 0.670] & 0.606 & 0.738 & 0.050 & 0.212 & 0.544 & 0.067 \\
+Gemma-4-31B                 & \textbf{0.926} & [0.879, 0.966] & 0.937 & 0.920 & 0.011 & 0.068 & 0.819 & 0.058 \\
+GPT-5.4-mini                & \tie{0.919} & [0.866, 0.966] & 0.931 & 0.909 & 0.011 & 0.080 & 0.811 & 0.058 \\
+GPT-5.5 (high)              & \tie{0.907} & [0.868, 0.944] & 0.907 & 0.943 & 0.000 & 0.057 & 0.800 & 0.048 \\
+GPT-5.5 (med)               & \tie{0.901} & [0.857, 0.943] & 0.901 & 0.932 & 0.000 & 0.068 & 0.791 & 0.048 \\
+Claude Opus 4.7             & \tie{0.882} & [0.790, 0.954] & 0.882 & 0.932 & 0.000 & 0.068 & 0.791 & 0.038 \\
+Claude Sonnet 4.6           & \tie{0.877} & [0.811, 0.934] & 0.889 & 0.852 & 0.011 & 0.136 & 0.771 & 0.058 \\
+DeepSeek V4 Flash           & 0.851 & [0.765, 0.922] & 0.851 & 0.841 & 0.000 & 0.159 & 0.757 & 0.048 \\
+Gemini 3.5 Flash            & \tie{0.850} & [0.749, 0.944] & 0.850 & 0.966 & 0.000 & 0.034 & 0.757 & 0.038 \\
+DeepSeek V4 Pro             & 0.821 & [0.735, 0.904] & 0.821 & 0.909 & 0.000 & 0.091 & 0.729 & 0.038 \\
+GLM-5.1                     & 0.775 & [0.686, 0.862] & 0.775 & 0.761 & 0.000 & 0.239 & 0.689 & 0.048 \\
+THaLLE 8B$^\dagger$         & 0.742 & [0.658, 0.818] & 0.742 & 0.670 & 0.000 & 0.330 & 0.670 & 0.048 \\
+Typhoon 2.5 30B$^\dagger$   & 0.741 & [0.653, 0.826] & 0.751 & 0.795 & 0.011 & 0.193 & 0.655 & 0.048 \\
+OpenThaiGPT v7.2$^\dagger$    & 0.725 & [0.638, 0.807] & 0.725 & 0.659 & 0.000 & 0.341 & 0.630 & 0.048 \\
+MiniMax-M2.7                & 0.720 & [0.632, 0.797] & 0.720 & 0.614 & 0.000 & 0.386 & 0.663 & 0.038 \\
+Typhoon-S 8B$^\dagger$      & 0.703 & [0.610, 0.784] & 0.717 & 0.580 & 0.011 & 0.409 & 0.626 & 0.038 \\
+Qwen3.6-35B-A3B             & 0.588 & [0.494, 0.680] & 0.623 & 0.761 & 0.045 & 0.193 & 0.544 & 0.067 \\
 \bottomrule
 \end{tabular}
 \caption{Natural-error evaluation. \textbf{Bold} $=$ best on the audited set; \underline{underlined}
-$=$ not separable from the best by a paired bootstrap test ($p \ge 0.05$); $\dagger$ $=$ Thai-native.}
+$=$ not separable from the best by a paired bootstrap test ($p \ge 0.05$); $\dagger$ $=$ Thai-adapted.}
 \label{tab:natural}
 \end{table*}
 
 \section{Prompt and inference}
 \label{app:prompt}
-A single fixed Thai instruction prompt is used for all models. It asks the model to return the
-passage with orthographic errors corrected and \textbf{nothing else changed}, explicitly
-forbidding spacing, punctuation, and numeral edits. Temperature is 0 where supported. Claude
+\textbf{Prompt.} All models receive the same Thai system message and instruction. The system
+message is คุณเป็นเครื่องมือตรวจแก้การสะกดคำภาษาไทยตามอักขรวิธีมาตรฐานของราชบัณฑิตยสภา (`You are
+a tool that checks and corrects Thai spelling according to the standard orthography of the Royal
+Society'). The T1 instruction, with the input in place of \{text\}, is:
+\begin{quote}\small\raggedright
+จงแก้คำที่สะกดผิดในประโยคต่อไปนี้ให้ถูกต้องตามอักขรวิธี แก้เฉพาะตัวพยัญชนะ/สระ/วรรณยุกต์/ตัวการันต์ที่สะกดผิดเท่านั้น
+ห้ามเปลี่ยนถ้อยคำ ห้ามเรียบเรียงใหม่ ห้ามเพิ่มหรือลบเนื้อความ ห้ามเปลี่ยนการเว้นวรรค ตัวเลข
+หรือเครื่องหมายวรรคตอน ถ้าไม่มีคำผิดให้ตอบประโยคเดิมทุกตัวอักษร
+ตอบกลับเป็นประโยคที่แก้ไขแล้วบรรทัดเดียวเท่านั้น ไม่ต้องอธิบาย\\[3pt]
+ประโยค: \{text\}\\
+ประโยคที่แก้ไขแล้ว:
+\end{quote}
+For T2 and T3, ประโยค (`sentence') becomes ข้อความ (`text'), and the single-line requirement is
+dropped. The English prompt of the sensitivity test below translates the T1 instruction:
+\begin{quote}\small\raggedright
+Correct the misspelled Thai words in the following sentence according to standard Thai
+orthography. Fix only misspelled consonants, vowels, tone marks, or silent-consonant (karan)
+marks. Do not change the wording, do not rephrase, do not add or remove content, and do not
+change spacing, numerals, or punctuation. If there are no misspellings, return the sentence
+exactly as given. Reply with only the corrected sentence on a single line, with no
+explanation.\\[3pt]
+Sentence: \{text\}\\
+Corrected sentence:
+\end{quote}
+The few-shot prompt keeps the Thai instruction and inserts ตัวอย่าง (`Examples') followed by two
+worked examples from the train split, in the same ประโยค / ประโยคที่แก้ไขแล้ว format, before the
+input. The examples contain a tone-mark error (ก้อ$\to$ก็) and a consonant-pair error
+(ฐาณ$\to$ฐาน):
+\begin{quote}\small\raggedright
+ประโยค: แต่เพลงนี้ก้อยังไม่ได้มีการประกาศอย่างเป็นทางการว่าเป็นเพลงชาติ\\
+ประโยคที่แก้ไขแล้ว: แต่เพลงนี้ก็ยังไม่ได้มีการประกาศอย่างเป็นทางการว่าเป็นเพลงชาติ\\[3pt]
+ประโยค: โดยถ้าลอการิทึมในสมการข้างต้น เป็นฐาณสอง เอนโทรปีที่วัดจะอยู่ในหน่วยบิตเช่นกัน\\
+ประโยคที่แก้ไขแล้ว: โดยถ้าลอการิทึมในสมการข้างต้น เป็นฐานสอง เอนโทรปีที่วัดจะอยู่ในหน่วยบิตเช่นกัน
+\end{quote}
+Both variants keep the Thai system message.
+
+\textbf{Inference.} Temperature is 0 where supported. Claude
 models use the Anthropic Message Batches API in non-thinking mode. GPT-5.x models use the
-Responses API at the stated reasoning effort with a 3k-token budget. Open reasoning models run
-in native thinking mode with large token budgets, and token-runout counts as a failure.
-ThaiLLM-gateway models are reached with a browser User-Agent header, because the gateway's
-web application firewall otherwise blocks the default SDK user agent.
+Responses API, GPT-5.5 at medium or high reasoning effort with 3k and 6k output-token budgets and
+GPT-5.4-mini at its default effort with a 2k budget. Open reasoning models run
+in native thinking mode with large token budgets, and token-runout counts as a failure. Replies
+are cleaned by removing reasoning traces and echoed labels, keeping the last non-empty line for T1
+or joining all lines for T2 and T3, and stripping quotation marks at both ends. For the 127 of
+18{,}256 scored replies (0.7\%) whose passage itself begins or ends with a quotation mark, this
+cleaning also removes a correct quotation mark, which counts as one error. Scoring these replies
+without the stripping changes any model's correction F1 by at most 0.005 and leaves the order of
+models unchanged in every tier.
 
 \textbf{Prompt sensitivity.} We rerun the full T1 set for one strong general model (Gemma-4-31B)
 and one Thai 8B model (Typhoon-S) under two alternative prompts: the same instruction in English,
@@ -836,7 +952,7 @@ every prompt. The two models move in opposite directions: the worked examples he
 model and hurt the general model.
 
 \begin{table}[t]
-\centering\small\setlength{\tabcolsep}{4pt}
+\centering\small\setlength{\tabcolsep}{3pt}
 \begin{tabular}{@{}lccc@{}}
 \toprule
 model & Thai (default) & English & Thai + 2 examples \\

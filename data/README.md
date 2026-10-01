@@ -16,8 +16,8 @@ object, and the construction invariants — is in
 | `items_dev.jsonl` | 606 | synthetic; development |
 | `items_test_public.jsonl` | 795 | **T1 sentence tier**, public |
 | `items_test_private.jsonl` | 868 | held-out: synthetic + 40 Wikipedia-mined; lowest memorization risk |
-| `items_t2.jsonl` | 223 | **T2 paragraph tier** (multi-sentence) |
-| `items_t3.jsonl` | 124 | **T3 page tier** (page-length) |
+| `items_t2.jsonl` | 224 | **T2 paragraph tier** (multi-sentence) |
+| `items_t3.jsonl` | 122 | **T3 page tier** (page-length) |
 
 The public test / T2 / T3 tiers were trimmed by a cross-model gold-quality audit
 (removing residual source typos and punctuation-only artifacts; 24 / 27 / 26

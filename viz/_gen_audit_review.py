@@ -34,6 +34,15 @@ def variant_flag(gold, cons):
             return f"{a} -> {b}"
     return None
 
+def _lev(a, b):
+    prev = list(range(len(b) + 1))
+    for i, ca in enumerate(a, 1):
+        cur = [i]
+        for j, cb in enumerate(b, 1):
+            cur.append(min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (ca != cb)))
+        prev = cur
+    return prev[-1]
+
 def localized(gold, cons, win=30):
     sm = difflib.SequenceMatcher(None, gold, cons, autojunk=False)
     out = []
@@ -82,7 +91,9 @@ def run(resdir, split, n, label):
         if all(is_punct(g) or is_punct(c) for _, g, c, _ in blocks):  # punct only -> gold OK
             continue
         nf, vf = norm_flag(goldn, val), variant_flag(goldn, val)
-        if nf:
+        if _lev(wrongn, val) + _lev(val, goldn) == _lev(wrongn, goldn):
+            disp, reason = "keep", "partial fix toward the gold (shared miss)"
+        elif nf:
             disp, reason = "keep", f"register-norm ({nf})"
         elif vf:
             disp, reason = "variant", f"loanword variant ({vf})"

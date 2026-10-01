@@ -1,6 +1,7 @@
 """Natural-error evaluation (paper Section 5.5 and Appendix F).
 
-Applies the cross-model consensus audit (k >= 3) to the 103 mined items, then scores all 16 systems
+Applies the cross-model consensus audit (k >= 3, and at least as many as reproduce the gold) to the
+103 mined items, then scores all 16 systems
 on the audited set and on all items: correction F1 with CIs, paired ties, outcome decomposition,
 and rank correlation with T1. The dropped item ids are listed in the output JSON.
 
@@ -53,11 +54,11 @@ dropped, reasons = [], Counter()
 for it in items:
     g, w = normalize(it["text_correct"]), normalize(it["text_wrong"])
     c = Counter(normalize(sys_text(m, it)) for m in runs)
-    c.pop(g, None)
+    gv = c.pop(g, 0)
     if not c:
         continue
     cons, n = c.most_common(1)[0]
-    if n < K or cons == w or strip(cons) == strip(g):
+    if n < K or n < gv or cons == w or strip(cons) == strip(g):
         continue
     if lev(w, cons) + lev(cons, g) == lev(w, g):
         reasons["keep_partial_fix"] += 1

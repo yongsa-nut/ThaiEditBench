@@ -105,8 +105,8 @@ PYTHONUTF8=1 python test_therrant.py
 
 ```bash
 PYTHONUTF8=1 python score_runs.py --split test_public --n 819                       # T1 sentence
-PYTHONUTF8=1 python score_runs.py --split t2 --n 223 --results results_t2           # T2 paragraph
-PYTHONUTF8=1 python score_runs.py --split t3 --n 124 --results results_t3           # T3 page
+PYTHONUTF8=1 python score_runs.py --split t2 --n 224 --results results_t2           # T2 paragraph
+PYTHONUTF8=1 python score_runs.py --split t3 --n 122 --results results_t3           # T3 page
 PYTHONUTF8=1 python error_analysis.py                                               # failure decomposition
 ```
 
@@ -114,7 +114,7 @@ PYTHONUTF8=1 python error_analysis.py                                           
 
 ```bash
 PYTHONUTF8=1 python score_runs.py --split wiki --n 103 --results results_wiki --report results_wiki/report.md   # natural set, all items
-PYTHONUTF8=1 python analysis/natural_eval.py      # consensus audit (103 -> 79) + natural results (Sec. 5.5, App. F)
+PYTHONUTF8=1 python analysis/natural_eval.py      # consensus audit (103 -> 87) + natural results (Sec. 5.5, App. F)
 PYTHONUTF8=1 python analysis/leaderboard_ties.py  # CIs and paired ties with the column best (Table 1, App. D)
 PYTHONUTF8=1 python analysis/paired_bootstrap.py  # pairwise comparisons quoted in Sec. 5.1
 PYTHONUTF8=1 python analysis/span_check.py        # exact-span check on the outcome decomposition (Sec. 5.2)
@@ -151,9 +151,9 @@ Run `python run_editing.py --help` for the full model registry and flags
 | dev | `data/items_dev.jsonl` | 606 | synthetic |
 | **test (public, T1)** | `data/items_test_public.jsonl` | 795 | sentence tier |
 | held-out test | `data/items_test_private.jsonl` | 868 | synthetic + 40 mined; lowest memorization; not evaluated in the paper |
-| **natural errors** | `data/items_wiki.jsonl` | 103 | real errors mined from Wikipedia; 79 after the consensus audit |
-| **T2 paragraph** | `data/items_t2.jsonl` | 223 | multi-sentence |
-| **T3 page** | `data/items_t3.jsonl` | 124 | page-length |
+| **natural errors** | `data/items_wiki.jsonl` | 103 | real errors mined from Wikipedia; 87 after the consensus audit |
+| **T2 paragraph** | `data/items_t2.jsonl` | 224 | multi-sentence |
+| **T3 page** | `data/items_t3.jsonl` | 122 | page-length |
 
 Item schema, the six-class taxonomy, the loanword-absorption rule, and full
 provenance/licensing are documented in [`data/README.md`](data/README.md) and

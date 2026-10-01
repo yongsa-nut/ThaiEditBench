@@ -46,10 +46,21 @@ def drop_ids(resdir, split, n):
             continue
         if val == wrongn:                      # shared miss -> gold OK, keep
             continue
+        if _lev(wrongn, val) + _lev(val, goldn) == _lev(wrongn, goldn):  # partial fix toward gold -> keep
+            continue
         if all(is_punct(g) or is_punct(c) for g, c in _blocks(goldn, val)):  # punct over-edit -> keep
             continue
         drops.append(iid)
     return set(drops), len(items)
+
+def _lev(a, b):
+    prev = list(range(len(b) + 1))
+    for i, ca in enumerate(a, 1):
+        cur = [i]
+        for j, cb in enumerate(b, 1):
+            cur.append(min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (ca != cb)))
+        prev = cur
+    return prev[-1]
 
 def _blocks(a, b):
     import difflib
