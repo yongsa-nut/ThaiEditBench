@@ -35,7 +35,7 @@ Appendix B, and the tooling lives in [`../viz/`](../viz/) (`audit_golds.py`,
 | `wiki_filtered_pairs.jsonl` | RID-gated clean pairs mined from cleanup-bot edit history |
 | `wiki_items.jsonl` | curated, class-balanced mined ship set (~40) |
 | `wiki_items_all.jsonl` | full mined sentence-level set (103) |
-| `items_wiki.jsonl` | the same 103 items under the name the harness uses (`--split wiki`); the paper's natural-error set is the 87 left after the consensus audit (`analysis/natural_eval.py`) |
+| `items_wiki.jsonl` | the same 103 items under the name the harness uses (`--split wiki`); the paper's natural-error set is the 86 left after the consensus audit (`analysis/natural_eval.py`) |
 | `memorization.json` | per-source verbatim-recall scores used to route low-memorization text to the held-out test split |
 | `excluded.jsonl` | items removed during construction/audit, with reasons |
 

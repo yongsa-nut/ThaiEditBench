@@ -35,8 +35,8 @@
      0.9835
     ],
     "det_f1": 0.9774,
-    "p_vs_best": 0.0952,
-    "tied_with_best": true,
+    "p_vs_best": 0.034,
+    "tied_with_best": false,
     "coverage": 774,
     "decomp": null
    },
@@ -47,7 +47,7 @@
      0.9709
     ],
     "det_f1": 0.9635,
-    "p_vs_best": 0.0006,
+    "p_vs_best": 0.0,
     "tied_with_best": false,
     "coverage": 774,
     "decomp": null
@@ -71,18 +71,18 @@
      0.9693
     ],
     "det_f1": 0.9674,
-    "p_vs_best": 0.0002,
+    "p_vs_best": 0.0,
     "tied_with_best": false,
     "coverage": 774,
     "decomp": null
    },
    "gpt55-high": {
-    "corr_f1": 0.9804,
+    "corr_f1": 0.9815,
     "ci": [
-     0.9731,
-     0.9871
+     0.9746,
+     0.9878
     ],
-    "det_f1": 0.9804,
+    "det_f1": 0.9815,
     "p_vs_best": null,
     "tied_with_best": true,
     "coverage": 774,
@@ -95,7 +95,7 @@
      0.9852
     ],
     "det_f1": 0.9784,
-    "p_vs_best": 0.3346,
+    "p_vs_best": 0.1054,
     "tied_with_best": true,
     "coverage": 774,
     "decomp": null
@@ -131,7 +131,7 @@
      0.9831
     ],
     "det_f1": 0.9769,
-    "p_vs_best": 0.2548,
+    "p_vs_best": 0.154,
     "tied_with_best": true,
     "coverage": 774,
     "decomp": null
@@ -210,7 +210,7 @@
      0.9682
     ],
     "det_f1": 0.9558,
-    "p_vs_best": 0.0754,
+    "p_vs_best": 0.0986,
     "tied_with_best": true,
     "coverage": 224,
     "decomp": null
@@ -222,7 +222,7 @@
      0.9497
     ],
     "det_f1": 0.9265,
-    "p_vs_best": 0.0014,
+    "p_vs_best": 0.0024,
     "tied_with_best": false,
     "coverage": 224,
     "decomp": null
@@ -234,7 +234,7 @@
      0.9765
     ],
     "det_f1": 0.9599,
-    "p_vs_best": 0.3242,
+    "p_vs_best": 0.444,
     "tied_with_best": true,
     "coverage": 224,
     "decomp": null
@@ -246,7 +246,7 @@
      0.9737
     ],
     "det_f1": 0.9539,
-    "p_vs_best": 0.1984,
+    "p_vs_best": 0.2586,
     "tied_with_best": true,
     "coverage": 224,
     "decomp": null
@@ -276,24 +276,24 @@
     "decomp": null
    },
    "gpt55-high": {
-    "corr_f1": 0.9677,
+    "corr_f1": 0.9664,
     "ci": [
-     0.95,
-     0.9831
+     0.9474,
+     0.9824
     ],
-    "det_f1": 0.9677,
+    "det_f1": 0.9664,
     "p_vs_best": null,
     "tied_with_best": true,
     "coverage": 224,
     "decomp": null
    },
    "gpt55-med": {
-    "corr_f1": 0.9539,
+    "corr_f1": 0.9525,
     "ci": [
-     0.9326,
-     0.973
+     0.9303,
+     0.9724
     ],
-    "det_f1": 0.9539,
+    "det_f1": 0.9525,
     "p_vs_best": 0.0046,
     "tied_with_best": false,
     "coverage": 224,
@@ -330,7 +330,7 @@
      0.9702
     ],
     "det_f1": 0.9481,
-    "p_vs_best": 0.145,
+    "p_vs_best": 0.2012,
     "tied_with_best": true,
     "coverage": 224,
     "decomp": null
@@ -354,7 +354,7 @@
      0.9352
     ],
     "det_f1": 0.9085,
-    "p_vs_best": 0.0,
+    "p_vs_best": 0.0002,
     "tied_with_best": false,
     "coverage": 224,
     "decomp": null
@@ -475,25 +475,25 @@
     "decomp": null
    },
    "gpt55-high": {
-    "corr_f1": 0.8618,
+    "corr_f1": 0.8552,
     "ci": [
-     0.8094,
-     0.91
+     0.8035,
+     0.9045
     ],
-    "det_f1": 0.8618,
-    "p_vs_best": 0.1148,
+    "det_f1": 0.8552,
+    "p_vs_best": 0.056,
     "tied_with_best": true,
     "coverage": 122,
     "decomp": null
    },
    "gpt55-med": {
-    "corr_f1": 0.8659,
+    "corr_f1": 0.8565,
     "ci": [
-     0.819,
-     0.9109
+     0.8044,
+     0.9073
     ],
-    "det_f1": 0.8659,
-    "p_vs_best": 0.1776,
+    "det_f1": 0.8565,
+    "p_vs_best": 0.0772,
     "tied_with_best": true,
     "coverage": 122,
     "decomp": null
@@ -698,34 +698,34 @@
     }
    },
    "gpt55-high": {
-    "corr_f1": 0.8,
+    "corr_f1": 0.751,
     "ci": [
-     0.7359,
-     0.8596
+     0.6667,
+     0.8354
     ],
-    "det_f1": 0.8444,
-    "p_vs_best": 0.4058,
+    "det_f1": 0.7918,
+    "p_vs_best": 0.0778,
     "tied_with_best": true,
     "coverage": 103,
     "decomp": {
-     "fixed": 0.8654,
-     "missed": 0.0865,
+     "fixed": 0.8846,
+     "missed": 0.0673,
      "wrong_corr": 0.0481
     }
    },
    "gpt55-med": {
-    "corr_f1": 0.7911,
+    "corr_f1": 0.7603,
     "ci": [
-     0.7257,
-     0.8531
+     0.6777,
+     0.8407
     ],
-    "det_f1": 0.8356,
-    "p_vs_best": 0.2544,
+    "det_f1": 0.8017,
+    "p_vs_best": 0.0938,
     "tied_with_best": true,
     "coverage": 103,
     "decomp": {
-     "fixed": 0.8558,
-     "missed": 0.0962,
+     "fixed": 0.8846,
+     "missed": 0.0673,
      "wrong_corr": 0.0481
     }
    },

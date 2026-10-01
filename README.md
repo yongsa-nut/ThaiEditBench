@@ -26,7 +26,7 @@ them is *detection*; (2) the evaluated Thai-specialized models do not lead the
 strongest general models; and (3) long, mostly-correct context exposes
 **over-edit accumulation** and clean-text fidelity failures that sentence-level
 evaluation hides. On real errors mined from Wikipedia edit history, the model
-ranking transfers (Spearman ρ = 0.87 with the sentence tier).
+ranking transfers (Spearman ρ = 0.81 with the sentence tier).
 
 **Paper:** Nutchanon Yongsatianchot, Piyalitt Ittichaiwong, and Kanyakorn
 Veerakanjana. *ThaiEditBench: A Mechanism-Typed, Length-Stratified Benchmark for
@@ -114,7 +114,7 @@ PYTHONUTF8=1 python error_analysis.py                                           
 
 ```bash
 PYTHONUTF8=1 python score_runs.py --split wiki --n 103 --results results_wiki --report results_wiki/report.md   # natural set, all items
-PYTHONUTF8=1 python analysis/natural_eval.py      # consensus audit (103 -> 87) + natural results (Sec. 5.5, App. F)
+PYTHONUTF8=1 python analysis/natural_eval.py      # consensus audit (103 -> 86) + natural results (Sec. 5.5, App. F)
 PYTHONUTF8=1 python analysis/leaderboard_ties.py  # CIs and paired ties with the column best (Table 1, App. D)
 PYTHONUTF8=1 python analysis/paired_bootstrap.py  # pairwise comparisons quoted in Sec. 5.1
 PYTHONUTF8=1 python analysis/span_check.py        # exact-span check on the outcome decomposition (Sec. 5.2)
@@ -151,7 +151,7 @@ Run `python run_editing.py --help` for the full model registry and flags
 | dev | `data/items_dev.jsonl` | 606 | synthetic |
 | **test (public, T1)** | `data/items_test_public.jsonl` | 774 | sentence tier |
 | held-out test | `data/items_test_private.jsonl` | 868 | synthetic + 40 mined; lowest memorization; not evaluated in the paper |
-| **natural errors** | `data/items_wiki.jsonl` | 103 | real errors mined from Wikipedia; 87 after the consensus audit |
+| **natural errors** | `data/items_wiki.jsonl` | 103 | real errors mined from Wikipedia; 86 after the consensus audit |
 | **T2 paragraph** | `data/items_t2.jsonl` | 224 | multi-sentence |
 | **T3 page** | `data/items_t3.jsonl` | 122 | page-length |
 

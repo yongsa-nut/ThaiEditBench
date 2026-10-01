@@ -95,12 +95,12 @@ $\alpha = 0.75$).
 (2)~An \textbf{ERRANT-style edit-typer for Thai}. It segments the difference between an input and its
 correction into TCC-level edits and assigns each edit one of the six classes where one applies. This lets us report
 \textbf{span-F0.5} separately for each error type, as ChERRANT does for Chinese
-\citep{zhang-etal-2022-mucgec}. We use it to score and diagnose systems on this benchmark, not as
+\citep{zhang-etal-2022-mucgec}. We use it to score and diagnose models on this benchmark, not as
 a general Thai grammatical error classifier.
 (3)~A \textbf{16-model evaluation}. Models that find an error almost always fix it, so detection
-separates them. The evaluated Thai-adapted systems do not lead, weaker models accumulate
+separates them. The evaluated Thai-adapted models do not lead, weaker models accumulate
 over-edits in long text, and the ranking largely holds on naturally occurring errors
-(Spearman $\rho = 0.87$).
+(Spearman $\rho = 0.81$).
 We release the code, data, grader, edit-typer, and variant map at
 \url{https://github.com/yongsa-nut/ThaiEditBench}.
 
@@ -108,8 +108,8 @@ We release the code, data, grader, edit-typer, and variant map at
 
 \noindent\textbf{GEC and CSC.} English grammatical error correction is evaluated with
 span-based metrics. These metrics represent a correction as a set of edits, each a span of the
-input and its replacement, and credit a system for each gold edit it reproduces with the same
-replacement. The M\textsuperscript{2} scorer matches a system's edits against gold edits
+input and its replacement, and credit a model for each gold edit it reproduces with the same
+replacement. The M\textsuperscript{2} scorer matches a model's edits against gold edits
 \citep{dahlmeier-ng-2012-better}. ERRANT (the ERRor ANnotation Toolkit) extracts the edits
 automatically by aligning the input with each correction, assigns each edit an error type, and
 reports span-F0.5, an F-score over matched edits that weights precision twice as much as recall
@@ -170,7 +170,7 @@ encyclopedic text (Thai Wikipedia), and Thai government press releases, all perm
 redistributable.
 
 \subsection{Contamination control}
-Systems are evaluated on \textbf{corrupted passages that do not appear verbatim in the source
+Models are evaluated on \textbf{corrupted passages that do not appear verbatim in the source
 corpora}. A residual risk remains: a model that
 memorized a clean source passage could reproduce it instead of finding and fixing the injected
 errors. We therefore probe memorization directly. Given the first half of 30 sentences per
@@ -200,12 +200,12 @@ problems: typos already present in the source text, and words with two accepted 
 one check for each.
 \begin{itemize}\itemsep2pt
 \item \textbf{Cross-model consensus audit.} A typo left in the source text stays in the gold. An
-item is flagged when, among the systems' full outputs, the most common one other than the gold
-comes from at least three systems and from at least as many as return the gold. A flagged item is kept if that output is the unchanged input or makes only some of the
-gold corrections (the systems missed an error), or if it differs from the gold only in punctuation
+item is flagged when, among the models' full outputs, the most common one other than the gold
+comes from at least three models and from at least as many as return the gold. A flagged item is kept if that output is the unchanged input or makes only some of the
+gold corrections (the models missed an error), or if it differs from the gold only in punctuation
 or spacing. Every other flagged item is dropped. The same rule is applied to all three tiers and
 removed 45 of 819 (T1), 26 of 250 (T2), and 28 of 150 (T3) items. They include source typos and
-non-standard spellings, but also items where the systems agree on a register change or on a
+non-standard spellings, but also items where the models agree on a register change or on a
 wrong form (Appendix~\ref{app:qc}).
 \item \textbf{Variant reconciliation.} Before scoring, we map words with two accepted spellings
 (four groups, eight word forms; Appendix~\ref{app:qc}) to the gold's form. No injected wrong
@@ -228,13 +228,13 @@ automatic label on 35; most disagreements fall at the loanword-absorption and cl
 \subsection{Metrics}
 We grade at the TCC level with ERRANT-style span matching \citep{bryant-etal-2017-automatic}.
 The \textbf{primary metric is correction F1}. We derive minimal TCC edits by aligning the wrong
-text with \emph{both} the gold and the system output under the \textbf{same} Levenshtein
+text with \emph{both} the gold and the model output under the \textbf{same} Levenshtein
 alignment, so an output identical to the gold scores exactly 1.0, as in SIGHAN CSC scoring
 \citep{tseng-etal-2015-introduction}. \textbf{Detection F1} credits the correct error site and
 ignores the replacement. \textbf{Clean-sentence fidelity} is the fraction of error-free sentences
 left unchanged, a precision signal for T2 and T3. The edit-typer (Section~\ref{sec:typer}) also
 gives \textbf{span-F0.5}, overall and per mechanism. We report 95\% item-bootstrap confidence
-intervals (Appendix~\ref{app:results}) and test differences between systems with a
+intervals (Appendix~\ref{app:results}) and test differences between models with a
 \textbf{paired item-level bootstrap} \citep{koehn-2004-statistical} over 10{,}000 resamples.
 
 \subsection{ERRANT-style edit-typer}
@@ -250,7 +250,7 @@ wrong and correct forms of that word character by character and assigns the clas
 changed; for example, a changed tone mark gives class~1. If the corrected word is in a loan
 lexicon, the edit is class~6 (Appendix~\ref{app:taxonomy} gives the full rules). The same
 classifier labels the confusion set, and the typer also tags the edit operation (substitution,
-insertion, deletion, transposition, or mixed). Because it types both the gold and the system edits, it gives
+insertion, deletion, transposition, or mixed). Because it types both the gold and the model edits, it gives
 \textbf{span-F0.5 per mechanism} on any (wrong, correct) pair, without construction labels. On
 the dev split, it recovers 98.9\% of the gold edit spans and agrees with the
 construction class on 98.1\% of them. Because the typer reuses the construction-time classifier,
@@ -273,19 +273,19 @@ Appendix~\ref{app:prompt} gives the prompts and a prompt-sensitivity ablation.
 \subsection{Leaderboard}
 \label{sec:leaderboard}
 Table~\ref{tab:main} reports correction F1 on the three tiers and on the natural-error set
-(post-audit $n = 774 / 224 / 122 / 87$); the full table is in Appendix~\ref{app:results}.
+(post-audit $n = 774 / 224 / 122 / 86$); the full table is in Appendix~\ref{app:results}.
 The frontier clusters at 0.96 to 0.98 on T1, and the confidence intervals separate three strata:
 the frontier
 and the strongest open-weight models, then GLM-5.1, then the Thai-adapted models, MiniMax, and
 Qwen. Within the frontier, T1 differences are mostly not significant: GPT-5.5 (high) is tied
-with GPT-5.5 (med), Claude Opus~4.7, and Gemini~3.5 Flash.
+with GPT-5.5 (med) and Claude Opus~4.7.
 
 General frontier models dominate, while the Thai-adapted models trail (0.75 to 0.79 on T1 and
 0.46 to 0.62 on T3). The strongest \textbf{open-weight} model is a general 31B model,
-Gemma-4. The frontier leads it on T1 ($\Delta = 0.019$ against GPT-5.5 high, $p = 0.001$), and
-on T3 it has the highest point estimate (0.898) but is statistically tied with the top frontier systems
-(against GPT-5.5 med, $\Delta = +0.032$, 95\% CI $[-0.013, 0.077]$). Under this setup the
-evaluated Thai-adapted systems do not lead, and the gap widens with length (Gemma-4 against
+Gemma-4. The frontier leads it on T1 ($\Delta = 0.020$ against GPT-5.5 high, $p < 0.001$), and
+on T3 it has the highest point estimate (0.898) but is statistically tied with the top frontier models
+(against GPT-5.5 med, $\Delta = +0.041$, 95\% CI $[-0.004, 0.085]$). Under this setup the
+evaluated Thai-adapted models do not lead, and the gap widens with length (Gemma-4 against
 Typhoon~2.5 on T3: $\Delta = 0.422$, $p < 0.001$). This comparison is confounded by
 base model, scale, serving stack, and inference settings, so it is not evidence about Thai
 adaptation in general.
@@ -298,22 +298,22 @@ adaptation in general.
 \cmidrule(lr){2-5}\cmidrule(l){6-6}
 model & T1 & T2 & T3 & Nat. & T3 \\
 \midrule
-GPT-5.5 (high)            & \textbf{0.980} & \textbf{0.968} & \tie{0.862} & \tie{0.907} & 0.977 \\
-GPT-5.5 (med)             & \tie{0.978} & 0.954 & \tie{0.866} & \tie{0.901} & 0.977 \\
-Claude Opus 4.7           & \tie{0.975} & \tie{0.948} & \tie{0.853} & \tie{0.882} & 0.976 \\
-Gemini 3.5 Flash          & \tie{0.975} & \tie{0.960} & 0.825 & \tie{0.850} & 0.963 \\
-Gemma-4-31B               & 0.961 & \tie{0.954} & \textbf{0.898} & \textbf{0.926} & 0.984 \\
-GPT-5.4-mini              & 0.959 & 0.915 & \tie{0.865} & \tie{0.919} & \textbf{0.990} \\
-Claude Sonnet 4.6         & 0.957 & 0.905 & 0.825 & \tie{0.877} & 0.974 \\
-DeepSeek V4 Flash         & 0.956 & \tie{0.945} & 0.840 & 0.851 & 0.971 \\
-DeepSeek V4 Pro           & 0.939 & 0.926 & 0.754 & 0.821 & 0.958 \\
-GLM-5.1                   & 0.856 & 0.811 & 0.657 & 0.775 & 0.954 \\
-Typhoon-S 8B$^\dagger$    & 0.792 & 0.702 & 0.617 & 0.703 & 0.964 \\
-THaLLE 8B$^\dagger$       & 0.760 & 0.594 & 0.507 & 0.742 & 0.814 \\
-Typhoon 2.5 30B$^\dagger$ & 0.754 & 0.632 & 0.476 & 0.741 & 0.899 \\
-OpenThaiGPT v7.2$^\dagger$& 0.753 & 0.476 & 0.463 & 0.725 & 0.901 \\
-MiniMax-M2.7              & 0.749 & 0.720 & 0.471 & 0.720 & 0.970 \\
-Qwen3.6-35B-A3B           & 0.709 & 0.384 & 0.310 & 0.588 & 0.838 \\
+GPT-5.5 (high)            & \textbf{0.981} & \textbf{0.966} & \tie{0.855} & \tie{0.862} & 0.971 \\
+GPT-5.5 (med)             & \tie{0.978} & 0.953 & \tie{0.857} & \tie{0.862} & 0.973 \\
+Claude Opus 4.7           & \tie{0.975} & \tie{0.948} & \tie{0.853} & \tie{0.885} & 0.976 \\
+Gemini 3.5 Flash          & 0.975 & \tie{0.960} & 0.825 & \tie{0.871} & 0.963 \\
+Gemma-4-31B               & 0.961 & \tie{0.954} & \textbf{0.898} & \textbf{0.925} & 0.984 \\
+GPT-5.4-mini              & 0.959 & 0.915 & \tie{0.865} & \tie{0.924} & \textbf{0.990} \\
+Claude Sonnet 4.6         & 0.957 & 0.905 & 0.825 & \tie{0.898} & 0.974 \\
+DeepSeek V4 Flash         & 0.956 & \tie{0.945} & 0.840 & \tie{0.854} & 0.971 \\
+DeepSeek V4 Pro           & 0.939 & 0.926 & 0.754 & 0.850 & 0.958 \\
+GLM-5.1                   & 0.856 & 0.811 & 0.657 & 0.795 & 0.954 \\
+Typhoon-S 8B$^\dagger$    & 0.792 & 0.702 & 0.617 & 0.708 & 0.964 \\
+THaLLE 8B$^\dagger$       & 0.760 & 0.594 & 0.507 & 0.744 & 0.814 \\
+Typhoon 2.5 30B$^\dagger$ & 0.754 & 0.632 & 0.476 & 0.753 & 0.899 \\
+OpenThaiGPT v7.2$^\dagger$& 0.753 & 0.476 & 0.463 & 0.722 & 0.901 \\
+MiniMax-M2.7              & 0.749 & 0.720 & 0.471 & 0.725 & 0.970 \\
+Qwen3.6-35B-A3B           & 0.709 & 0.384 & 0.310 & 0.589 & 0.838 \\
 \bottomrule
 \end{tabular}
 \caption{Correction F1 by tier and on the natural-error set (Nat.), and T3 clean-sentence
@@ -326,11 +326,11 @@ Thai-adapted.}
 
 \subsection{Where models fail: finding versus fixing}
 \label{sec:detection}
-We decompose every gold edit into \textbf{fixed}, \textbf{miscorrected} (the system edits
-exactly the gold span but with a different replacement), and \textbf{missed} (no system edit
-matches the gold span). Pooled over all 16 models, 0.872 of T1 gold edits are fixed, only 0.006
-are miscorrected, and 0.122 are missed. The shares are 0.821, 0.005, and 0.173 at T3 and 0.815,
-0.006, and 0.178 on natural errors (Section~\ref{sec:natural}), and no single model's
+We decompose every gold edit into \textbf{fixed}, \textbf{miscorrected} (the model edits
+exactly the gold span but with a different replacement), and \textbf{missed} (no model edit
+matches the gold span). Pooled over all 16 models, 0.873 of T1 gold edits are fixed, only 0.006
+are miscorrected, and 0.122 are missed. The shares are 0.826, 0.005, and 0.168 at T3 and 0.820,
+0.006, and 0.175 on natural errors (Section~\ref{sec:natural}), and no single model's
 miscorrected share exceeds 0.032 on T1 (Table~\ref{tab:decomp}, Appendix~\ref{app:results}). The
 pattern holds within every mechanism class, including the hardest (loanword: miscorrected 0.003
 against missed 0.186). A model that rewrites a wider region around an error is scored as
@@ -344,32 +344,32 @@ dense, interacting errors is open (Limitations).
 
 \subsection{Length robustness}
 \label{sec:length}
-Sentence-tier scores largely predict the page-tier ranking (Spearman $\rho = 0.91$), but the
+Sentence-tier scores largely predict the page-tier ranking (Spearman $\rho = 0.90$), but the
 \textbf{drop from T1 to T3} differs widely between models (Figure~\ref{fig:degradation}a). The
-frontier loses only 0.09 to 0.15 correction F1 (GPT-5.5-med $0.978{\to}0.866$) and Gemma-4 only
+frontier loses only 0.09 to 0.15 correction F1 (GPT-5.5-med $0.978{\to}0.857$) and Gemma-4 only
 0.06 ($0.961{\to}0.898$), while Typhoon~2.5 and Qwen lose 0.28 and 0.40 ($0.754{\to}0.476$ and
 $0.709{\to}0.310$). Measured per 10{,}000 clean TCCs, the over-edit rate is lower at T3 than at
 T1 for 15 of the 16 models (Figure~\ref{fig:degradation}b), although it rises from T2 to T3 for 11 of
 them, so over-edits per passage grow mainly with the amount of correct text. What separates models is the
-\emph{level} of that rate: Typhoon~2.5, OpenThaiGPT, and Qwen over-edit at 4 to 35 times the
+\emph{level} of that rate: Typhoon~2.5, OpenThaiGPT, and Qwen over-edit at 4 to 30 times the
 rate of GPT-5.5 (med) at every tier (Appendix~\ref{app:results}). Clean-sentence
 \textbf{fidelity} agrees: the frontier holds at or above 0.95, while the heaviest over-editors sit
 at 0.77 to 0.90. These results suggest that \textbf{over-editing and missing reflect the same
 weak discrimination}. At T3, even the frontier models are
-limited more by over-editing than by detection: they fix 0.94 to 0.98 of gold edits, but their
-precision is 0.71 to 0.80 (GPT-5.4-mini, with recall 0.85 and precision 0.88, is the exception).
+limited more by over-editing than by detection: they fix 0.95 to 0.98 of gold edits, but their
+precision is 0.71 to 0.76 (GPT-5.4-mini, with recall 0.85 and precision 0.88, is the exception).
 
 \subsection{Per-mechanism difficulty}
-The edit-typer types the system's edits as well as the gold's, so it gives span recall,
+The edit-typer types the model's edits as well as the gold's, so it gives span recall,
 precision, and F0.5 for every mechanism and model (F0.5 in Figure~\ref{fig:classes}; recall and
 precision in Table~\ref{tab:classes}). At the sentence level most cells are above 0.9, and the weak cells
 belong to particular models. The four Thai-adapted models and MiniMax find only 0.33 to 0.71 of
-loanword errors, against 0.95 to 1.00 for the nine systems above GLM-5.1 in
+loanword errors, against 0.95 to 1.00 for the nine models above GLM-5.1 in
 Table~\ref{tab:main}. Cluster edits (class~5: reordered, doubled, or inserted letters, and other
 consonant changes)
 have the lowest precision for 12 of the 16 models. At page length the weakness is shared: tone
 marks (class~1) or clusters are the weakest class for 14 of the 16 models. Their median precision
-falls from 0.93 and 0.91 at T1 to 0.73 and 0.74 at T3, while median recall falls only from 0.93
+falls from 0.93 and 0.91 at T1 to 0.73 and 0.73 at T3, while median recall falls only from 0.93
 and 0.95 to 0.88 and 0.89: in long text, models mostly change tone marks and consonants in
 correct words rather than miss errors of these types. For GPT-5.5 (high), most such edits
 respell loanwords to the Royal Institute standard, formalize informal words, or fix typos left in
@@ -386,16 +386,16 @@ cluster, 6 loanword. $\dagger$ $=$ Thai-adapted.}
 
 \subsection{Natural errors}
 \label{sec:natural}
-We evaluate all 16 systems on the mined cleanup-bot items, each a real error in its original
-encyclopedic sentence. The consensus audit of Section~\ref{sec:qc} removes 16 of the 103 items,
-where the agreeing systems correct more than the recorded bot fix does (Appendix~\ref{app:natural}). On the remaining 87 items, mean correction
-F1 is 0.81 against 0.88 on T1, and the system ranking transfers (Spearman $\rho = 0.87$ with T1;
+We evaluate all 16 models on the mined cleanup-bot items, each a real error in its original
+encyclopedic sentence. The consensus audit of Section~\ref{sec:qc} removes 17 of the 103 items,
+where the agreeing models correct more than the recorded bot fix does (Appendix~\ref{app:natural}). On the remaining 86 items, mean correction
+F1 is 0.81 against 0.88 on T1, and the model ranking transfers (Spearman $\rho = 0.81$ with T1;
 Table~\ref{tab:main}).
 
 \section{Conclusion}
 We presented ThaiEditBench, a mechanism-typed, length-stratified benchmark for Thai spelling
 correction. Across 16 models, \textbf{detection} rather than the choice of spelling separates
-systems, and weaker models accumulate over-edits in long text.
+models, and weaker models accumulate over-edits in long text.
 
 \section*{Limitations}
 \textbf{Sparse error density (primary).} The long tiers (T2 and T3) are deliberately sparse,
@@ -408,13 +408,13 @@ important next step.
 
 \textbf{A fixed inventory of attested errors.} Every injected error comes from 1{,}044 attested
 pairs, each mapping one wrong form to one correct form. The benchmark therefore does not cover
-misspellings outside the inventory, and a system that consulted the released inventory would be
-answering a different, tool-augmented question; all systems are evaluated zero-shot without it.
+misspellings outside the inventory, and a model that consulted the released inventory would be
+answering a different, tool-augmented question; all models are evaluated zero-shot without it.
 The class mix follows the distribution of attested misspelling types, not the frequency of
 errors in running text.
 
-\textbf{Scope of the natural-error check.} The audited natural set has 87 items from one
-cleanup bot in one register, with only 7 loanword and 5 class-5 edits, so it
+\textbf{Scope of the natural-error check.} The audited natural set has 86 items from one
+cleanup bot in one register, with only 6 loanword and 4 class-5 edits, so it
 supports the ranking and the decomposition but not per-class conclusions; loanword behaviour is
 measured mainly on injected errors. The audit relies on cross-model consensus, and the bot's fix
 is taken as gold, so the natural gold is less certain than the construction gold of the tiers.
@@ -422,12 +422,12 @@ A larger, naturally distributed test set, which the released mining pipeline sup
 main way to strengthen this check.
 
 \textbf{Source spellings in the gold.} The gold keeps the clean source as written, including
-common spellings outside the Royal Institute standard, such as many loanwords. A system that
+common spellings outside the Royal Institute standard, such as many loanwords. A model that
 respells these words, or fixes a source typo the consensus audit missed, is scored as
-over-editing. The audit needs several systems to return the same whole passage, so it catches
+over-editing. The audit needs several models to return the same whole passage, so it catches
 fewer source typos in long passages; for GPT-5.5 (high), most of its unsupported tone and
 cluster edits at page length are of these kinds (Appendix~\ref{app:results}). Conversely, the audit's automatic rule
-drops some items where the systems agree on a register change or on a wrong form
+drops some items where the models agree on a register change or on a wrong form
 (Appendix~\ref{app:qc}). Precision at T2 and T3, and that of the strongest models in particular,
 should be read with this in mind.
 
@@ -437,18 +437,20 @@ whose boundary depends on the absorption convention, and the automatic class mat
 consensus on 35 of 48 items. Per-mechanism results near the class~6 and class~2 boundaries
 should be read with this uncertainty.
 
-\textbf{Configured-system comparison.} Each system is evaluated under one fixed configuration
+\textbf{Configured-model comparison.} Each model is evaluated under one fixed configuration
 and one fixed Thai prompt. Reasoning modes, token budgets, provider defaults, serving stacks,
-and model scale are not controlled, so the leaderboard reflects configured-system behaviour
-rather than an intrinsic ranking of base-model capability. A prompt ablation on two systems
+and model scale are not controlled, so the leaderboard reflects configured-model behaviour
+rather than an intrinsic ranking of base-model capability. A prompt ablation on two models
 shifts correction F1 by at most 0.07 without reordering them (Appendix~\ref{app:prompt}), but
-we do not sweep prompts across all systems. A reply that exhausts its token budget is empty and
+we do not sweep prompts across all models. A reply that exhausts its token budget is empty and
 scored as the unchanged input, so its errors count as missed. This affects 110 of 774 T1 items
 for GLM-5.1, 91 for MiniMax, and 55 for Qwen, and 51 of 122 T3 items for MiniMax; empty replies
-account for 18\% of missed edits at T1 and 29\% at T3. For these systems, a low score partly
+account for 18\% of missed edits at T1 and 27\% at T3. For these models, a low score partly
 reflects failure to deliver an answer rather than failure to detect errors, and excluding empty
-replies, untouched errors outnumber wrong fixes four to one rather than five to one.
-Appendix~\ref{app:prompt} covers server errors and THaLLE's partial replies.
+replies, untouched errors outnumber wrong fixes four to one rather than five to one. Budgets
+also differ: GPT-5.5 runs with 3k or 6k tokens against 24k for the open reasoning models; its
+22 replies that exhausted that budget (11 of them on T3) were rerun with 24k tokens. Appendix~\ref{app:prompt} covers server errors and THaLLE's
+partial replies.
 
 \section*{Acknowledgments}
 We thank Pachaya Sailamul for help with the annotation study.
@@ -501,10 +503,10 @@ an item's source carries such a residual typo, the gold inherits it, so a model 
 \emph{that} genuinely wrong span is unfairly scored as a miss or an over-edit. We find and remove
 such items with a cross-model consensus audit.
 
-\textbf{Cross-model consensus audit.} For every item we pool the systems' full outputs
+\textbf{Cross-model consensus audit.} For every item we pool the models' full outputs
 (Unicode-normalized and variant-reconciled) and look for a \emph{consensus} output: the most
 common output other than the gold, compared as the whole passage (an empty reply counts as the unchanged input), if it comes from
-at least $k{=}3$ systems and from at least as many systems
+at least $k{=}3$ models and from at least as many models
 as reproduce the gold. Each flagged item falls into one of three cases.
 (i)~If the consensus equals the corrupted input, or makes some of the gold corrections and no
 other change, this is a \emph{shared miss}: the gold is correct, and we \textbf{keep} the item.
@@ -517,13 +519,13 @@ input keeps shared misses from being taken for gold defects. The same automatic 
 to all three tiers and removed 45 (T1), 26 (T2), and 28 (T3) items.
 
 \textbf{What the rule also drops.} The rule cannot tell a source typo from an accepted variant or
-a register change outside the variant map, so it also drops items where the systems agree on such
+a register change outside the variant map, so it also drops items where the models agree on such
 a change, for example วิกฤติ$\to$วิกฤต, the informal word เท่าไหร่, and
 informal-to-formal rewordings such as มั้ย$\to$ไหม and วันนึง$\to$วันหนึ่ง. It also drops six T1
-items whose gold is correct, where the systems agree on a wrong fix of the injected error
+items whose gold is correct, where the models agree on a wrong fix of the injected error
 (เคารวะ$\to$เคารพ for คารวะ twice, ขวาญ$\to$ขวัญ for ขวาน, and มั๊ย$\to$มั้ย for ไหม twice) or
 change นะคะ to the common misspelling นะค่ะ; dropping them slightly lowers the measured
-miscorrection rate. For 24 of the 45 dropped T1 items, only nine systems have outputs (GPT-5.5
+miscorrection rate. For 24 of the 45 dropped T1 items, only nine models have outputs (GPT-5.5
 med and high, GPT-5.4-mini, Gemini~3.5 Flash, Claude Sonnet~4.6, DeepSeek~V4 Pro and Flash,
 GLM-5.1, and Typhoon~2.5), plus MiniMax for 17 of them; applied to these outputs, the rule drops
 all 24, including one whose source sentence itself lacks a
@@ -572,7 +574,7 @@ between the continuation and the true second half, ignoring whitespace, divided 
 the true second half. The mean score is 0.003 (news), 0.004 (government press releases), 0.012
 (Wikipedia), and 0.017 (Thai Constitution text, used only in the train split), and no sentence
 scores 0.5 or more. The probe uses a single model, so it does not measure memorization by the
-other systems directly. Items that share a clean sentence are then kept together as one group,
+other models directly. Items that share a clean sentence are then kept together as one group,
 and groups are assigned to splits class by class (by the class of the group's first item): within
 each class, groups are shuffled with a fixed seed and ordered by their source's mean score, and
 the lowest-scoring 34\% (mined groups first) form the held-out test split, followed by the public
@@ -630,11 +632,11 @@ license (code), consistent with the permissive redistribution terms of the sourc
 \toprule
 model & T1 det & T1 corr & T1 span-F0.5 & T2 corr & T2 fidelity & T3 corr & T3 fidelity \\
 \midrule
-GPT-5.5 (high)        & \textbf{0.980} & \textbf{0.980} & \textbf{0.972} & \textbf{0.968} & \textbf{0.990} & 0.862 & 0.977 \\
-GPT-5.5 (med)         & 0.978 & 0.978 & 0.969 & 0.954 & 0.983 & 0.866 & 0.977 \\
+GPT-5.5 (high)        & \textbf{0.981} & \textbf{0.981} & \textbf{0.972} & \textbf{0.966} & \textbf{0.988} & 0.855 & 0.971 \\
+GPT-5.5 (med)         & 0.978 & 0.978 & 0.969 & 0.953 & 0.982 & 0.857 & 0.973 \\
 Claude Opus 4.7       & 0.977 & 0.975 & 0.964 & 0.948 & 0.986 & 0.853 & 0.976 \\
 Gemini 3.5 Flash      & 0.977 & 0.975 & 0.965 & 0.960 & 0.983 & 0.825 & 0.963 \\
-Gemma-4-31B           & 0.964 & 0.961 & 0.960 & 0.954 & 0.988 & \textbf{0.898} & 0.984 \\
+Gemma-4-31B           & 0.964 & 0.961 & 0.960 & 0.954 & \textbf{0.988} & \textbf{0.898} & 0.984 \\
 GPT-5.4-mini          & 0.967 & 0.959 & 0.963 & 0.915 & 0.986 & 0.865 & \textbf{0.990} \\
 Claude Sonnet 4.6     & 0.959 & 0.957 & 0.950 & 0.905 & 0.977 & 0.825 & 0.974 \\
 DeepSeek V4 Flash     & 0.959 & 0.956 & 0.950 & 0.945 & 0.986 & 0.840 & 0.971 \\
@@ -650,7 +652,7 @@ Qwen3.6-35B-A3B       & 0.725 & 0.709 & 0.656 & 0.384 & 0.776 & 0.310 & 0.838 \\
 \end{tabular}
 \caption{Full leaderboard: detection and correction F1, span-F0.5 from the edit-typer, and
 clean-sentence fidelity across the three length tiers. \textbf{Bold} $=$ column best;
-$\dagger$ $=$ Thai-adapted. Table~\ref{tab:main} marks which systems are statistically tied with
+$\dagger$ $=$ Thai-adapted. Table~\ref{tab:main} marks which models are statistically tied with
 the best correction F1 in each tier. Table~\ref{tab:ci} gives the confidence intervals, and
 Table~\ref{tab:classes} the per-class results.}
 \label{tab:leaderboard}
@@ -674,8 +676,8 @@ times the frontier's per-unit rate at every tier.}
 \toprule
 model & T1 & T2 & T3 \\
 \midrule
-GPT-5.5 (high)            & [0.973, 0.987] & [0.950, 0.983] & [0.809, 0.910] \\
-GPT-5.5 (med)             & [0.972, 0.985] & [0.933, 0.973] & [0.819, 0.911] \\
+GPT-5.5 (high)            & [0.975, 0.988] & [0.947, 0.982] & [0.803, 0.904] \\
+GPT-5.5 (med)             & [0.972, 0.985] & [0.930, 0.972] & [0.804, 0.907] \\
 Claude Opus 4.7           & [0.966, 0.983] & [0.924, 0.970] & [0.783, 0.918] \\
 Gemini 3.5 Flash          & [0.966, 0.984] & [0.942, 0.977] & [0.764, 0.883] \\
 Gemma-4-31B               & [0.951, 0.971] & [0.931, 0.974] & [0.859, 0.934] \\
@@ -703,14 +705,14 @@ resamples). $\dagger$ $=$ Thai-adapted.}
 \toprule
 model & fixed & miscorrected & missed \\
 \midrule
-GPT-5.5 (high)   & 0.995 & 0.000 & 0.005 \\
+GPT-5.5 (high)   & 0.997 & 0.000 & 0.003 \\
 Gemma-4-31B      & 0.963 & 0.002 & 0.034 \\
 Qwen3.6-35B-A3B  & 0.819 & 0.018 & 0.163 \\
 Typhoon 2.5 30B  & 0.775 & 0.032 & 0.192 \\
 \midrule
-All 16, T1       & 0.872 & 0.006 & 0.122 \\
-All 16, T3       & 0.821 & 0.005 & 0.173 \\
-All 16, natural  & 0.815 & 0.006 & 0.178 \\
+All 16, T1       & 0.873 & 0.006 & 0.122 \\
+All 16, T3       & 0.826 & 0.005 & 0.168 \\
+All 16, natural  & 0.820 & 0.006 & 0.175 \\
 \bottomrule
 \end{tabular}
 \caption{Gold-edit outcomes (T1 unless stated). The miscorrected share stays near zero
@@ -724,15 +726,15 @@ throughout.}
 \toprule
 class & T1 & T2 & T3 \\
 \midrule
-1 tone mark          & 0.906 & 0.868 & 0.801 \\
-2 consonant-pair     & 0.879 & 0.885 & 0.812 \\
-3 silent-consonant   & 0.887 & 0.865 & 0.800 \\
+1 tone mark          & 0.906 & 0.871 & 0.809 \\
+2 consonant-pair     & 0.879 & 0.887 & 0.822 \\
+3 silent-consonant   & 0.887 & 0.865 & 0.805 \\
 4 vowel              & 0.863 & 0.870 & 0.831 \\
-5 cluster/metathesis & 0.876 & 0.807 & 0.843 \\
-6 loanword           & 0.810 & 0.790 & 0.819 \\
+5 cluster/metathesis & 0.876 & 0.809 & 0.845 \\
+6 loanword           & 0.810 & 0.790 & 0.829 \\
 \midrule
-all classes          & 0.872 & 0.849 & 0.821 \\
-spread (max$-$min)   & 0.096 & 0.096 & 0.042 \\
+all classes          & 0.873 & 0.850 & 0.826 \\
+spread (max$-$min)   & 0.096 & 0.097 & 0.040 \\
 \bottomrule
 \end{tabular}
 \caption{Fraction of gold edits fixed, by mechanism class and tier, pooled over all 16 models
@@ -750,8 +752,8 @@ scored TCC edit spans per item can differ slightly after alignment.}
  & \multicolumn{2}{c}{1} & \multicolumn{2}{c}{2} & \multicolumn{2}{c}{3} & \multicolumn{2}{c}{4} & \multicolumn{2}{c}{5} & \multicolumn{2}{c}{6} & \multicolumn{2}{c}{1} & \multicolumn{2}{c}{2} & \multicolumn{2}{c}{3} & \multicolumn{2}{c}{4} & \multicolumn{2}{c}{5} & \multicolumn{2}{c}{6} \\
 model & R & P & R & P & R & P & R & P & R & P & R & P & R & P & R & P & R & P & R & P & R & P & R & P \\
 \midrule
-GPT-5.5 (high) & .99 & .93 & 1.0 & .99 & 1.0 & .99 & .99 & .98 & .99 & .94 & 1.0 & 1.0 & .91 & .62 & .92 & .96 & .92 & .86 & .97 & .86 & .96 & .79 & .95 & .90 \\
-GPT-5.5 (med) & .99 & .94 & .99 & .99 & 1.0 & .99 & .99 & .96 & 1.0 & .94 & 1.0 & 1.0 & .91 & .63 & .88 & 1.0 & .92 & .86 & .97 & .93 & 1.0 & .76 & .89 & .89 \\
+GPT-5.5 (high) & .99 & .93 & 1.0 & .99 & 1.0 & .99 & .99 & .98 & 1.0 & .94 & 1.0 & 1.0 & .97 & .57 & 1.0 & .96 & .96 & .83 & .97 & .79 & 1.0 & .75 & 1.0 & .90 \\
+GPT-5.5 (med) & .99 & .94 & .99 & .99 & 1.0 & .99 & .99 & .96 & 1.0 & .94 & 1.0 & 1.0 & .97 & .57 & .96 & 1.0 & .96 & .83 & .97 & .84 & 1.0 & .73 & 1.0 & .90 \\
 Claude Opus 4.7 & 1.0 & .97 & .99 & .98 & 1.0 & .99 & 1.0 & .98 & .98 & .97 & .99 & 1.0 & 1.0 & .84 & .92 & .96 & 1.0 & .96 & 1.0 & 1.0 & .98 & .88 & 1.0 & 1.0 \\
 Gemini 3.5 Flash & .99 & .93 & .99 & 1.0 & .99 & .96 & 1.0 & .98 & .99 & .92 & 1.0 & 1.0 & .97 & .52 & .96 & .93 & .92 & .77 & 1.0 & .88 & 1.0 & .67 & 1.0 & .90 \\
 Gemma-4-31B & .95 & .95 & .93 & 1.0 & .97 & .99 & .98 & .97 & .97 & .96 & .98 & 1.0 & .94 & .77 & .96 & 1.0 & .96 & .93 & .95 & .97 & 1.0 & .79 & 1.0 & .90 \\
@@ -797,7 +799,7 @@ labelled by the edit-typer's class (cl.).}
 \textbf{Per-model results by class.} Table~\ref{tab:classes} gives the edit-typer's span recall
 and precision per class for every model (Figure~\ref{fig:classes} shows span-F0.5), and
 Table~\ref{tab:mech} gives the fraction of gold edits fixed per construction class, pooled over
-models. A system edit that matches no gold edit lowers the precision of the class the typer
+models. A model edit that matches no gold edit lowers the precision of the class the typer
 assigns to it; edits that fit no class, such as spacing changes, enter no class, while many
 word-level rewordings fall in class~5, which collects every consonant change outside the class-2
 groups. Loanword
@@ -806,11 +808,10 @@ loan lexicon, so a change that turns a correct loanword into another form is usu
 another class.
 
 \textbf{What GPT-5.5 (high) gets wrong.} GPT-5.5 (high), the best model on T1 and T2, leaves few
-errors unfixed: at T3, 8 of its 11 missed edits fall in the six passages where its reply is empty
-because it exhausts its 6k-token budget, and two of the other three are fixed inside a wider edit. Most of
-its unsupported T3 edits are tone-mark (18) and cluster (14) edits, and on manual inspection only
-3 of these 32 clearly damage the text, by changing a proper name or a correct form. Of the rest,
-16 respell a loanword or foreign name toward the standard of the Royal Society (formerly the
+errors unfixed: it misses 3 of the 195 T3 gold edits, and two of those it fixes inside a wider
+edit. Most of its unsupported T3 edits are tone-mark (23) and cluster (18) edits, and on manual
+inspection only 3 of these 41 clearly damage the text, by changing a proper name or a correct
+form. Of the rest, 25 respell a loanword or foreign name toward the standard of the Royal Society (formerly the
 Royal Institute), which the system prompt names, 5 fix a typo left in the source that the
 consensus audit did not catch, and 8 replace an informal form with the dictionary form
 (นึง$\to$หนึ่ง, เท่าไหร่$\to$เท่าไร). Because the gold keeps the source's spelling, its T3
@@ -827,7 +828,7 @@ class & edits$\times$16 & fixed & miscorr. & missed \\
 2 consonant& 2{,}160 & 0.879 & 0.006 & 0.115 \\
 3 silent-consonant & 2{,}640 & 0.887 & 0.010 & 0.103 \\
 4 vowel    & 2{,}816 & 0.863 & 0.002 & 0.134 \\
-5 cluster  & 3{,}280 & 0.876 & 0.006 & 0.119 \\
+5 cluster  & 3{,}280 & 0.876 & 0.006 & 0.118 \\
 6 loanword & 1{,}920 & 0.810 & 0.003 & 0.186 \\
 \bottomrule
 \end{tabular}
@@ -838,7 +839,7 @@ class & edits$\times$16 & fixed & miscorr. & missed \\
 \toprule
 model & T1 & T2 & T3 \\
 \midrule
-GPT-5.5 (med)    & 5  & 8   & 38  \\
+GPT-5.5 (med)    & 5  & 9   & 49  \\
 Gemma-4-31B      & 5  & 8   & 30  \\
 GLM-5.1          & 8  & 23  & 108 \\
 Typhoon 2.5 30B  & 31 & 81  & 192 \\
@@ -856,7 +857,7 @@ amount of correct text.
 \toprule
 model & T1 & T2 & T3 \\
 \midrule
-GPT-5.5 (med)    & 8.1   & 3.0   & 5.1  \\
+GPT-5.5 (med)    & 8.1   & 3.5   & 6.6  \\
 Gemma-4-31B      & 8.1   & 3.0   & 4.0  \\
 GLM-5.1          & 14.3  & 9.2   & 14.5 \\
 Typhoon 2.5 30B  & 52.4  & 32.1  & 25.7 \\
@@ -865,8 +866,8 @@ Qwen3.6-35B-A3B  & 99.3  & 105.7 & 64.2 \\
 \bottomrule
 \end{tabular}
 \end{center}
-\textbf{Register effect (pooled correction recall, T1/T2/T3).} encyclopedic 0.82/0.79/0.76;
-news 0.88/0.85/0.82; government 0.89/0.90/0.88. Per-model correction recall by construction class is released with
+\textbf{Register effect (pooled correction recall, T1/T2/T3).} encyclopedic 0.82/0.79/0.77;
+news 0.88/0.85/0.83; government 0.89/0.90/0.88. Per-model correction recall by construction class is released with
 the data.
 
 \section{Annotation study}
@@ -919,47 +920,47 @@ therefore sit at the class boundaries fixed by convention rather than at error p
 \label{app:natural}
 The natural set comes from the edit history of a Thai Wikipedia spelling-cleanup bot: 103 items, each a
 real error in its original encyclopedic sentence, with the bot's fix as gold. We apply the consensus
-audit of Section~\ref{sec:qc} with the same rule as the tiers: at least $k = 3$ systems, and at
+audit of Section~\ref{sec:qc} with the same rule as the tiers: at least $k = 3$ models, and at
 least as many as reproduce the gold, must agree on an output that differs from the gold. The audit
 drops such a flagged item unless that output equals the input, differs only in whitespace or punctuation, or is a partial fix on the way
-to the gold. It removes 16 items. In some, the consensus also fixes a second, unmarked error in the
+to the gold. It removes 17 items. In some, the consensus also fixes a second, unmarked error in the
 sentence (for example เพึย$\to$เพีย); in others, the recorded fix is itself incomplete and the
 consensus completes it (ตำ่ recorded as ตำ, น้้า as น้า, and สรา้ง as สราง, where the intended words
-are ต่ำ, น้ำ, and สร้าง). Without the condition that the agreeing systems at least match those reproducing the gold, the
-audit would remove 24 items
-(79 kept; mean correction F1 0.81, $\rho = 0.92$), including one where the systems change a
-correctly spelled film title. The audited set has 87 items with 87 recorded fixes (88 aligned gold edits). Classified without
-the loanword rule, the fixes fall in classes 1: 27, 2: 21, 3: 14, 4: 20, and 5: 5; the edit-typer,
-which applies the rule, types 7 of the 88 gold edits as loanwords. Table~\ref{tab:natural} gives per-model results on the audited
+are ต่ำ, น้ำ, and สร้าง). Without the condition that the agreeing models at least match those reproducing the gold, the
+audit would remove 25 items
+(78 kept; mean correction F1 0.81, $\rho = 0.82$), including one where the models change a
+correctly spelled film title. The audited set has 86 items with 86 recorded fixes (87 aligned gold edits). Classified without
+the loanword rule, the fixes fall in classes 1: 26, 2: 21, 3: 14, 4: 20, and 5: 5; the edit-typer,
+which applies the rule, types 6 of the 87 gold edits as loanwords and 4 as class~5. Table~\ref{tab:natural} gives per-model results on the audited
 set, with correction F1 and the miscorrected share on all 103 items for comparison. On the audited
-set the ranking correlates with the T1 ranking at Spearman $\rho = 0.87$ (Pearson $r = 0.93$); on
-all 103 items, where mean correction F1 is 0.72, mostly because of the 16 dropped items, also at
-$\rho = 0.87$ ($r = 0.93$).
+set the ranking correlates with the T1 ranking at Spearman $\rho = 0.81$ (Pearson $r = 0.93$); on
+all 103 items, where mean correction F1 is 0.71, mostly because of the 17 dropped items, at
+$\rho = 0.80$ ($r = 0.92$).
 
 \begin{table*}[t]
 \centering\small
 \begin{tabular}{@{}lcccccccc@{}}
 \toprule
- & \multicolumn{6}{c}{audited set ($n = 87$)} & \multicolumn{2}{c}{all items ($n = 103$)} \\
+ & \multicolumn{6}{c}{audited set ($n = 86$)} & \multicolumn{2}{c}{all items ($n = 103$)} \\
 \cmidrule(lr){2-7}\cmidrule(l){8-9}
 model & corr F1 & 95\% CI & det F1 & fixed & miscorrected & missed & corr F1 & miscorrected \\
 \midrule
-Gemma-4-31B                 & \textbf{0.926} & [0.879, 0.966] & 0.937 & 0.920 & 0.011 & 0.068 & 0.819 & 0.058 \\
-GPT-5.4-mini                & \tie{0.919} & [0.866, 0.966] & 0.931 & 0.909 & 0.011 & 0.080 & 0.811 & 0.058 \\
-GPT-5.5 (high)              & \tie{0.907} & [0.868, 0.944] & 0.907 & 0.943 & 0.000 & 0.057 & 0.800 & 0.048 \\
-GPT-5.5 (med)               & \tie{0.901} & [0.857, 0.943] & 0.901 & 0.932 & 0.000 & 0.068 & 0.791 & 0.048 \\
-Claude Opus 4.7             & \tie{0.882} & [0.790, 0.954] & 0.882 & 0.932 & 0.000 & 0.068 & 0.791 & 0.038 \\
-Claude Sonnet 4.6           & \tie{0.877} & [0.811, 0.934] & 0.889 & 0.852 & 0.011 & 0.136 & 0.771 & 0.058 \\
-DeepSeek V4 Flash           & 0.851 & [0.765, 0.922] & 0.851 & 0.841 & 0.000 & 0.159 & 0.757 & 0.048 \\
-Gemini 3.5 Flash            & \tie{0.850} & [0.749, 0.944] & 0.850 & 0.966 & 0.000 & 0.034 & 0.757 & 0.038 \\
-DeepSeek V4 Pro             & 0.821 & [0.735, 0.904] & 0.821 & 0.909 & 0.000 & 0.091 & 0.729 & 0.038 \\
-GLM-5.1                     & 0.775 & [0.686, 0.862] & 0.775 & 0.761 & 0.000 & 0.239 & 0.689 & 0.048 \\
-THaLLE 8B$^\dagger$         & 0.742 & [0.658, 0.818] & 0.742 & 0.670 & 0.000 & 0.330 & 0.670 & 0.048 \\
-Typhoon 2.5 30B$^\dagger$   & 0.741 & [0.653, 0.826] & 0.751 & 0.795 & 0.011 & 0.193 & 0.655 & 0.048 \\
-OpenThaiGPT v7.2$^\dagger$    & 0.725 & [0.638, 0.807] & 0.725 & 0.659 & 0.000 & 0.341 & 0.630 & 0.048 \\
-MiniMax-M2.7                & 0.720 & [0.632, 0.797] & 0.720 & 0.614 & 0.000 & 0.386 & 0.663 & 0.038 \\
-Typhoon-S 8B$^\dagger$      & 0.703 & [0.610, 0.784] & 0.717 & 0.580 & 0.011 & 0.409 & 0.626 & 0.038 \\
-Qwen3.6-35B-A3B             & 0.588 & [0.494, 0.680] & 0.623 & 0.761 & 0.045 & 0.193 & 0.544 & 0.067 \\
+Gemma-4-31B                 & \textbf{0.925} & [0.876, 0.966] & 0.936 & 0.919 & 0.011 & 0.069 & 0.819 & 0.058 \\
+GPT-5.4-mini                & \tie{0.924} & [0.871, 0.971] & 0.936 & 0.908 & 0.011 & 0.081 & 0.811 & 0.058 \\
+Claude Sonnet 4.6           & \tie{0.898} & [0.847, 0.942] & 0.898 & 0.862 & 0.000 & 0.138 & 0.771 & 0.058 \\
+Claude Opus 4.7             & \tie{0.885} & [0.790, 0.955] & 0.885 & 0.931 & 0.000 & 0.069 & 0.791 & 0.038 \\
+Gemini 3.5 Flash            & \tie{0.871} & [0.768, 0.955] & 0.871 & 0.966 & 0.000 & 0.035 & 0.757 & 0.038 \\
+GPT-5.5 (high)              & \tie{0.862} & [0.768, 0.939] & 0.862 & 0.966 & 0.000 & 0.035 & 0.751 & 0.048 \\
+GPT-5.5 (med)               & \tie{0.862} & [0.768, 0.941] & 0.862 & 0.966 & 0.000 & 0.035 & 0.760 & 0.048 \\
+DeepSeek V4 Flash           & \tie{0.854} & [0.766, 0.929] & 0.854 & 0.839 & 0.000 & 0.161 & 0.757 & 0.048 \\
+DeepSeek V4 Pro             & 0.850 & [0.778, 0.917] & 0.850 & 0.908 & 0.000 & 0.092 & 0.729 & 0.038 \\
+GLM-5.1                     & 0.795 & [0.708, 0.876] & 0.795 & 0.759 & 0.000 & 0.241 & 0.689 & 0.048 \\
+Typhoon 2.5 30B$^\dagger$   & 0.753 & [0.663, 0.837] & 0.763 & 0.805 & 0.011 & 0.184 & 0.655 & 0.048 \\
+THaLLE 8B$^\dagger$         & 0.744 & [0.657, 0.820] & 0.744 & 0.667 & 0.000 & 0.333 & 0.670 & 0.048 \\
+MiniMax-M2.7                & 0.725 & [0.638, 0.802] & 0.725 & 0.621 & 0.000 & 0.379 & 0.663 & 0.038 \\
+OpenThaiGPT v7.2$^\dagger$  & 0.722 & [0.632, 0.805] & 0.722 & 0.655 & 0.000 & 0.345 & 0.630 & 0.048 \\
+Typhoon-S 8B$^\dagger$      & 0.708 & [0.618, 0.789] & 0.722 & 0.586 & 0.011 & 0.402 & 0.626 & 0.038 \\
+Qwen3.6-35B-A3B             & 0.589 & [0.492, 0.685] & 0.625 & 0.759 & 0.046 & 0.195 & 0.544 & 0.067 \\
 \bottomrule
 \end{tabular}
 \caption{Natural-error evaluation. \textbf{Bold} $=$ best on the audited set; \underline{underlined}
@@ -1008,8 +1009,11 @@ Both variants keep the Thai system message.
 \textbf{Inference.} Temperature is 0 where supported. Claude
 models use the Anthropic Message Batches API in non-thinking mode. GPT-5.x models use the
 Responses API, GPT-5.5 at medium or high reasoning effort with 3k and 6k output-token budgets and
-GPT-5.4-mini at its default effort with a 2k budget. Open reasoning models run
-in native thinking mode with large token budgets, and token-runout counts as a failure. Replies
+GPT-5.4-mini at its default effort with a 2k budget; these budgets include the reasoning, and the 22 GPT-5.5 replies that exhausted them were rerun
+with a 24k budget. Gemini
+3.5 Flash and the open reasoning models run in native thinking mode with 24k-token budgets (8k
+for OpenThaiGPT and THaLLE); the other models run without thinking. Token-runout counts as a
+failure. Replies
 are cleaned by removing reasoning traces and echoed labels, keeping the last non-empty line for T1
 or joining all lines for T2 and T3, and stripping quotation marks at both ends. For the 114 of
 17{,}920 scored replies (0.6\%) whose passage itself begins or ends with a quotation mark, this

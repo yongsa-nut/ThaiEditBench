@@ -10,7 +10,7 @@ Reproducible (`error_analysis.py`); reads canonical post-audit items + available
 
 | model | cov | gold edits | fixed | wrong_corr | missed | over/100 |
 |---|--:|--:|--:|--:|--:|--:|
-| gpt55-high | 100% | 957 | 0.995 | 0.000 | 0.005 | 4.3 |
+| gpt55-high | 100% | 957 | 0.997 | 0.000 | 0.003 | 4.3 |
 | gpt55-med | 100% | 957 | 0.995 | 0.000 | 0.005 | 4.8 |
 | gemini-3.5-flash | 100% | 957 | 0.994 | 0.002 | 0.004 | 5.2 |
 | opus-4.7 | 100% | 957 | 0.993 | 0.002 | 0.005 | 5.2 |
@@ -38,7 +38,7 @@ Splits each class's failures into *detection* (missed) vs *correction* (wrong_co
 | 2 consonant | 2160 | 0.879 | 0.006 | 0.115 |
 | 3 การันต์ | 2640 | 0.887 | 0.010 | 0.103 |
 | 4 vowel | 2816 | 0.863 | 0.002 | 0.134 |
-| 5 cluster | 3280 | 0.876 | 0.006 | 0.119 |
+| 5 cluster | 3280 | 0.876 | 0.006 | 0.118 |
 | 6 loanword | 1920 | 0.810 | 0.003 | 0.186 |
 
 ### Item hardness (16 models scored)
@@ -53,8 +53,8 @@ How many models got each item *sentence-exact*. 0 = universally missed (intrinsi
 | 4/16 | 4 |
 | 5/16 | 5 |
 | 6/16 | 4 |
-| 7/16 | 22 |
-| 8/16 | 11 |
+| 7/16 | 21 |
+| 8/16 | 12 |
 | 9/16 | 30 |
 | 10/16 | 59 |
 | 11/16 | 58 |
@@ -90,7 +90,7 @@ How many models got each item *sentence-exact*. 0 = universally missed (intrinsi
 |---|--:|--:|
 | encyclopedic | 2311/2816 | 0.821 |
 | gov | 6254/7024 | 0.890 |
-| news | 4793/5472 | 0.876 |
+| news | 4795/5472 | 0.876 |
 
 ### Miscorrection examples (right site, wrong fix) — `src · gold · model`
 
@@ -111,10 +111,10 @@ How many models got each item *sentence-exact*. 0 = universally missed (intrinsi
 |---|--:|--:|--:|--:|--:|--:|
 | gemini-3.5-flash | 100% | 278 | 0.989 | 0.000 | 0.011 | 8.9 |
 | opus-4.7 | 100% | 278 | 0.986 | 0.000 | 0.014 | 11.6 |
+| gpt55-high | 100% | 278 | 0.982 | 0.000 | 0.018 | 6.2 |
 | deepseek-v4-pro | 100% | 278 | 0.975 | 0.000 | 0.025 | 16.1 |
-| gpt55-high | 100% | 278 | 0.971 | 0.000 | 0.029 | 4.5 |
+| gpt55-med | 100% | 278 | 0.975 | 0.000 | 0.025 | 8.9 |
 | gemma-4-31b | 100% | 278 | 0.968 | 0.000 | 0.032 | 7.6 |
-| gpt55-med | 100% | 278 | 0.968 | 0.000 | 0.032 | 7.6 |
 | deepseek-flash | 100% | 278 | 0.960 | 0.011 | 0.029 | 7.6 |
 | sonnet-4.6 | 100% | 278 | 0.942 | 0.004 | 0.054 | 17.0 |
 | gpt54-mini | 100% | 278 | 0.914 | 0.014 | 0.072 | 8.5 |
@@ -132,11 +132,11 @@ Splits each class's failures into *detection* (missed) vs *correction* (wrong_co
 
 | class | gold edits | fixed | wrong_corr | missed |
 |---|--:|--:|--:|--:|
-| 1 tone | 672 | 0.868 | 0.015 | 0.118 |
-| 2 consonant | 592 | 0.885 | 0.000 | 0.115 |
+| 1 tone | 672 | 0.871 | 0.015 | 0.115 |
+| 2 consonant | 592 | 0.887 | 0.000 | 0.113 |
 | 3 การันต์ | 864 | 0.865 | 0.008 | 0.127 |
 | 4 vowel | 960 | 0.870 | 0.001 | 0.129 |
-| 5 cluster | 880 | 0.807 | 0.007 | 0.186 |
+| 5 cluster | 880 | 0.809 | 0.007 | 0.184 |
 | 6 loanword | 480 | 0.790 | 0.010 | 0.200 |
 
 ### Item hardness (16 models scored)
@@ -175,18 +175,18 @@ How many models got each item *sentence-exact*. 0 = universally missed (intrinsi
 | ∅→ข้อความ:  | 14 |
 | “→∅ | 11 |
 | 2→  | 9 |
+| กะ→ก | 7 |
 |  →- | 7 |
 | -→– | 7 |
 | ลิ→ลี | 6 |
-| กษ→กษ์ | 6 |
 
 ### Register effect (pooled correction recall)
 
 | register | fixed/total | recall |
 |---|--:|--:|
-| encyclopedic | 971/1232 | 0.788 |
+| encyclopedic | 972/1232 | 0.789 |
 | gov | 1461/1632 | 0.895 |
-| news | 1346/1584 | 0.850 |
+| news | 1350/1584 | 0.852 |
 
 ### Miscorrection examples (right site, wrong fix) — `src · gold · model`
 
@@ -204,13 +204,13 @@ How many models got each item *sentence-exact*. 0 = universally missed (intrinsi
 
 | model | cov | gold edits | fixed | wrong_corr | missed | over/100 |
 |---|--:|--:|--:|--:|--:|--:|
+| gpt55-high | 100% | 195 | 0.985 | 0.000 | 0.015 | 50.8 |
 | opus-4.7 | 100% | 195 | 0.985 | 0.000 | 0.015 | 51.6 |
 | gemini-3.5-flash | 100% | 195 | 0.979 | 0.005 | 0.015 | 62.3 |
+| gpt55-med | 100% | 195 | 0.979 | 0.000 | 0.021 | 49.2 |
 | gemma-4-31b | 100% | 195 | 0.969 | 0.005 | 0.026 | 29.5 |
 | deepseek-flash | 100% | 195 | 0.954 | 0.005 | 0.041 | 50.0 |
 | sonnet-4.6 | 100% | 195 | 0.954 | 0.000 | 0.046 | 57.4 |
-| gpt55-high | 100% | 195 | 0.944 | 0.000 | 0.056 | 39.3 |
-| gpt55-med | 100% | 195 | 0.944 | 0.000 | 0.056 | 37.7 |
 | deepseek-v4-pro | 100% | 195 | 0.903 | 0.000 | 0.097 | 78.7 |
 | gpt54-mini | 100% | 195 | 0.851 | 0.010 | 0.138 | 17.2 |
 | glm-5.1 | 100% | 195 | 0.826 | 0.010 | 0.164 | 108.2 |
@@ -227,12 +227,12 @@ Splits each class's failures into *detection* (missed) vs *correction* (wrong_co
 
 | class | gold edits | fixed | wrong_corr | missed |
 |---|--:|--:|--:|--:|
-| 1 tone | 512 | 0.801 | 0.018 | 0.182 |
-| 2 consonant | 416 | 0.812 | 0.010 | 0.178 |
-| 3 การันต์ | 416 | 0.800 | 0.000 | 0.200 |
+| 1 tone | 512 | 0.809 | 0.018 | 0.174 |
+| 2 consonant | 416 | 0.822 | 0.010 | 0.168 |
+| 3 การันต์ | 416 | 0.805 | 0.000 | 0.195 |
 | 4 vowel | 608 | 0.831 | 0.002 | 0.168 |
-| 5 cluster | 864 | 0.843 | 0.003 | 0.154 |
-| 6 loanword | 304 | 0.819 | 0.000 | 0.181 |
+| 5 cluster | 864 | 0.845 | 0.003 | 0.152 |
+| 6 loanword | 304 | 0.829 | 0.000 | 0.171 |
 
 ### Item hardness (16 models scored)
 
@@ -246,10 +246,10 @@ How many models got each item *sentence-exact*. 0 = universally missed (intrinsi
 | 4/16 | 8 |
 | 5/16 | 8 |
 | 6/16 | 6 |
-| 7/16 | 8 |
-| 8/16 | 8 |
-| 9/16 | 21 |
-| 10/16 | 13 |
+| 7/16 | 7 |
+| 8/16 | 9 |
+| 9/16 | 20 |
+| 10/16 | 14 |
 | 11/16 | 8 |
 | 12/16 | 18 |
 | 13/16 | 7 |
@@ -270,19 +270,19 @@ How many models got each item *sentence-exact*. 0 = universally missed (intrinsi
 | ​→∅ | 31 |
 | เอม→เอ็ม | 26 |
 | นึง→หนึ่ง | 22 |
+| ค→ก | 17 |
 | ชั่น→ชัน | 17 |
-| ค→ก | 15 |
-| ท→ต | 14 |
+| ท→ต | 15 |
 | ∅→ พ.ศ. | 14 |
-| ห้→หั | 10 |
+| รี่→รี | 13 |
 
 ### Register effect (pooled correction recall)
 
 | register | fixed/total | recall |
 |---|--:|--:|
-| encyclopedic | 713/944 | 0.755 |
+| encyclopedic | 726/944 | 0.769 |
 | gov | 953/1088 | 0.876 |
-| news | 897/1088 | 0.824 |
+| news | 899/1088 | 0.826 |
 
 ### Miscorrection examples (right site, wrong fix) — `src · gold · model`
 
