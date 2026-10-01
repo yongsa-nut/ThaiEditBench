@@ -26,8 +26,8 @@
   "gold_edits": 88,
   "best": "gemma-4-31b",
   "mean_f1": 0.8079,
-  "spearman_t1": 0.8765,
-  "pearson_t1": 0.928,
+  "spearman_t1": 0.8706,
+  "pearson_t1": 0.9318,
   "pooled_decomp": {
    "fixed": 0.8154,
    "wrong_corr": 0.0064,
@@ -282,8 +282,8 @@
   "gold_edits": 104,
   "best": "gemma-4-31b",
   "mean_f1": 0.719,
-  "spearman_t1": 0.8756,
-  "pearson_t1": 0.931,
+  "spearman_t1": 0.8742,
+  "pearson_t1": 0.9338,
   "pooled_decomp": {
    "fixed": 0.7524,
    "wrong_corr": 0.0481,

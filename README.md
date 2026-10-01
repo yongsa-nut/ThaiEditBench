@@ -26,7 +26,7 @@ them is *detection*; (2) the evaluated Thai-specialized models do not lead the
 strongest general models; and (3) long, mostly-correct context exposes
 **over-edit accumulation** and clean-text fidelity failures that sentence-level
 evaluation hides. On real errors mined from Wikipedia edit history, the model
-ranking transfers (Spearman ρ = 0.92 with the sentence tier).
+ranking transfers (Spearman ρ = 0.87 with the sentence tier).
 
 **Paper:** Nutchanon Yongsatianchot, Piyalitt Ittichaiwong, and Kanyakorn
 Veerakanjana. *ThaiEditBench: A Mechanism-Typed, Length-Stratified Benchmark for
@@ -149,7 +149,7 @@ Run `python run_editing.py --help` for the full model registry and flags
 |---|---|--:|---|
 | train | `data/items_train.jsonl` | 249 | synthetic |
 | dev | `data/items_dev.jsonl` | 606 | synthetic |
-| **test (public, T1)** | `data/items_test_public.jsonl` | 795 | sentence tier |
+| **test (public, T1)** | `data/items_test_public.jsonl` | 774 | sentence tier |
 | held-out test | `data/items_test_private.jsonl` | 868 | synthetic + 40 mined; lowest memorization; not evaluated in the paper |
 | **natural errors** | `data/items_wiki.jsonl` | 103 | real errors mined from Wikipedia; 87 after the consensus audit |
 | **T2 paragraph** | `data/items_t2.jsonl` | 224 | multi-sentence |

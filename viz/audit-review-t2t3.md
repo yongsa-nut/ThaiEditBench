@@ -1,9 +1,9 @@
-# T2/T3 Gold Audit — Residual Source-Typo Candidates (review before drop)
+# T2/T3 consensus-audit report
 
-Shared-misses (gold OK) and punct-only over-edits (gold OK) already excluded.
-Each item: **N models** converged on a correction the gold lacks (N vs gold-votes).
-⚠ = **register-norm** or **loanword variant** → gold is acceptable, **KEEP**.
-Everything else = likely **real residual source typo** → drop. `⟦gold→cons⟧` = differing span + context.
+Flagged items whose consensus equals the input or differs from the gold only in punctuation are kept and not listed.
+Each listed item: **N systems** agree on an output the gold lacks (N vs systems returning the gold).
+Items marked KEEP are partial fixes toward the gold; every other listed item is dropped by the audit rule.
+`⟦gold→cons⟧` = differing span + context.
 
 ## T3 page — 31 candidates (of 150)  [full models=16]
 

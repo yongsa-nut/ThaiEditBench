@@ -1,31 +1,30 @@
 {
   "T1": {
     "deepseek-flash": {
-      "graded": 795,
+      "graded": 774,
       "coverage": 1.0,
       "n_errors": 0,
       "outcomes": {
-        "fixed": 945,
-        "missed": 32,
-        "wrong_corr": 5
+        "fixed": 924,
+        "missed": 30,
+        "wrong_corr": 3
       },
-      "gold_edits": 982,
-      "over_edits": 63,
-      "clean_tcc": 46921,
+      "gold_edits": 957,
+      "over_edits": 50,
+      "clean_tcc": 45601,
       "per_class": {
         "4": {
-          "fixed": 179,
+          "fixed": 174,
           "missed": 2
         },
         "2": {
-          "fixed": 134,
+          "fixed": 132,
           "missed": 2,
           "wrong_corr": 1
         },
         "5": {
-          "fixed": 198,
-          "missed": 12,
-          "wrong_corr": 2
+          "fixed": 194,
+          "missed": 11
         },
         "3": {
           "fixed": 159,
@@ -33,12 +32,12 @@
           "missed": 4
         },
         "6": {
-          "fixed": 122,
+          "fixed": 119,
           "missed": 1
         },
         "1": {
-          "fixed": 152,
-          "missed": 11
+          "fixed": 145,
+          "missed": 10
         },
         "0": {
           "fixed": 1
@@ -46,23 +45,15 @@
       },
       "over_cat": [
         [
-          "“→∅",
-          4
-        ],
-        [
           "ฮอ→โฮ",
           3
         ],
         [
-          "มั้ย→ไหม",
+          "“→∅",
           3
         ],
         [
           ") →∅",
-          2
-        ],
-        [
-          "ค→ก",
           2
         ],
         [
@@ -74,11 +65,11 @@
           2
         ],
         [
-          "ดูดดื่ม→ดื่มด่ำ",
+          "มั้ย→ไหม",
           2
         ],
         [
-          "ซ→ส",
+          "ดูดดื่ม→ดื่มด่ำ",
           2
         ],
         [
@@ -114,70 +105,78 @@
           1
         ],
         [
-          "น่า→นา",
-          1
-        ],
-        [
-          "น→∅",
-          1
-        ],
-        [
           "…→∅",
+          1
+        ],
+        [
+          "รึ→หรือ",
+          1
+        ],
+        [
+          "ค→ก",
+          1
+        ],
+        [
+          "ดา→ดะ",
+          1
+        ],
+        [
+          "∅→ข",
           1
         ]
       ],
       "by_register": {
         "gov": [
-          437,
-          445
+          431,
+          439
         ],
         "news": [
-          333,
-          356
+          322,
+          342
         ],
         "encyclopedic": [
-          175,
-          181
+          171,
+          176
         ]
       }
     },
     "deepseek-v4-pro": {
-      "graded": 795,
+      "graded": 774,
       "coverage": 1.0,
       "n_errors": 0,
       "outcomes": {
-        "fixed": 937,
-        "missed": 43,
-        "wrong_corr": 2
+        "fixed": 919,
+        "missed": 37,
+        "wrong_corr": 1
       },
-      "gold_edits": 982,
-      "over_edits": 102,
-      "clean_tcc": 46921,
+      "gold_edits": 957,
+      "over_edits": 80,
+      "clean_tcc": 45601,
       "per_class": {
         "4": {
-          "fixed": 175,
-          "missed": 6
+          "fixed": 172,
+          "missed": 4
         },
         "2": {
-          "fixed": 128,
+          "fixed": 126,
           "missed": 9
         },
         "5": {
-          "fixed": 201,
-          "missed": 11
+          "fixed": 196,
+          "missed": 9
         },
         "3": {
           "fixed": 160,
           "missed": 5
         },
         "6": {
-          "fixed": 120,
+          "fixed": 117,
           "missed": 3
         },
         "1": {
-          "fixed": 152,
-          "wrong_corr": 2,
-          "missed": 9
+          "fixed": 147,
+          "missed": 7,
+          "wrong_corr": 1
         },
         "0": {
           "fixed": 1
@@ -194,10 +193,6 @@
         ],
         [
           "“→∅",
-          4
-        ],
-        [
-          "มั้ย→ไหม",
           3
         ],
         [
@@ -205,11 +200,11 @@
           2
         ],
         [
-          "ไหร่→ไร",
+          "มั้ย→ไหม",
           2
         ],
         [
-          "วะ→พ",
+          "ไหร่→ไร",
           2
         ],
         [
@@ -221,15 +216,7 @@
           2
         ],
         [
-          "นึง→หนึ่ง",
-          2
-        ],
-        [
           "รึ→หรือ",
-          2
-        ],
-        [
-          "ธ→ท",
           2
         ],
         [
@@ -249,60 +236,72 @@
           1
         ],
         [
-          "ฟู→ฟิว",
-          1
-        ],
-        [
-          "ค→ก",
-          1
-        ],
-        [
           "ด้วย→∅",
           1
         ],
         [
           "พากษ์→พาก",
           1
+        ],
+        [
+          "แม→เม",
+          1
+        ],
+        [
+          "ลัง→เลเยฟ",
+          1
+        ],
+        [
+          "รุก→เร่ง",
+          1
+        ],
+        [
+          "เซปต์→เซ็ปต์",
+          1
+        ],
+        [
+          "เห้→เฮ้",
+          1
         ]
       ],
       "by_register": {
         "gov": [
-          434,
-          445
+          430,
+          439
         ],
         "news": [
-          330,
-          356
+          320,
+          342
         ],
         "encyclopedic": [
-          173,
-          181
+          169,
+          176
         ]
       }
     },
     "gemini-3.5-flash": {
-      "graded": 795,
+      "graded": 774,
       "coverage": 1.0,
       "n_errors": 0,
       "outcomes": {
-        "fixed": 972,
-        "missed": 6,
-        "wrong_corr": 4
+        "fixed": 951,
+        "missed": 4,
+        "wrong_corr": 2
       },
-      "gold_edits": 982,
-      "over_edits": 56,
-      "clean_tcc": 46921,
+      "gold_edits": 957,
+      "over_edits": 40,
+      "clean_tcc": 45601,
       "per_class": {
         "4": {
-          "fixed": 181
+          "fixed": 176
         },
         "2": {
-          "fixed": 136,
+          "fixed": 134,
           "missed": 1
         },
         "5": {
-          "fixed": 208,
-          "wrong_corr": 3,
+          "fixed": 203,
+          "wrong_corr": 1,
           "missed": 1
         },
         "3": {
@@ -311,11 +310,11 @@
           "wrong_corr": 1
         },
         "6": {
-          "fixed": 123
+          "fixed": 120
         },
         "1": {
-          "fixed": 160,
-          "missed": 3
+          "fixed": 154,
+          "missed": 1
         },
         "0": {
           "fixed": 1
@@ -323,16 +322,16 @@
       },
       "over_cat": [
         [
-          "ค→ก",
-          4
+          "มั้ย→ไหม",
+          3
         ],
         [
-          "มั้ย→ไหม",
-          4
+          "ค→ก",
+          3
         ],
         [
           "“→∅",
-          4
+          3
         ],
         [
           "ญ→ณ",
@@ -343,23 +342,11 @@
           2
         ],
         [
-          "นึง→หนึ่ง",
-          2
-        ],
-        [
-          "ซ→ส",
-          2
-        ],
-        [
           "∅→การ",
           1
         ],
         [
           "งค์→ง",
-          1
-        ],
-        [
-          "ฟู→ฟิว",
           1
         ],
         [
@@ -399,63 +386,75 @@
           1
         ],
         [
-          "น่า→นา",
+          "ดริ→ดิ",
+          1
+        ],
+        [
+          "มี่→มี",
+          1
+        ],
+        [
+          "เล่→เล",
+          1
+        ],
+        [
+          "ค่ะ→คะ",
           1
         ]
       ],
       "by_register": {
         "gov": [
-          444,
-          445
+          438,
+          439
         ],
         "news": [
-          348,
-          356
+          338,
+          342
         ],
         "encyclopedic": [
-          180,
-          181
+          175,
+          176
         ]
       }
     },
     "gemma-4-31b": {
-      "graded": 795,
+      "graded": 774,
       "coverage": 1.0,
       "n_errors": 0,
       "outcomes": {
-        "fixed": 939,
-        "missed": 39,
-        "wrong_corr": 4
+        "fixed": 922,
+        "missed": 33,
+        "wrong_corr": 2
       },
-      "gold_edits": 982,
-      "over_edits": 51,
-      "clean_tcc": 46921,
+      "gold_edits": 957,
+      "over_edits": 37,
+      "clean_tcc": 45601,
       "per_class": {
         "4": {
-          "fixed": 175,
-          "missed": 6
+          "fixed": 172,
+          "missed": 4
         },
         "2": {
-          "fixed": 127,
+          "fixed": 125,
           "missed": 10
         },
         "5": {
-          "fixed": 201,
-          "missed": 8,
-          "wrong_corr": 3
+          "fixed": 199,
+          "missed": 5,
+          "wrong_corr": 1
         },
         "3": {
           "fixed": 160,
           "missed": 5
         },
         "6": {
-          "fixed": 121,
+          "fixed": 118,
           "wrong_corr": 1,
           "missed": 1
         },
         "1": {
-          "fixed": 154,
-          "missed": 9
+          "fixed": 147,
+          "missed": 8
         },
         "0": {
           "fixed": 1
@@ -471,10 +470,6 @@
           4
         ],
         [
-          "“→∅",
-          4
-        ],
-        [
           " → ",
           3
         ],
@@ -483,16 +478,12 @@
           3
         ],
         [
-          "วะ→พ",
-          2
+          "“→∅",
+          3
         ],
         [
           "ติ→ต",
           2
-        ],
-        [
-          "ค→ก",
-          1
         ],
         [
           "∅→บดี",
@@ -511,22 +502,6 @@
           1
         ],
         [
-          "น่า→นา",
-          1
-        ],
-        [
-          "คราวะ→คำนับ",
-          1
-        ],
-        [
-          "รณะ→รัต",
-          1
-        ],
-        [
-          "น→∅",
-          1
-        ],
-        [
           "∅→ชนะ",
           1
         ],
@@ -541,61 +516,85 @@
         [
           "พร→∅",
           1
+        ],
+        [
+          "แต→เต",
+          1
+        ],
+        [
+          "รัต→รตะ",
+          1
+        ],
+        [
+          "เอา→ออ",
+          1
+        ],
+        [
+          "∅→ตัว",
+          1
+        ],
+        [
+          "เลิก→∅",
+          1
+        ],
+        [
+          "ริ้นท์→ริ้น",
+          1
         ]
       ],
       "by_register": {
         "gov": [
-          434,
-          445
+          431,
+          439
         ],
         "news": [
-          335,
-          356
+          325,
+          342
         ],
         "encyclopedic": [
-          170,
-          181
+          166,
+          176
         ]
       }
     },
     "glm-5.1": {
-      "graded": 795,
+      "graded": 774,
       "coverage": 1.0,
       "n_errors": 0,
       "outcomes": {
-        "fixed": 782,
-        "missed": 195,
-        "wrong_corr": 5
+        "fixed": 767,
+        "missed": 187,
+        "wrong_corr": 3
       },
-      "gold_edits": 982,
-      "over_edits": 80,
-      "clean_tcc": 46921,
+      "gold_edits": 957,
+      "over_edits": 65,
+      "clean_tcc": 45601,
       "per_class": {
         "4": {
-          "fixed": 149,
-          "missed": 32
+          "fixed": 147,
+          "missed": 29
         },
         "2": {
-          "fixed": 118,
-          "missed": 19
+          "fixed": 117,
+          "missed": 18
         },
         "5": {
-          "fixed": 159,
-          "missed": 50,
-          "wrong_corr": 3
+          "fixed": 155,
+          "missed": 48,
+          "wrong_corr": 2
         },
         "3": {
           "fixed": 131,
           "missed": 34
         },
         "6": {
-          "fixed": 91,
+          "fixed": 88,
           "missed": 32
         },
         "1": {
-          "fixed": 134,
-          "wrong_corr": 2,
-          "missed": 27
+          "fixed": 129,
+          "missed": 25,
+          "wrong_corr": 1
         },
         "0": {
           "missed": 1
@@ -612,19 +611,7 @@
         ],
         [
           "“→∅",
-          3
-        ],
-        [
-          "มั้ย→ไหม",
           2
-        ],
-        [
-          "วะ→พ",
-          2
-        ],
-        [
-          "รัสมี→รูทีเนียม",
-          1
         ],
         [
           "ลั→ลุ",
@@ -663,6 +650,10 @@
           1
         ],
         [
+          "มั้ย→ไหม",
+          1
+        ],
+        [
           "สะ→สำ",
           1
         ],
@@ -681,50 +672,58 @@
         [
           "พิฏฐ์→พิฐ",
           1
+        ],
+        [
+          "ทุก→ทุกข์",
+          1
+        ],
+        [
+          "เนาว→เนาว์",
+          1
         ]
       ],
       "by_register": {
         "gov": [
-          369,
-          445
+          366,
+          439
         ],
         "news": [
-          276,
-          356
+          268,
+          342
         ],
         "encyclopedic": [
-          137,
-          181
+          133,
+          176
         ]
       }
     },
     "gpt54-mini": {
-      "graded": 795,
+      "graded": 774,
       "coverage": 1.0,
       "n_errors": 0,
       "outcomes": {
-        "fixed": 928,
-        "missed": 44,
-        "wrong_corr": 10
+        "fixed": 911,
+        "missed": 38,
+        "wrong_corr": 8
       },
-      "gold_edits": 982,
-      "over_edits": 36,
-      "clean_tcc": 46921,
+      "gold_edits": 957,
+      "over_edits": 24,
+      "clean_tcc": 45601,
       "per_class": {
         "4": {
-          "fixed": 177,
+          "fixed": 172,
           "missed": 3,
           "wrong_corr": 1
         },
         "2": {
-          "fixed": 130,
-          "missed": 4,
+          "fixed": 129,
+          "missed": 3,
           "wrong_corr": 3
         },
         "5": {
-          "fixed": 198,
-          "missed": 11,
-          "wrong_corr": 3
+          "fixed": 195,
+          "missed": 9,
+          "wrong_corr": 1
         },
         "3": {
           "fixed": 157,
@@ -732,12 +731,12 @@
           "wrong_corr": 1
         },
         "6": {
-          "missed": 6,
-          "fixed": 117
+          "missed": 5,
+          "fixed": 115
         },
         "1": {
-          "fixed": 148,
-          "missed": 13,
+          "fixed": 142,
+          "missed": 11,
           "wrong_corr": 2
         },
         "0": {
@@ -747,10 +746,6 @@
       "over_cat": [
         [
           "“→∅",
-          4
-        ],
-        [
-          "ก้→ก็",
           3
         ],
         [
@@ -758,12 +753,8 @@
           2
         ],
         [
-          "มั้ย→ไหม",
+          "ก้→ก็",
           2
-        ],
-        [
-          "ค→ก",
-          1
         ],
         [
           "พู่ก้→พู้ก็",
@@ -783,10 +774,6 @@
         ],
         [
           "\"→∅",
-          1
-        ],
-        [
-          "น่า→นา",
           1
         ],
         [
@@ -818,61 +805,73 @@
           1
         ],
         [
-          "ชะน๊ะ→ชนะ",
+          "เอา→ออ",
           1
         ],
         [
-          "เอา→ออ",
+          "นึง→หนึ่ง",
+          1
+        ],
+        [
+          "การ→∅",
+          1
+        ],
+        [
+          "เพ็ชร→เพชร์",
+          1
+        ],
+        [
+          "ด้วย→∅",
           1
         ]
       ],
       "by_register": {
         "gov": [
-          435,
-          445
+          429,
+          439
         ],
         "news": [
-          324,
-          356
+          316,
+          342
         ],
         "encyclopedic": [
-          169,
-          181
+          166,
+          176
         ]
       }
     },
     "gpt55-high": {
-      "graded": 795,
+      "graded": 774,
       "coverage": 1.0,
       "n_errors": 0,
       "outcomes": {
-        "fixed": 975,
-        "missed": 7
+        "fixed": 952,
+        "missed": 5
       },
-      "gold_edits": 982,
-      "over_edits": 48,
-      "clean_tcc": 46921,
+      "gold_edits": 957,
+      "over_edits": 33,
+      "clean_tcc": 45601,
       "per_class": {
         "4": {
-          "fixed": 180,
+          "fixed": 175,
           "missed": 1
         },
         "2": {
-          "fixed": 137
+          "fixed": 135
         },
         "5": {
-          "fixed": 209,
+          "fixed": 202,
           "missed": 3
         },
         "3": {
           "fixed": 165
         },
         "6": {
-          "fixed": 123
+          "fixed": 120
         },
         "1": {
-          "fixed": 160,
-          "missed": 3
+          "fixed": 154,
+          "missed": 1
         },
         "0": {
           "fixed": 1
@@ -881,27 +880,15 @@
       "over_cat": [
         [
           "มั้ย→ไหม",
-          4
+          3
         ],
         [
           "“→∅",
-          4
-        ],
-        [
-          "ค→ก",
-          2
+          3
         ],
         [
           "ไหร่→ไร",
           2
-        ],
-        [
-          "นึง→หนึ่ง",
-          2
-        ],
-        [
-          "ฟู→ฟิว",
-          1
         ],
         [
           "แมน→มา",
@@ -940,14 +927,6 @@
           1
         ],
         [
-          "น่า→นา",
-          1
-        ],
-        [
-          "นท์น→นทน์",
-          1
-        ],
-        [
           "ดริ→ดิ",
           1
         ],
@@ -958,56 +937,76 @@
         [
           "เล่→เล",
           1
+        ],
+        [
+          "ญาน์→ญาณ์",
+          1
+        ],
+        [
+          "ค่ะ→คะ",
+          1
+        ],
+        [
+          "ไลท์→ไลต์",
+          1
+        ],
+        [
+          "แต→เต",
+          1
+        ],
+        [
+          "เจ๊ะห์→เจะห์",
+          1
         ]
       ],
       "by_register": {
         "gov": [
-          445,
-          445
+          439,
+          439
         ],
         "news": [
-          349,
-          356
+          337,
+          342
         ],
         "encyclopedic": [
-          181,
-          181
+          176,
+          176
         ]
       }
     },
     "gpt55-med": {
-      "graded": 795,
+      "graded": 774,
       "coverage": 1.0,
       "n_errors": 0,
       "outcomes": {
-        "fixed": 975,
-        "missed": 7
+        "fixed": 952,
+        "missed": 5
       },
-      "gold_edits": 982,
-      "over_edits": 55,
-      "clean_tcc": 46921,
+      "gold_edits": 957,
+      "over_edits": 37,
+      "clean_tcc": 45601,
       "per_class": {
         "4": {
-          "fixed": 179,
+          "fixed": 174,
           "missed": 2
         },
         "2": {
-          "fixed": 136,
+          "fixed": 134,
           "missed": 1
         },
         "5": {
-          "fixed": 211,
+          "fixed": 204,
           "missed": 1
         },
         "3": {
           "fixed": 165
         },
         "6": {
-          "fixed": 123
+          "fixed": 120
         },
         "1": {
-          "fixed": 160,
-          "missed": 3
+          "fixed": 154,
+          "missed": 1
         },
         "0": {
           "fixed": 1
@@ -1016,14 +1015,10 @@
       "over_cat": [
         [
           "มั้ย→ไหม",
-          4
+          3
         ],
         [
           "“→∅",
-          4
-        ],
-        [
-          "ค→ก",
           3
         ],
         [
@@ -1031,15 +1026,11 @@
           2
         ],
         [
-          "นึง→หนึ่ง",
+          "ค→ก",
           2
         ],
         [
           "งค์→ง",
-          1
-        ],
-        [
-          "ฟู→ฟิว",
           1
         ],
         [
@@ -1071,14 +1062,6 @@
           1
         ],
         [
-          "น่า→นา",
-          1
-        ],
-        [
-          "นท์น→นทน์",
-          1
-        ],
-        [
           "ดริ→ดิ",
           1
         ],
@@ -1091,50 +1074,66 @@
           1
         ],
         [
-          "มั้ย ก้อ→ไหม ก็",
+          "ญาน์→ญาณ์",
+          1
+        ],
+        [
+          "ค่ะ→คะ",
+          1
+        ],
+        [
+          "แต→เต",
+          1
+        ],
+        [
+          "เจ๊ะห์→เจะห์",
+          1
+        ],
+        [
+          "คุ→คู",
           1
         ]
       ],
       "by_register": {
         "gov": [
-          444,
-          445
+          438,
+          439
         ],
         "news": [
-          350,
-          356
+          338,
+          342
         ],
         "encyclopedic": [
-          181,
-          181
+          176,
+          176
         ]
       }
     },
     "minimax-m2.7": {
-      "graded": 795,
+      "graded": 774,
       "coverage": 1.0,
       "n_errors": 0,
       "outcomes": {
-        "fixed": 644,
-        "missed": 332,
-        "wrong_corr": 6
+        "fixed": 633,
+        "missed": 321,
+        "wrong_corr": 3
       },
-      "gold_edits": 982,
-      "over_edits": 109,
-      "clean_tcc": 46921,
+      "gold_edits": 957,
+      "over_edits": 97,
+      "clean_tcc": 45601,
       "per_class": {
         "4": {
-          "fixed": 116,
-          "missed": 65
+          "fixed": 114,
+          "missed": 62
         },
         "2": {
           "fixed": 99,
-          "missed": 38
+          "missed": 36
         },
         "5": {
-          "fixed": 138,
-          "missed": 71,
-          "wrong_corr": 3
+          "fixed": 136,
+          "missed": 68,
+          "wrong_corr": 1
         },
         "3": {
           "fixed": 98,
@@ -1143,12 +1142,12 @@
         },
         "6": {
           "missed": 65,
-          "fixed": 58
+          "fixed": 55
         },
         "1": {
-          "fixed": 134,
-          "missed": 27,
-          "wrong_corr": 2
+          "fixed": 130,
+          "missed": 24,
+          "wrong_corr": 1
         },
         "0": {
           "fixed": 1
@@ -1157,7 +1156,7 @@
       "over_cat": [
         [
           "”→\"",
-          15
+          13
         ],
         [
           "“→\"",
@@ -1172,14 +1171,6 @@
           4
         ],
         [
-          "∅→ ",
-          3
-        ],
-        [
-          "เรย→เร็ว",
-          3
-        ],
-        [
           "1) →∅",
           2
         ],
@@ -1192,11 +1183,15 @@
           2
         ],
         [
+          "∅→ ",
+          2
+        ],
+        [
           ")​ →∅",
           2
         ],
         [
-          "วะ→พ",
+          "เรย→เร็ว",
           2
         ],
         [
@@ -1234,50 +1229,54 @@
         [
           "วะ→ว",
           1
+        ],
+        [
+          "กฏา→กาฎา",
+          1
         ]
       ],
       "by_register": {
         "gov": [
           290,
-          445
+          439
         ],
         "news": [
-          249,
-          356
+          242,
+          342
         ],
         "encyclopedic": [
-          105,
-          181
+          101,
+          176
         ]
       }
     },
     "openthaigpt": {
-      "graded": 795,
+      "graded": 774,
       "coverage": 1.0,
-      "n_errors": 5,
+      "n_errors": 4,
       "outcomes": {
-        "fixed": 678,
-        "missed": 292,
-        "wrong_corr": 12
+        "fixed": 671,
+        "missed": 279,
+        "wrong_corr": 7
       },
-      "gold_edits": 982,
-      "over_edits": 157,
-      "clean_tcc": 46921,
+      "gold_edits": 957,
+      "over_edits": 148,
+      "clean_tcc": 45601,
       "per_class": {
         "4": {
           "fixed": 109,
-          "missed": 71,
+          "missed": 66,
           "wrong_corr": 1
         },
         "2": {
-          "missed": 40,
-          "fixed": 96,
+          "missed": 39,
+          "fixed": 95,
           "wrong_corr": 1
         },
         "5": {
-          "fixed": 155,
-          "missed": 52,
-          "wrong_corr": 5
+          "fixed": 154,
+          "missed": 49,
+          "wrong_corr": 2
         },
         "3": {
           "fixed": 134,
@@ -1285,13 +1284,13 @@
           "wrong_corr": 1
         },
         "6": {
-          "missed": 77,
+          "missed": 74,
           "fixed": 46
         },
         "1": {
-          "fixed": 138,
-          "wrong_corr": 4,
-          "missed": 21
+          "fixed": 133,
+          "missed": 20,
+          "wrong_corr": 2
         },
         "0": {
           "missed": 1
@@ -1311,10 +1310,6 @@
           4
         ],
         [
-          "“→∅",
-          4
-        ],
-        [
           "ด้วย→∅",
           3
         ],
@@ -1328,6 +1323,10 @@
         ],
         [
           "ภาคม→จิกายน",
+          3
+        ],
+        [
+          "“→∅",
           3
         ],
         [
@@ -1381,54 +1380,53 @@
       ],
       "by_register": {
         "gov": [
-          312,
-          445
+          311,
+          439
         ],
         "news": [
-          276,
-          356
+          271,
+          342
         ],
         "encyclopedic": [
-          90,
-          181
+          89,
+          176
         ]
       }
     },
     "opus-4.7": {
-      "graded": 795,
+      "graded": 774,
       "coverage": 1.0,
       "n_errors": 0,
       "outcomes": {
-        "fixed": 972,
-        "missed": 7,
-        "wrong_corr": 3
+        "fixed": 950,
+        "missed": 5,
+        "wrong_corr": 2
       },
-      "gold_edits": 982,
-      "over_edits": 51,
-      "clean_tcc": 46921,
+      "gold_edits": 957,
+      "over_edits": 40,
+      "clean_tcc": 45601,
       "per_class": {
         "4": {
-          "fixed": 181
+          "fixed": 176
         },
         "2": {
-          "fixed": 135,
+          "fixed": 133,
           "missed": 2
         },
         "5": {
-          "fixed": 206,
-          "wrong_corr": 3,
-          "missed": 3
+          "fixed": 201,
+          "missed": 2,
+          "wrong_corr": 2
         },
         "3": {
           "fixed": 165
         },
         "6": {
-          "fixed": 122,
+          "fixed": 119,
           "missed": 1
         },
         "1": {
-          "fixed": 162,
-          "missed": 1
+          "fixed": 155
         },
         "0": {
           "fixed": 1
@@ -1449,27 +1447,11 @@
         ],
         [
           "“→∅",
-          4
+          3
         ],
         [
           "ญ→ณ",
           2
-        ],
-        [
-          "ธ→ท",
-          2
-        ],
-        [
-          "ซ→ส",
-          2
-        ],
-        [
-          "ฟู→ฟิว",
-          1
-        ],
-        [
-          "ค→ก",
-          1
         ],
         [
           "เห้→เฮ้",
@@ -1500,62 +1482,78 @@
           1
         ],
         [
-          "น่า→นา",
-          1
-        ],
-        [
-          "นท์น→นทน์",
-          1
-        ],
-        [
           "ค่ะ→คะ",
+          1
+        ],
+        [
+          "ธ→ท",
           1
         ],
         [
           "ไลท์→ไลต์",
           1
+        ],
+        [
+          "เจ๊ะห์→เจะห์",
+          1
+        ],
+        [
+          "ระ→ร",
+          1
+        ],
+        [
+          "ริ้นท์→ริน",
+          1
+        ],
+        [
+          "รุ→รั",
+          1
+        ],
+        [
+          "ซ→ส",
+          1
         ]
       ],
       "by_register": {
         "gov": [
-          444,
-          445
+          438,
+          439
         ],
         "news": [
-          348,
-          356
+          337,
+          342
         ],
         "encyclopedic": [
-          180,
-          181
+          175,
+          176
         ]
       }
     },
     "qwen3.6-35b-a3b": {
-      "graded": 795,
+      "graded": 774,
       "coverage": 1.0,
       "n_errors": 0,
       "outcomes": {
-        "missed": 162,
-        "fixed": 802,
-        "wrong_corr": 18
+        "missed": 156,
+        "fixed": 784,
+        "wrong_corr": 17
       },
-      "gold_edits": 982,
-      "over_edits": 473,
-      "clean_tcc": 46921,
+      "gold_edits": 957,
+      "over_edits": 453,
+      "clean_tcc": 45601,
       "per_class": {
         "4": {
-          "missed": 31,
-          "fixed": 150
+          "missed": 29,
+          "fixed": 147
         },
         "2": {
-          "fixed": 120,
-          "missed": 14,
+          "fixed": 119,
+          "missed": 13,
           "wrong_corr": 3
         },
         "5": {
-          "fixed": 172,
-          "missed": 40
+          "fixed": 168,
+          "missed": 37
         },
         "3": {
           "fixed": 131,
@@ -1563,13 +1561,13 @@
           "wrong_corr": 10
         },
         "6": {
-          "fixed": 104,
+          "fixed": 101,
           "missed": 19
         },
         "1": {
-          "fixed": 125,
-          "wrong_corr": 5,
-          "missed": 33
+          "fixed": 118,
+          "missed": 33,
+          "wrong_corr": 4
         },
         "0": {
           "missed": 1
@@ -1602,14 +1600,6 @@
         ],
         [
           "∅→ที่",
-          4
-        ],
-        [
-          "∅→น",
-          4
-        ],
-        [
-          "“→∅",
           4
         ],
         [
@@ -1649,6 +1639,14 @@
           3
         ],
         [
+          "∅→น",
+          3
+        ],
+        [
+          "“→∅",
+          3
+        ],
+        [
           "∅→่",
           3
         ],
@@ -1659,58 +1657,57 @@
       ],
       "by_register": {
         "gov": [
-          370,
-          445
+          367,
+          439
         ],
         "news": [
-          278,
-          356
+          266,
+          342
         ],
         "encyclopedic": [
-          154,
-          181
+          151,
+          176
         ]
       }
     },
     "sonnet-4.6": {
-      "graded": 795,
+      "graded": 774,
       "coverage": 1.0,
       "n_errors": 0,
       "outcomes": {
-        "fixed": 945,
-        "missed": 32,
-        "wrong_corr": 5
+        "fixed": 928,
+        "missed": 27,
+        "wrong_corr": 2
       },
-      "gold_edits": 982,
-      "over_edits": 64,
-      "clean_tcc": 46921,
+      "gold_edits": 957,
+      "over_edits": 52,
+      "clean_tcc": 45601,
       "per_class": {
         "4": {
-          "fixed": 176,
-          "missed": 5
+          "fixed": 173,
+          "missed": 3
         },
         "2": {
-          "fixed": 134,
+          "fixed": 132,
           "missed": 3
         },
         "5": {
-          "fixed": 199,
-          "missed": 10,
-          "wrong_corr": 3
+          "fixed": 196,
+          "missed": 8,
+          "wrong_corr": 1
         },
         "3": {
           "fixed": 157,
           "missed": 8
         },
         "6": {
-          "fixed": 120,
+          "fixed": 117,
           "missed": 2,
           "wrong_corr": 1
         },
         "1": {
-          "fixed": 158,
-          "wrong_corr": 1,
-          "missed": 4
+          "fixed": 152,
+          "missed": 3
         },
         "0": {
           "fixed": 1
@@ -1719,7 +1716,7 @@
       "over_cat": [
         [
           "”→\"",
-          20
+          18
         ],
         [
           "“→\"",
@@ -1731,15 +1728,11 @@
         ],
         [
           "“→∅",
-          4
+          3
         ],
         [
           "​→∅",
           3
-        ],
-        [
-          "วะ→พ",
-          2
         ],
         [
           "ติ→ต",
@@ -1751,10 +1744,6 @@
         ],
         [
           "บี→เบ",
-          1
-        ],
-        [
-          "ค→ก",
           1
         ],
         [
@@ -1778,68 +1767,58 @@
           1
         ],
         [
-          "น่า→นา",
-          1
-        ],
-        [
           "ญาน์→ญา",
-          1
-        ],
-        [
-          "”→ย\"",
-          1
-        ],
-        [
-          "ชะน๊ะ→ชนะ",
           1
         ],
         [
           "เรย→เรียก",
           1
+        ],
+        [
+          "ฅน→ให้",
+          1
         ]
       ],
       "by_register": {
         "gov": [
-          435,
-          445
+          432,
+          439
         ],
         "news": [
-          334,
-          356
+          325,
+          342
         ],
         "encyclopedic": [
-          176,
-          181
+          171,
+          176
         ]
       }
     },
     "thalle": {
-      "graded": 795,
+      "graded": 774,
       "coverage": 1.0,
       "n_errors": 0,
       "outcomes": {
-        "fixed": 680,
-        "missed": 294,
-        "wrong_corr": 8
+        "fixed": 671,
+        "missed": 281,
+        "wrong_corr": 5
       },
-      "gold_edits": 982,
-      "over_edits": 146,
-      "clean_tcc": 46921,
+      "gold_edits": 957,
+      "over_edits": 132,
+      "clean_tcc": 45601,
       "per_class": {
         "4": {
-          "fixed": 108,
-          "missed": 72,
+          "fixed": 107,
+          "missed": 68,
           "wrong_corr": 1
         },
         "2": {
           "fixed": 93,
-          "missed": 43,
-          "wrong_corr": 1
+          "missed": 42
         },
         "5": {
-          "missed": 51,
-          "fixed": 160,
-          "wrong_corr": 1
+          "missed": 47,
+          "fixed": 158
         },
         "3": {
           "fixed": 135,
@@ -1847,13 +1826,13 @@
           "wrong_corr": 1
         },
         "6": {
-          "missed": 84,
+          "missed": 81,
           "fixed": 39
         },
         "1": {
-          "fixed": 145,
-          "missed": 14,
-          "wrong_corr": 4
+          "fixed": 139,
+          "missed": 13,
+          "wrong_corr": 3
         },
         "0": {
           "missed": 1
@@ -1870,10 +1849,6 @@
         ],
         [
           " → ",
-          4
-        ],
-        [
-          "“→∅",
           4
         ],
         [
@@ -1897,6 +1872,10 @@
           3
         ],
         [
+          "“→∅",
+          3
+        ],
+        [
           "∅→น",
           2
         ],
@@ -1910,14 +1889,6 @@
         ],
         [
           "ติง→เตียน",
-          2
-        ],
-        [
-          "วะ→พ",
-          2
-        ],
-        [
-          ",→∅",
           2
         ],
         [
@@ -1937,63 +1908,71 @@
           2
         ],
         [
-          "ซ→ส",
-          2
+          "กร→กา",
+          1
+        ],
+        [
+          "ม→∅",
+          1
+        ],
+        [
+          "ทศวรรษ→ศักราช",
+          1
         ]
       ],
       "by_register": {
         "gov": [
           320,
-          445
+          439
         ],
         "news": [
-          285,
-          356
+          276,
+          342
         ],
         "encyclopedic": [
           75,
-          181
+          176
         ]
       }
     },
     "typhoon-s": {
-      "graded": 795,
+      "graded": 774,
       "coverage": 1.0,
       "n_errors": 0,
       "outcomes": {
-        "fixed": 688,
-        "missed": 289,
+        "fixed": 681,
+        "missed": 271,
         "wrong_corr": 5
       },
-      "gold_edits": 982,
-      "over_edits": 84,
-      "clean_tcc": 46921,
+      "gold_edits": 957,
+      "over_edits": 76,
+      "clean_tcc": 45601,
       "per_class": {
         "4": {
-          "fixed": 126,
-          "missed": 55
+          "fixed": 123,
+          "missed": 53
         },
         "2": {
-          "fixed": 91,
+          "fixed": 89,
           "missed": 43,
           "wrong_corr": 3
         },
         "5": {
           "fixed": 154,
-          "missed": 58
+          "missed": 51
         },
         "3": {
           "fixed": 120,
           "missed": 45
         },
         "6": {
-          "missed": 47,
+          "missed": 44,
           "fixed": 75,
           "wrong_corr": 1
         },
         "1": {
-          "fixed": 122,
-          "missed": 40,
+          "fixed": 120,
+          "missed": 34,
           "wrong_corr": 1
         },
         "0": {
@@ -2003,7 +1982,7 @@
       "over_cat": [
         [
           "∅→ ",
-          17
+          16
         ],
         [
           " →∅",
@@ -2014,19 +1993,19 @@
           6
         ],
         [
-          "“→∅",
-          4
-        ],
-        [
-          "” →∅",
-          4
-        ],
-        [
           "ด้วย→∅",
           3
         ],
         [
           ")​ →∅",
+          3
+        ],
+        [
+          "“→∅",
+          3
+        ],
+        [
+          "” →∅",
           3
         ],
         [
@@ -2038,19 +2017,11 @@
           2
         ],
         [
-          "วะ→พ",
-          2
-        ],
-        [
           "  →∅",
           2
         ],
         [
           ") →∅",
-          2
-        ],
-        [
-          "”→“",
           2
         ],
         [
@@ -2080,50 +2051,58 @@
         [
           "**→∅",
           1
+        ],
+        [
+          "ทราบซึ้ง→ซึ้งใจ",
+          1
+        ],
+        [
+          "มา→∅",
+          1
         ]
       ],
       "by_register": {
         "gov": [
-          335,
-          445
+          333,
+          439
         ],
         "news": [
-          255,
-          356
+          251,
+          342
         ],
         "encyclopedic": [
-          98,
-          181
+          97,
+          176
         ]
       }
     },
     "typhoon25": {
-      "graded": 795,
+      "graded": 774,
       "coverage": 1.0,
       "n_errors": 0,
       "outcomes": {
-        "fixed": 750,
-        "missed": 197,
-        "wrong_corr": 35
+        "fixed": 742,
+        "missed": 184,
+        "wrong_corr": 31
       },
-      "gold_edits": 982,
-      "over_edits": 255,
-      "clean_tcc": 46921,
+      "gold_edits": 957,
+      "over_edits": 239,
+      "clean_tcc": 45601,
       "per_class": {
         "4": {
-          "fixed": 122,
-          "missed": 55,
+          "fixed": 120,
+          "missed": 52,
           "wrong_corr": 4
         },
         "2": {
-          "fixed": 107,
-          "missed": 28,
+          "fixed": 106,
+          "missed": 27,
           "wrong_corr": 2
         },
         "5": {
           "fixed": 157,
-          "missed": 44,
-          "wrong_corr": 11
+          "missed": 40,
+          "wrong_corr": 8
         },
         "3": {
           "fixed": 142,
@@ -2131,14 +2110,14 @@
           "wrong_corr": 9
         },
         "6": {
-          "missed": 33,
+          "missed": 30,
           "fixed": 87,
           "wrong_corr": 3
         },
         "1": {
-          "fixed": 134,
-          "missed": 23,
-          "wrong_corr": 6
+          "fixed": 129,
+          "missed": 21,
+          "wrong_corr": 5
         },
         "0": {
           "fixed": 1
@@ -2147,7 +2126,7 @@
       "over_cat": [
         [
           "∅→ ",
-          46
+          43
         ],
         [
           " →∅",
@@ -2170,10 +2149,6 @@
           4
         ],
         [
-          ",→ ",
-          4
-        ],
-        [
           " → ",
           4
         ],
@@ -2182,8 +2157,8 @@
           4
         ],
         [
-          "“→∅",
-          4
+          ",→ ",
+          3
         ],
         [
           "63→๖๓",
@@ -2206,6 +2181,10 @@
           3
         ],
         [
+          "“→∅",
+          3
+        ],
+        [
           "กลาง→เฉลี่ย",
           2
         ],
@@ -2218,26 +2197,26 @@
           2
         ],
         [
-          "มั้ย→ไหม",
+          "ติง→เตียน",
           2
         ],
         [
-          "ติง→เตียน",
+          "คอ→กรา",
           2
         ]
       ],
       "by_register": {
         "gov": [
-          363,
-          445
+          361,
+          439
         ],
         "news": [
-          267,
-          356
+          261,
+          342
         ],
         "encyclopedic": [
           120,
-          181
+          176
         ]
       }
     }

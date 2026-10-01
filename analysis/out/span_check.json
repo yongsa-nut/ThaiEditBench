@@ -1,122 +1,122 @@
 {
  "T1": {
   "pooled": {
-   "fixed": 0.8663,
-   "missed_untouched": 0.1126,
-   "missed_touched": 0.0133,
-   "wrong_corr": 0.0078,
-   "n": 15712
+   "fixed": 0.8724,
+   "missed_untouched": 0.11,
+   "missed_touched": 0.0116,
+   "wrong_corr": 0.0059,
+   "n": 15312
   },
   "per_model": {
    "deepseek-flash": {
-    "fixed": 0.9623,
-    "missed_untouched": 0.0214,
-    "missed_touched": 0.0112,
-    "wrong_corr": 0.0051,
-    "n": 982
+    "fixed": 0.9655,
+    "missed_untouched": 0.0219,
+    "missed_touched": 0.0094,
+    "wrong_corr": 0.0031,
+    "n": 957
    },
    "deepseek-v4-pro": {
-    "fixed": 0.9542,
-    "missed_untouched": 0.0377,
-    "wrong_corr": 0.002,
-    "missed_touched": 0.0061,
-    "n": 982
+    "fixed": 0.9603,
+    "missed_untouched": 0.0355,
+    "missed_touched": 0.0031,
+    "wrong_corr": 0.001,
+    "n": 957
    },
    "gemini-3.5-flash": {
-    "fixed": 0.9898,
+    "fixed": 0.9937,
     "missed_untouched": 0.0031,
-    "wrong_corr": 0.0041,
-    "missed_touched": 0.0031,
-    "n": 982
+    "wrong_corr": 0.0021,
+    "missed_touched": 0.001,
+    "n": 957
    },
    "gemma-4-31b": {
-    "fixed": 0.9562,
-    "missed_untouched": 0.0346,
-    "missed_touched": 0.0051,
-    "wrong_corr": 0.0041,
-    "n": 982
+    "fixed": 0.9634,
+    "missed_untouched": 0.0324,
+    "wrong_corr": 0.0021,
+    "missed_touched": 0.0021,
+    "n": 957
    },
    "glm-5.1": {
-    "fixed": 0.7963,
-    "missed_untouched": 0.1843,
-    "missed_touched": 0.0143,
-    "wrong_corr": 0.0051,
-    "n": 982
+    "fixed": 0.8015,
+    "missed_untouched": 0.1829,
+    "missed_touched": 0.0125,
+    "wrong_corr": 0.0031,
+    "n": 957
    },
    "gpt54-mini": {
-    "fixed": 0.945,
-    "missed_untouched": 0.0346,
-    "missed_touched": 0.0102,
-    "wrong_corr": 0.0102,
-    "n": 982
+    "fixed": 0.9519,
+    "missed_untouched": 0.0313,
+    "missed_touched": 0.0084,
+    "wrong_corr": 0.0084,
+    "n": 957
    },
    "gpt55-high": {
-    "fixed": 0.9929,
-    "missed_untouched": 0.0041,
-    "missed_touched": 0.0031,
-    "n": 982
+    "fixed": 0.9948,
+    "missed_untouched": 0.0042,
+    "missed_touched": 0.001,
+    "n": 957
    },
    "gpt55-med": {
-    "fixed": 0.9929,
-    "missed_untouched": 0.0041,
-    "missed_touched": 0.0031,
-    "n": 982
+    "fixed": 0.9948,
+    "missed_untouched": 0.0042,
+    "missed_touched": 0.001,
+    "n": 957
    },
    "minimax-m2.7": {
-    "fixed": 0.6558,
-    "missed_untouched": 0.3167,
-    "wrong_corr": 0.0061,
-    "missed_touched": 0.0214,
-    "n": 982
+    "fixed": 0.6614,
+    "missed_untouched": 0.3145,
+    "missed_touched": 0.0209,
+    "wrong_corr": 0.0031,
+    "n": 957
    },
    "openthaigpt": {
-    "fixed": 0.6904,
-    "missed_untouched": 0.279,
-    "wrong_corr": 0.0122,
-    "missed_touched": 0.0183,
-    "n": 982
+    "fixed": 0.7011,
+    "missed_untouched": 0.2738,
+    "wrong_corr": 0.0073,
+    "missed_touched": 0.0178,
+    "n": 957
    },
    "opus-4.7": {
-    "fixed": 0.9898,
-    "missed_touched": 0.002,
-    "missed_untouched": 0.0051,
-    "wrong_corr": 0.0031,
-    "n": 982
+    "fixed": 0.9927,
+    "missed_touched": 0.001,
+    "missed_untouched": 0.0042,
+    "wrong_corr": 0.0021,
+    "n": 957
    },
    "qwen3.6-35b-a3b": {
-    "missed_untouched": 0.1303,
-    "fixed": 0.8167,
-    "wrong_corr": 0.0183,
-    "missed_touched": 0.0346,
-    "n": 982
+    "missed_untouched": 0.1285,
+    "fixed": 0.8192,
+    "wrong_corr": 0.0178,
+    "missed_touched": 0.0345,
+    "n": 957
    },
    "sonnet-4.6": {
-    "fixed": 0.9623,
-    "missed_untouched": 0.0265,
-    "wrong_corr": 0.0051,
-    "missed_touched": 0.0061,
-    "n": 982
+    "fixed": 0.9697,
+    "missed_untouched": 0.024,
+    "missed_touched": 0.0042,
+    "wrong_corr": 0.0021,
+    "n": 957
    },
    "thalle": {
-    "fixed": 0.6925,
-    "missed_untouched": 0.2749,
-    "wrong_corr": 0.0081,
-    "missed_touched": 0.0244,
-    "n": 982
+    "fixed": 0.7011,
+    "missed_untouched": 0.2717,
+    "missed_touched": 0.0219,
+    "wrong_corr": 0.0052,
+    "n": 957
    },
    "typhoon-s": {
-    "fixed": 0.7006,
-    "missed_untouched": 0.2841,
-    "wrong_corr": 0.0051,
-    "missed_touched": 0.0102,
-    "n": 982
+    "fixed": 0.7116,
+    "missed_untouched": 0.2748,
+    "wrong_corr": 0.0052,
+    "missed_touched": 0.0084,
+    "n": 957
    },
    "typhoon25": {
-    "fixed": 0.7637,
-    "missed_untouched": 0.1609,
-    "wrong_corr": 0.0356,
-    "missed_touched": 0.0397,
-    "n": 982
+    "fixed": 0.7753,
+    "missed_untouched": 0.1536,
+    "wrong_corr": 0.0324,
+    "missed_touched": 0.0387,
+    "n": 957
    }
   }
  },

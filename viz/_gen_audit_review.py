@@ -94,7 +94,7 @@ def run(resdir, split, n, label):
         if _lev(wrongn, val) + _lev(val, goldn) == _lev(wrongn, goldn):
             disp, reason = "keep", "partial fix toward the gold (shared miss)"
         elif nf:
-            disp, reason = "keep", f"register-norm ({nf})"
+            disp, reason = "drop", f"register change ({nf})"
         elif vf:
             disp, reason = "variant", f"loanword variant ({vf})"
         else:
@@ -105,11 +105,11 @@ def run(resdir, split, n, label):
 
 
 def write_md(tiers, path):
-    out = ["# T2/T3 Gold Audit — Residual Source-Typo Candidates (review before drop)", "",
-           "Shared-misses (gold OK) and punct-only over-edits (gold OK) already excluded.",
-           "Each item: **N models** converged on a correction the gold lacks (N vs gold-votes).",
-           "⚠ = **register-norm** or **loanword variant** → gold is acceptable, **KEEP**.",
-           "Everything else = likely **real residual source typo** → drop. `⟦gold→cons⟧` = differing span + context.", ""]
+    out = ["# T2/T3 consensus-audit report", "",
+           "Flagged items whose consensus equals the input or differs from the gold only in punctuation are kept and not listed.",
+           "Each listed item: **N systems** agree on an output the gold lacks (N vs systems returning the gold).",
+           "Items marked KEEP are partial fixes toward the gold; every other listed item is dropped by the audit rule.",
+           "`⟦gold→cons⟧` = differing span + context.", ""]
     for i, t in enumerate(tiers):
         if i:
             out += ["", "---", ""]
@@ -187,11 +187,11 @@ h2 .sub{{font-size:13px;color:var(--mut);font-weight:400}}
 .arr{{color:var(--mut);margin:0 4px}}
 </style></head><body><div class="wrap">
 <h1>ThaiEditBench — T2/T3 Gold Audit (residual source-typo candidates)</h1>
-<p class="lead">Cross-model consensus, after excluding shared-misses and punct-only over-edits (gold OK in those).
+<p class="lead">Cross-model consensus audit; flagged items that are shared misses or punctuation-only differences are kept and not listed.
 <span class="g">red strike</span> = current gold · <span class="c">green</span> = what ≥N models converge on.</p>
-<div class="legend"><b style="color:#ff7b72">DROP</b> = real residual source typo ·
-<b style="color:#27ae60">KEEP</b> = register-normalization (gold correct) ·
-<b style="color:#e67e22">VARIANT?</b> = loanword variant (reconcile or drop — your call)</div>
+<div class="legend"><b style="color:#ff7b72">DROP</b> = dropped by the audit rule ·
+<b style="color:#27ae60">KEEP</b> = partial fix toward the gold (gold correct) ·
+<b style="color:#e67e22">VARIANT?</b> = loanword variant (also dropped by the rule)</div>
 <div class="bar">
 <button data-f="all" class="on" onclick="flt(this)">All</button>
 <button data-f="drop" onclick="flt(this)">DROP only</button>

@@ -14,14 +14,15 @@ object, and the construction invariants — is in
 |---|--:|---|
 | `items_train.jsonl` | 249 | synthetic; for tuning prompts/baselines |
 | `items_dev.jsonl` | 606 | synthetic; development |
-| `items_test_public.jsonl` | 795 | **T1 sentence tier**, public |
+| `items_test_public.jsonl` | 774 | **T1 sentence tier**, public |
 | `items_test_private.jsonl` | 868 | held-out: synthetic + 40 Wikipedia-mined; lowest memorization risk |
 | `items_t2.jsonl` | 224 | **T2 paragraph tier** (multi-sentence) |
 | `items_t3.jsonl` | 122 | **T3 page tier** (page-length) |
 
-The public test / T2 / T3 tiers were trimmed by a cross-model gold-quality audit
-(removing residual source typos and punctuation-only artifacts; 24 / 27 / 26
-items dropped respectively). The audit method is described in the paper's
+The public test / T2 / T3 tiers were trimmed by the same automatic cross-model
+consensus audit (mainly residual source typos and non-standard source spellings;
+45 / 26 / 28 items dropped respectively; reports in `../viz/audit-review-t1.md`
+and `../viz/audit-review-t2t3.md`). The audit method is described in the paper's
 Appendix B, and the tooling lives in [`../viz/`](../viz/) (`audit_golds.py`,
 `apply_audit_drops.py`).
 
@@ -34,7 +35,7 @@ Appendix B, and the tooling lives in [`../viz/`](../viz/) (`audit_golds.py`,
 | `wiki_filtered_pairs.jsonl` | RID-gated clean pairs mined from cleanup-bot edit history |
 | `wiki_items.jsonl` | curated, class-balanced mined ship set (~40) |
 | `wiki_items_all.jsonl` | full mined sentence-level set (103) |
-| `items_wiki.jsonl` | the same 103 items under the name the harness uses (`--split wiki`); the paper's natural-error set is the 79 left after the consensus audit (`analysis/natural_eval.py`) |
+| `items_wiki.jsonl` | the same 103 items under the name the harness uses (`--split wiki`); the paper's natural-error set is the 87 left after the consensus audit (`analysis/natural_eval.py`) |
 | `memorization.json` | per-source verbatim-recall scores used to route low-memorization text to the held-out test split |
 | `excluded.jsonl` | items removed during construction/audit, with reasons |
 
